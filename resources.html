@@ -8,7 +8,155 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <style></style>
+  <style>
+    /* =========================================================
+       BRAND KIT SECTION
+       ========================================================= */
+    .brand-kit-section { background: var(--color-bg); }
+
+    .brand-kit-intro {
+      font-size: 15px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.7;
+      max-width: 640px;
+      margin: 0 auto 40px;
+      text-align: center;
+    }
+
+    .logo-packages-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 800px) {
+      .logo-packages-grid { grid-template-columns: 1fr; }
+    }
+
+    .logo-package-card {
+      background: rgba(18,18,117,0.35);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(80,80,200,0.22);
+      border-radius: 18px;
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .logo-package-card:hover {
+      border-color: rgba(104,104,238,0.4);
+      box-shadow: 0 8px 30px rgba(104,104,238,0.1);
+    }
+
+    /* Preview area */
+    .logo-preview {
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .logo-preview.lp-dark {
+      background: linear-gradient(135deg, #0a0a55 0%, #121275 100%);
+    }
+    .logo-preview.lp-dark::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 80% at 50% 50%, rgba(104,104,238,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .logo-preview img {
+      max-height: 52px;
+      max-width: 100%;
+      width: auto;
+      object-fit: contain;
+      position: relative;
+      z-index: 1;
+    }
+    /* S-Mark is square -- cap smaller */
+    .logo-preview.lp-mark img {
+      max-height: 64px;
+    }
+
+    /* Info area */
+    .logo-package-info {
+      padding: 20px 24px 24px;
+    }
+    .logo-package-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+    .logo-package-desc {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.55;
+      margin-bottom: 18px;
+    }
+
+    /* Variant rows */
+    .logo-variants {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .logo-variant {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lv-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .lv-dot.lv-white {
+      background: #fff;
+      border: 1px solid rgba(255,255,255,0.25);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.08);
+    }
+    .lv-dot.lv-blue {
+      background: #121275;
+      border: 1px solid rgba(104,104,238,0.5);
+      box-shadow: 0 0 6px rgba(18,18,117,0.6);
+    }
+    .lv-dot.lv-black {
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .lv-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+      font-weight: 600;
+      flex: 1;
+      min-width: 0;
+    }
+    .lv-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      background: rgba(104,104,238,0.12);
+      border: 1px solid rgba(104,104,238,0.22);
+      border-radius: 6px;
+      padding: 5px 11px;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      flex-shrink: 0;
+    }
+    .lv-btn:hover {
+      background: rgba(104,104,238,0.28);
+      color: white;
+      border-color: rgba(104,104,238,0.5);
+    }
+  </style>
 </head>
 <body>
 
@@ -38,6 +186,146 @@
       <span class="page-hero-eyebrow fade-in">Agent Resources</span>
       <h1 class="page-hero-title fade-in fade-in-delay-1">Resources</h1>
       <p class="page-hero-sub fade-in fade-in-delay-2">Forms, documents, FAQs, and onboarding — everything you need to operate.</p>
+    </div>
+  </section>
+
+  <!-- BRAND KIT -->
+  <section class="section brand-kit-section">
+    <div class="section-inner-default">
+      <div class="section-header fade-in">
+        <span class="section-eyebrow">Brand Assets</span>
+        <h2 class="section-title">Logo Kit</h2>
+        <div class="section-rule"></div>
+      </div>
+      <p class="brand-kit-intro fade-in">Official SERHANT. Orlando logos. Three colorways per mark: White for dark backgrounds, SERHANT. Blue, and Black for light backgrounds. SVG and PDF included in every package.</p>
+
+      <div class="logo-packages-grid">
+
+        <!-- SERHANT. ORLANDO -->
+        <div class="logo-package-card fade-in">
+          <div class="logo-preview lp-dark">
+            <img src="assets/logos/SERHANT-Orlando-White.svg" alt="SERHANT. Orlando">
+          </div>
+          <div class="logo-package-info">
+            <div class="logo-package-name">SERHANT. Orlando</div>
+            <div class="logo-package-desc">Full horizontal wordmark with Orlando. Primary lockup for email signatures, presentations, and co-branded materials.</div>
+            <div class="logo-variants">
+              <div class="logo-variant">
+                <span class="lv-dot lv-white"></span>
+                <span class="lv-label">White</span>
+                <a href="assets/logos/SERHANT-Orlando-White.svg" download class="lv-btn">SVG</a>
+                <a href="assets/logos/SERHANT-Orlando-White.pdf" download class="lv-btn">PDF</a>
+              </div>
+              <div class="logo-variant">
+                <span class="lv-dot lv-blue"></span>
+                <span class="lv-label">SERHANT. Blue</span>
+                <a href="assets/logos/SERHANT-Orlando-SerhantBlue.svg" download class="lv-btn">SVG</a>
+                <a href="assets/logos/SERHANT-Orlando-SerhantBlue.pdf" download class="lv-btn">PDF</a>
+              </div>
+              <div class="logo-variant">
+                <span class="lv-dot lv-black"></span>
+                <span class="lv-label">Black</span>
+                <a href="assets/logos/SERHANT-Orlando-Black.svg" download class="lv-btn">SVG</a>
+                <a href="assets/logos/SERHANT-Orlando-Black.pdf" download class="lv-btn">PDF</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- S. ORLANDO -->
+        <div class="logo-package-card fade-in fade-in-delay-1">
+          <div class="logo-preview lp-dark">
+            <img src="assets/logos/S-Orlando-White.svg" alt="S. Orlando">
+          </div>
+          <div class="logo-package-info">
+            <div class="logo-package-name">S. Orlando</div>
+            <div class="logo-package-desc">Compact S mark with Orlando text. Ideal for social profile images, app icons, and tight horizontal spaces.</div>
+            <div class="logo-variants">
+              <div class="logo-variant">
+                <span class="lv-dot lv-white"></span>
+                <span class="lv-label">White</span>
+                <a href="assets/logos/S-Orlando-White.svg" download class="lv-btn">SVG</a>
+                <a href="assets/logos/S-Orlando-White.pdf" download class="lv-btn">PDF</a>
+              </div>
+              <div class="logo-variant">
+                <span class="lv-dot lv-blue"></span>
+                <span class="lv-label">SERHANT. Blue</span>
+                <a href="assets/logos/S-Orlando-SerhantBlue.svg" download class="lv-btn">SVG</a>
+                <a href="assets/logos/S-Orlando-SerhantBlue.pdf" download class="lv-btn">PDF</a>
+              </div>
+              <div class="logo-variant">
+                <span class="lv-dot lv-black"></span>
+                <span class="lv-label">Black</span>
+                <a href="assets/logos/S-Orlando-Black.svg" download class="lv-btn">SVG</a>
+                <a href="assets/logos/S-Orlando-Black.pdf" download class="lv-btn">PDF</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- S. MARK -->
+        <div class="logo-package-card fade-in fade-in-delay-2">
+          <div class="logo-preview lp-dark lp-mark">
+            <img src="assets/logos/S-Mark-White.svg" alt="S. Mark">
+          </div>
+          <div class="logo-package-info">
+            <div class="logo-package-name">S. Mark</div>
+            <div class="logo-package-desc">The iconic SERHANT. S mark, standalone. Use for watermarks, branded backgrounds, and secondary design elements.</div>
+            <div class="logo-variants">
+              <div class="logo-variant">
+                <span class="lv-dot lv-white"></span>
+                <span class="lv-label">White</span>
+                <a href="assets/logos/S-Mark-White.svg" download class="lv-btn">SVG</a>
+                <a href="assets/logos/S-Mark-White.pdf" download class="lv-btn">PDF</a>
+              </div>
+              <div class="logo-variant">
+                <span class="lv-dot lv-blue"></span>
+                <span class="lv-label">SERHANT. Blue</span>
+                <a href="assets/logos/S-Mark-SerhantBlue.svg" download class="lv-btn">SVG</a>
+                <a href="assets/logos/S-Mark-SerhantBlue.pdf" download class="lv-btn">PDF</a>
+              </div>
+              <div class="logo-variant">
+                <span class="lv-dot lv-black"></span>
+                <span class="lv-label">Black</span>
+                <a href="assets/logos/S-Mark-Black.svg" download class="lv-btn">SVG</a>
+                <a href="assets/logos/S-Mark-Black.pdf" download class="lv-btn">PDF</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SERHANT. WORDMARK -->
+        <div class="logo-package-card fade-in">
+          <div class="logo-preview lp-dark">
+            <img src="assets/logos/SERHANT-White.svg" alt="SERHANT.">
+          </div>
+          <div class="logo-package-info">
+            <div class="logo-package-name">SERHANT.</div>
+            <div class="logo-package-desc">Core national brand wordmark without the local identifier. Use when representing the broader SERHANT. brand.</div>
+            <div class="logo-variants">
+              <div class="logo-variant">
+                <span class="lv-dot lv-white"></span>
+                <span class="lv-label">White</span>
+                <a href="assets/logos/SERHANT-White.svg" download class="lv-btn">SVG</a>
+                <a href="assets/logos/SERHANT-White.pdf" download class="lv-btn">PDF</a>
+              </div>
+              <div class="logo-variant">
+                <span class="lv-dot lv-blue"></span>
+                <span class="lv-label">SERHANT. Blue</span>
+                <a href="assets/logos/SERHANT-SerhantBlue.svg" download class="lv-btn">SVG</a>
+                <a href="assets/logos/SERHANT-SerhantBlue.pdf" download class="lv-btn">PDF</a>
+              </div>
+              <div class="logo-variant">
+                <span class="lv-dot lv-black"></span>
+                <span class="lv-label">Black</span>
+                <a href="assets/logos/SERHANT-Black.svg" download class="lv-btn">SVG</a>
+                <a href="assets/logos/SERHANT-Black.pdf" download class="lv-btn">PDF</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   </section>
 
