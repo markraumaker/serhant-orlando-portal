@@ -3319,3 +3319,30 @@ table { border-collapse: collapse; width: 100%; }
   gap: 10px !important;
 }
 
+
+/* Phone features list */
+.phone-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.phone-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.4;
+}
+.phone-features li::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #6868ee;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(104,104,238,0.6);
+}
