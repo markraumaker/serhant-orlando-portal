@@ -3244,3 +3244,78 @@ table { border-collapse: collapse; width: 100%; }
     text-align: center;
   }
 }
+
+/* ============================================================
+   TOOL CARD UPGRADE — Rich gradients, sweep shimmer, depth
+   ============================================================ */
+
+/* Override tool-card with richer treatment */
+.tool-card {
+  background: linear-gradient(145deg,
+    rgba(25,25,140,0.55) 0%,
+    rgba(15,15,100,0.4) 40%,
+    rgba(20,20,120,0.45) 100%) !important;
+  border: 1px solid rgba(80,80,220,0.3) !important;
+  box-shadow:
+    0 4px 24px rgba(0,0,10,0.3),
+    0 1px 0 rgba(120,120,255,0.1) inset,
+    0 -1px 0 rgba(0,0,50,0.3) inset !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Sweep shimmer on hover */
+.tool-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(105deg,
+    transparent 0%,
+    rgba(150,150,255,0.06) 40%,
+    rgba(180,160,255,0.12) 50%,
+    rgba(150,150,255,0.06) 60%,
+    transparent 100%);
+  opacity: 0;
+  transition: left 0.55s ease, opacity 0.2s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+.tool-card:hover::after {
+  left: 140%;
+  opacity: 1;
+}
+
+/* Icon gets an orange shimmer on hover */
+.tool-card:hover .tool-card-icon {
+  background: linear-gradient(145deg, rgba(90,80,240,0.4) 0%, rgba(60,50,200,0.28) 100%) !important;
+  border-color: rgba(130,120,255,0.7) !important;
+  box-shadow:
+    0 0 20px rgba(100,80,240,0.35),
+    0 0 6px rgba(180,160,255,0.2),
+    inset 0 1px 0 rgba(180,160,255,0.25) !important;
+}
+
+/* Premium card hover */
+.tool-card:hover {
+  transform: translateY(-8px) scale(1.015) !important;
+  border-color: rgba(110,100,250,0.7) !important;
+  box-shadow:
+    0 0 0 1px rgba(110,100,250,0.2),
+    0 0 40px rgba(80,60,220,0.3),
+    0 0 80px rgba(80,60,220,0.12),
+    0 24px 60px rgba(0,0,20,0.5),
+    inset 0 1px 0 rgba(160,140,255,0.25) !important;
+  background: linear-gradient(145deg,
+    rgba(32,32,165,0.65) 0%,
+    rgba(20,20,130,0.5) 40%,
+    rgba(26,26,148,0.55) 100%) !important;
+}
+
+/* Arrow gets a color pop */
+.tool-card:hover .tool-card-arrow {
+  color: #a0a0ff !important;
+  gap: 10px !important;
+}
+

@@ -101,17 +101,40 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: var(--space-2);
-      color: var(--color-text-faint);
-      font-size: var(--text-xs);
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      animation: bounce 2s ease-in-out infinite;
+      gap: 10px;
     }
-    @keyframes bounce {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(6px); }
+    .scroll-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+    .scroll-mouse {
+      width: 28px;
+      height: 44px;
+      border: 2px solid rgba(255,255,255,0.25);
+      border-radius: 14px;
+      display: flex;
+      justify-content: center;
+      padding-top: 8px;
+      animation: mouse-float 2.5s ease-in-out infinite;
+    }
+    .scroll-wheel {
+      width: 4px;
+      height: 8px;
+      background: rgba(255,255,255,0.45);
+      border-radius: 4px;
+      animation: wheel-scroll 2.5s ease-in-out infinite;
+    }
+    @keyframes mouse-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+    @keyframes wheel-scroll {
+      0% { opacity: 1; transform: translateY(0); }
+      50% { opacity: 0.3; transform: translateY(6px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
     /* Tools Section — ambient light layer */
@@ -204,7 +227,10 @@
       </div>
     </div>
     <div class="hero-scroll">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      <span class="scroll-label">SCROLL</span>
+      <div class="scroll-mouse">
+        <div class="scroll-wheel"></div>
+      </div>
     </div>
   </section>
 
@@ -447,47 +473,97 @@
           <a href="https://app.serhantorlandohub.com" target="_blank" class="btn btn-primary phone-cta">Open the Hub</a>
         </div>
         <div class="phone-mockups">
-          <!-- Phone 2 (back, rotated) — Home/Pipeline screen -->
+          <!-- Phone back — Rankings screen -->
           <div class="phone-wrap phone-back">
-            <div class="phone-mockup">
-              <div class="phone-screen">
-                <div class="ps-nav">S. Orlando</div>
-                <div class="ps-stat-row">
-                  <div class="ps-stat"><div class="ps-stat-val">75</div><div class="ps-stat-lbl">ACTIVE</div></div>
-                  <div class="ps-stat"><div class="ps-stat-val">$52.9M</div><div class="ps-stat-lbl">CLOSED</div></div>
-                </div>
-                <div class="ps-tools-preview">
-                  <div class="ps-tool-item">Studios</div>
-                  <div class="ps-tool-item">S.RM</div>
-                  <div class="ps-tool-item">Rankings</div>
-                  <div class="ps-tool-item">S.MPLE</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Phone 1 (front) — Rankings screen -->
-          <div class="phone-wrap phone-front">
             <div class="phone-mockup">
               <div class="phone-screen">
                 <div class="ps-header">AGENT RANKINGS</div>
                 <div class="ps-eyebrow">SERHANT. ORLANDO &middot; YTD</div>
                 <div class="ps-rank-row">
                   <span class="ps-num ps-gold">1</span>
-                  <span class="ps-avatar">SK</span>
+                  <div class="ps-avatar" style="background:linear-gradient(135deg,#c9a84c,#a08030)">SK</div>
                   <span class="ps-name">Silvia Kinkela</span>
                   <span class="ps-vol">$4.5M</span>
                 </div>
                 <div class="ps-rank-row">
                   <span class="ps-num ps-silver">2</span>
-                  <span class="ps-avatar">JR</span>
-                  <span class="ps-name">James Rivera</span>
-                  <span class="ps-vol">$3.8M</span>
+                  <div class="ps-avatar" style="background:linear-gradient(135deg,#8090aa,#606880)">VC</div>
+                  <span class="ps-name">V. Cordaro</span>
+                  <span class="ps-vol">$4.1M</span>
                 </div>
                 <div class="ps-rank-row">
                   <span class="ps-num ps-bronze">3</span>
-                  <span class="ps-avatar">MT</span>
-                  <span class="ps-name">Maria Torres</span>
-                  <span class="ps-vol">$3.2M</span>
+                  <div class="ps-avatar" style="background:linear-gradient(135deg,#c07849,#905030)">MD</div>
+                  <span class="ps-name">Mary De Boer</span>
+                  <span class="ps-vol">$2.4M</span>
+                </div>
+                <div class="ps-rank-row" style="opacity:0.5">
+                  <span class="ps-num" style="color:rgba(255,255,255,0.3)">4</span>
+                  <div class="ps-avatar" style="background:#2D2D9E">JB</div>
+                  <span class="ps-name">J. Barreiro</span>
+                  <span class="ps-vol">$2.9M</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Phone front — Hub Home screen -->
+          <div class="phone-wrap phone-front">
+            <div class="phone-mockup">
+              <div class="phone-screen" style="gap:6px;">
+                <!-- Hub app nav -->
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:0 2px 6px;border-bottom:1px solid rgba(255,255,255,0.08);">
+                  <div style="font-size:9px;font-weight:800;color:white;letter-spacing:1px;">S. ORLANDO HUB</div>
+                  <div style="width:18px;height:18px;border-radius:50%;background:#F37021;font-size:7px;font-weight:800;color:white;display:flex;align-items:center;justify-content:center;">MR</div>
+                </div>
+                <!-- Stats strip -->
+                <div style="display:flex;gap:4px;">
+                  <div style="flex:1;background:rgba(255,255,255,0.06);border-radius:6px;padding:6px 4px;text-align:center;">
+                    <div style="font-size:10px;font-weight:800;color:#F37021;">75</div>
+                    <div style="font-size:6px;color:rgba(255,255,255,0.4);letter-spacing:0.5px;">ACTIVE</div>
+                  </div>
+                  <div style="flex:1;background:rgba(255,255,255,0.06);border-radius:6px;padding:6px 4px;text-align:center;">
+                    <div style="font-size:9px;font-weight:800;color:white;">$52.9M</div>
+                    <div style="font-size:6px;color:rgba(255,255,255,0.4);letter-spacing:0.5px;">CLOSED</div>
+                  </div>
+                  <div style="flex:1;background:rgba(255,255,255,0.06);border-radius:6px;padding:6px 4px;text-align:center;">
+                    <div style="font-size:10px;font-weight:800;color:white;">6.6K</div>
+                    <div style="font-size:6px;color:rgba(255,255,255,0.4);letter-spacing:0.5px;">FANS</div>
+                  </div>
+                </div>
+                <!-- Tools grid -->
+                <div style="font-size:7px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.35);margin-top:4px;">YOUR TOOLS</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;">
+                  <div style="background:rgba(243,112,33,0.15);border:1px solid rgba(243,112,33,0.25);border-radius:8px;padding:8px 4px;text-align:center;">
+                    <div style="font-size:12px;margin-bottom:2px;">🎬</div>
+                    <div style="font-size:6px;font-weight:700;color:white;">Studios</div>
+                  </div>
+                  <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 4px;text-align:center;">
+                    <div style="font-size:12px;margin-bottom:2px;">👤</div>
+                    <div style="font-size:6px;font-weight:700;color:white;">S.RM</div>
+                  </div>
+                  <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 4px;text-align:center;">
+                    <div style="font-size:12px;margin-bottom:2px;">📋</div>
+                    <div style="font-size:6px;font-weight:700;color:white;">TB</div>
+                  </div>
+                  <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 4px;text-align:center;">
+                    <div style="font-size:12px;margin-bottom:2px;">⭐</div>
+                    <div style="font-size:6px;font-weight:700;color:white;">S.MPLE</div>
+                  </div>
+                  <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 4px;text-align:center;">
+                    <div style="font-size:12px;margin-bottom:2px;">📧</div>
+                    <div style="font-size:6px;font-weight:700;color:white;">Email</div>
+                  </div>
+                  <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 4px;text-align:center;">
+                    <div style="font-size:12px;margin-bottom:2px;">🌐</div>
+                    <div style="font-size:6px;font-weight:700;color:white;">Website</div>
+                  </div>
+                </div>
+                <!-- Bottom nav -->
+                <div style="display:flex;justify-content:space-around;padding:8px 0 4px;border-top:1px solid rgba(255,255,255,0.08);margin-top:auto;">
+                  <div style="text-align:center;"><div style="font-size:10px;">🏠</div><div style="font-size:5px;color:#F37021;font-weight:700;">HOME</div></div>
+                  <div style="text-align:center;"><div style="font-size:10px;">💬</div><div style="font-size:5px;color:rgba(255,255,255,0.3);">CHAT</div></div>
+                  <div style="text-align:center;"><div style="font-size:10px;">🏆</div><div style="font-size:5px;color:rgba(255,255,255,0.3);">RANKS</div></div>
+                  <div style="text-align:center;"><div style="font-size:10px;">👤</div><div style="font-size:5px;color:rgba(255,255,255,0.3);">YOU</div></div>
                 </div>
               </div>
             </div>
