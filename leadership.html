@@ -8,171 +8,147 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
-    /* ── AUTH GATE ── */
-    #auth-gate {
-      position: fixed; inset: 0; z-index: 9999;
-      background: #0a0a55;
-      display: flex; align-items: center; justify-content: center;
-      flex-direction: column; gap: 20px;
-    }
-    #auth-gate img { height: 36px; margin-bottom: 16px; }
-    #auth-gate h2 { font-size: 22px; font-weight: 800; color: white; }
-    #auth-gate p { font-size: 14px; color: rgba(255,255,255,0.45); }
-    .auth-form { display: flex; flex-direction: column; gap: 12px; width: 320px; }
-    .auth-input {
-      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 10px; padding: 14px 18px; font-size: 14px;
-      color: white; font-family: 'Montserrat', sans-serif; outline: none;
-    }
-    .auth-input::placeholder { color: rgba(255,255,255,0.3); }
-    .auth-input:focus { border-color: rgba(255,255,255,0.4); }
-    .auth-btn {
-      background: #121275; border: none; border-radius: 10px;
-      padding: 14px; font-size: 14px; font-weight: 700;
-      color: white; cursor: pointer; font-family: 'Montserrat', sans-serif;
-      transition: background 0.2s;
-    }
-    .auth-btn:hover { background: #1a1a9a; }
-    .auth-error { font-size: 12px; color: #ff6b6b; text-align: center; display: none; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{font-family:'Montserrat',sans-serif;background:#080820;color:white;min-height:100vh;}
 
-    /* ── LEADERSHIP LAYOUT ── */
-    #leadership-content { display: none; }
+    /* AUTH */
+    #auth-gate{position:fixed;inset:0;z-index:9999;background:#080820;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+    #auth-gate img{height:32px;margin-bottom:16px;}
+    #auth-gate h2{font-size:20px;font-weight:900;}
+    #auth-gate p{font-size:13px;color:rgba(255,255,255,0.4);}
+    .auth-form{display:flex;flex-direction:column;gap:10px;width:300px;margin-top:8px;}
+    .auth-input{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:13px 16px;font-size:13px;color:white;font-family:'Montserrat',sans-serif;outline:none;}
+    .auth-input:focus{border-color:rgba(255,255,255,0.3);}
+    .auth-input::placeholder{color:rgba(255,255,255,0.25);}
+    .auth-btn{background:#121275;border:none;border-radius:10px;padding:13px;font-size:13px;font-weight:700;color:white;cursor:pointer;font-family:'Montserrat',sans-serif;}
+    .auth-btn:hover{background:#1a1a9a;}
+    .auth-err{font-size:11px;color:#f87171;text-align:center;display:none;}
 
-    .ld-header {
-      background: linear-gradient(135deg, #0a0a33 0%, #121275 100%);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      padding: 24px 48px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .ld-header-left { display: flex; align-items: center; gap: 20px; }
-    .ld-header-left img { height: 28px; }
-    .ld-title { font-size: 20px; font-weight: 900; color: white; }
-    .ld-subtitle { font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 600; margin-top: 2px; }
-    .ld-logout-btn {
-      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4);
-      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px; padding: 8px 16px; cursor: pointer;
-      font-family: 'Montserrat', sans-serif; transition: all 0.2s;
-    }
-    .ld-logout-btn:hover { color: white; background: rgba(255,255,255,0.1); }
+    /* SHELL */
+    #app{display:none;}
+    .top-bar{background:linear-gradient(135deg,#06061a 0%,#0f0f60 100%);border-bottom:1px solid rgba(255,255,255,0.07);padding:18px 48px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+    .top-bar-left{display:flex;align-items:center;gap:20px;}
+    .top-bar-left img{height:26px;}
+    .top-bar-title{font-size:18px;font-weight:900;}
+    .top-bar-sub{font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;font-weight:600;}
+    .sign-out{font-size:11px;font-weight:700;color:rgba(255,255,255,0.35);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 14px;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;}
+    .sign-out:hover{color:white;background:rgba(255,255,255,0.1);}
 
-    /* ── TABS ── */
-    .ld-tabs {
-      background: rgba(10,10,55,0.95);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      padding: 0 48px;
-      display: flex; gap: 0;
-    }
-    .ld-tab {
-      padding: 16px 28px; font-size: 13px; font-weight: 700;
-      color: rgba(255,255,255,0.4); cursor: pointer; border: none;
-      background: none; font-family: 'Montserrat', sans-serif;
-      border-bottom: 3px solid transparent; transition: all 0.2s;
-      letter-spacing: 0.03em;
-    }
-    .ld-tab:hover { color: rgba(255,255,255,0.7); }
-    .ld-tab.active { color: white; border-bottom-color: #c9a84c; }
+    /* PIPELINE STRIP */
+    .pipeline-strip{display:flex;gap:12px;padding:20px 48px;background:#06061a;border-bottom:1px solid rgba(255,255,255,0.05);}
+    .pp{display:flex;align-items:center;gap:10px;padding:12px 20px;border-radius:10px;flex:1;}
+    .pp.cl{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);}
+    .pp.pe{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);}
+    .pp.li{background:rgba(104,104,238,0.1);border:1px solid rgba(104,104,238,0.2);}
+    .pp.to{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);}
+    .pp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+    .cl .pp-dot{background:#10b981;}.pe .pp-dot{background:#f59e0b;}.li .pp-dot{background:#6868ee;}.to .pp-dot{background:rgba(255,255,255,0.3);}
+    .pp-lbl{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.35);}
+    .pp-val{font-size:20px;font-weight:900;}
+    .pp-sub{font-size:10px;color:rgba(255,255,255,0.3);font-weight:600;}
 
-    /* ── MAIN CONTENT ── */
-    .ld-body { background: #0d0d2e; min-height: calc(100vh - 130px); padding: 40px 48px; }
+    /* TABS */
+    .tabs{display:flex;padding:0 48px;background:#06061a;border-bottom:1px solid rgba(255,255,255,0.07);}
+    .tab{padding:14px 24px;font-size:12px;font-weight:700;color:rgba(255,255,255,0.35);cursor:pointer;border:none;background:none;font-family:'Montserrat',sans-serif;border-bottom:3px solid transparent;transition:all .2s;letter-spacing:.04em;}
+    .tab:hover{color:rgba(255,255,255,0.65);}
+    .tab.on{color:white;border-bottom-color:#c9a84c;}
 
-    /* ── PIPELINE BAR ── */
-    .pipeline-bar {
-      display: flex; gap: 16px; margin-bottom: 32px; flex-wrap: wrap;
-    }
-    .pipeline-pill {
-      display: flex; align-items: center; gap: 10px;
-      padding: 14px 24px; border-radius: 12px; flex: 1; min-width: 200px;
-    }
-    .pipeline-pill.closed { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); }
-    .pipeline-pill.pending { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25); }
-    .pipeline-pill.listed { background: rgba(104,104,238,0.12); border: 1px solid rgba(104,104,238,0.25); }
-    .pipeline-pill.total { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); }
-    .pp-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .closed .pp-dot { background: #10b981; }
-    .pending .pp-dot { background: #f59e0b; }
-    .listed .pp-dot { background: #6868ee; }
-    .total .pp-dot { background: rgba(255,255,255,0.4); }
-    .pp-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.4); }
-    .pp-value { font-size: 22px; font-weight: 900; color: white; }
-    .pp-units { font-size: 11px; color: rgba(255,255,255,0.35); font-weight: 600; }
+    /* BODY */
+    .body{padding:36px 48px;}
+    .sec-title{font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;}
+    .sec{margin-bottom:32px;}
 
-    /* ── PACE ── */
-    .ld-section-title { font-size: 11px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 14px; }
-    .pace-card { background: rgba(18,18,117,0.35); border: 1px solid rgba(80,80,200,0.2); border-radius: 16px; padding: 24px 28px; margin-bottom: 24px; }
-    .pace-row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
-    .pace-row:last-child { margin-bottom: 0; }
-    .pace-label { font-size: 13px; font-weight: 700; color: white; width: 80px; flex-shrink: 0; }
-    .pace-bar-wrap { flex: 1; background: rgba(255,255,255,0.08); border-radius: 6px; height: 8px; position: relative; }
-    .pace-bar-fill { height: 100%; border-radius: 6px; transition: width 0.8s ease; }
-    .pace-bar-goal { position: absolute; top: -4px; bottom: -4px; width: 2px; background: rgba(255,255,255,0.3); }
-    .pace-nums { font-size: 12px; color: rgba(255,255,255,0.5); width: 200px; text-align: right; flex-shrink: 0; }
-    .pace-pct { font-size: 12px; font-weight: 700; width: 52px; text-align: right; flex-shrink: 0; }
+    /* CARDS */
+    .cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+    .cards-2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+    .card{background:rgba(18,18,117,0.3);border:1px solid rgba(80,80,200,0.18);border-radius:14px;padding:20px 24px;}
+    .card-lbl{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px;}
+    .card-val{font-size:26px;font-weight:900;}
+    .card-val.green{color:#10b981;}.card-val.amber{color:#f59e0b;}.card-val.red{color:#f87171;}.card-val.gold{color:#c9a84c;}.card-val.purple{color:#6868ee;}
+    .card-sub{font-size:11px;color:rgba(255,255,255,0.3);margin-top:6px;font-weight:600;}
 
-    /* ── LEADERBOARD ── */
-    .ld-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    @media (max-width: 1100px) { .ld-grid { grid-template-columns: 1fr; } }
+    /* LEADERBOARD */
+    .lb-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    @media(max-width:1100px){.lb-grid{grid-template-columns:1fr;}}
+    .agent-row{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:12px;padding:16px 20px;transition:border-color .2s;}
+    .agent-row:hover{border-color:rgba(104,104,238,0.35);}
+    .agent-top{display:flex;align-items:center;margin-bottom:10px;}
+    .agent-num{font-size:10px;font-weight:900;color:rgba(255,255,255,0.2);width:26px;}
+    .agent-av{width:34px;height:34px;border-radius:50%;background:rgba(104,104,238,0.25);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
+    .agent-nm{font-size:14px;font-weight:800;flex:1;margin-left:10px;}
+    .agent-pipe{font-size:17px;font-weight:900;}
+    .agent-bk{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;font-weight:600;}
+    .agent-bk span{color:rgba(255,255,255,0.35);}
+    .cl-val{color:#10b981;}.pe-val{color:#f59e0b;}.li-val{color:#6868ee;}
+    .stale-tag{background:rgba(245,158,11,0.15);color:#f59e0b;font-size:9px;font-weight:700;letter-spacing:2px;padding:2px 7px;border-radius:4px;margin-left:6px;}
 
-    .agent-card {
-      background: rgba(18,18,117,0.25); border: 1px solid rgba(80,80,200,0.18);
-      border-radius: 14px; padding: 18px 22px;
-      transition: border-color 0.2s;
-    }
-    .agent-card:hover { border-color: rgba(104,104,238,0.4); }
-    .agent-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-    .agent-rank { font-size: 11px; font-weight: 900; color: rgba(255,255,255,0.25); width: 28px; }
-    .agent-avatar {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(104,104,238,0.3);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 800; color: white; flex-shrink: 0;
-    }
-    .agent-name { font-size: 15px; font-weight: 800; color: white; flex: 1; margin-left: 10px; }
-    .agent-pipeline { font-size: 18px; font-weight: 900; color: white; }
-    .agent-breakdown {
-      display: flex; gap: 16px; font-size: 11px; font-weight: 600;
-    }
-    .agent-breakdown span { color: rgba(255,255,255,0.4); }
-    .agent-breakdown .val-closed { color: #10b981; }
-    .agent-breakdown .val-pending { color: #f59e0b; }
-    .agent-breakdown .val-listed { color: #6868ee; }
+    /* GCI TABLE */
+    .gci-wrap{background:rgba(18,18,117,0.3);border:1px solid rgba(80,80,200,0.18);border-radius:14px;overflow:hidden;}
+    table{width:100%;border-collapse:collapse;}
+    th{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.25);padding:0 16px 12px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.07);}
+    th:last-child{text-align:right;}
+    td{padding:13px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px;color:rgba(255,255,255,0.7);font-weight:600;}
+    td:last-child{text-align:right;font-weight:800;color:#c9a84c;}
+    tr:last-child td{border-bottom:none;}
+    tr.total-row td{border-top:1px solid rgba(255,255,255,0.12);color:white;font-weight:900;}
+    tr.total-row td:last-child{color:#c9a84c;font-size:15px;}
 
-    /* ── GCI TABLE ── */
-    .gci-table { width: 100%; border-collapse: collapse; }
-    .gci-table th {
-      font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
-      color: rgba(255,255,255,0.3); padding: 0 12px 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .gci-table th:last-child { text-align: right; }
-    .gci-table td { padding: 14px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; color: rgba(255,255,255,0.75); font-weight: 600; }
-    .gci-table td:last-child { text-align: right; font-weight: 800; color: #c9a84c; }
-    .gci-table tr:last-child td { border-bottom: none; }
-    .gci-table tr:hover td { background: rgba(255,255,255,0.03); }
-    .gci-units { font-size: 11px; color: rgba(255,255,255,0.3); font-weight: 600; }
+    /* PACE */
+    .pace-card{background:rgba(18,18,117,0.3);border:1px solid rgba(80,80,200,0.18);border-radius:14px;padding:24px 28px;}
+    .pace-row{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+    .pace-row:last-of-type{margin-bottom:0;}
+    .pace-lbl{font-size:12px;font-weight:700;color:white;width:70px;flex-shrink:0;}
+    .pace-track{flex:1;background:rgba(255,255,255,0.07);border-radius:5px;height:7px;position:relative;}
+    .pace-fill{height:100%;border-radius:5px;transition:width .8s ease;}
+    .pace-goal{position:absolute;top:-5px;bottom:-5px;width:2px;background:rgba(255,255,255,0.25);}
+    .pace-pct{font-size:12px;font-weight:800;width:48px;text-align:right;flex-shrink:0;}
+    .pace-info{font-size:11px;color:rgba(255,255,255,0.35);width:220px;text-align:right;flex-shrink:0;}
 
-    /* ── FINANCIALS ── */
-    .fin-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 28px; }
-    .fin-card { background: rgba(18,18,117,0.35); border: 1px solid rgba(80,80,200,0.2); border-radius: 14px; padding: 22px 24px; }
-    .fin-card-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 8px; }
-    .fin-card-value { font-size: 28px; font-weight: 900; }
-    .fin-card-value.green { color: #10b981; }
-    .fin-card-value.red { color: #f87171; }
-    .fin-card-value.gold { color: #c9a84c; }
-    .fin-card-sub { font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 6px; font-weight: 600; }
+    /* CHART */
+    .chart-bars{display:flex;align-items:flex-end;gap:8px;height:120px;padding:0 4px;position:relative;}
+    .chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+    .chart-bar{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:height .5s ease;}
+    .chart-lbl{font-size:9px;color:rgba(255,255,255,0.35);font-weight:600;}
+    .chart-amt{font-size:9px;color:rgba(255,255,255,0.55);font-weight:700;}
+    .burn-line{position:absolute;left:0;right:0;border-top:1px dashed rgba(248,113,113,0.6);}
 
-    .loading-spinner {
-      display: flex; align-items: center; justify-content: center;
-      padding: 48px; color: rgba(255,255,255,0.3); font-size: 13px; font-weight: 600;
-      gap: 12px;
-    }
-    .spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.1); border-top-color: #6868ee; border-radius: 50%; animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    /* ENGAGEMENT */
+    .eng-section{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:14px;padding:20px 24px;margin-bottom:14px;}
+    .eng-header{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+    .eng-title{font-size:13px;font-weight:800;}
+    .eng-list{display:flex;flex-direction:column;gap:12px;}
+    .eng-row{display:flex;align-items:center;gap:12px;}
+    .eng-av{width:36px;height:36px;border-radius:50%;background:rgba(104,104,238,0.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
+    .eng-name{font-size:13px;font-weight:700;}
+    .eng-meta{font-size:11px;color:rgba(255,255,255,0.4);font-weight:600;}
+    .ghost .eng-meta{color:#f87171;}
+    .dot-green{display:inline-block;width:6px;height:6px;border-radius:50%;background:#10b981;margin-right:4px;}
 
-    .ld-section { margin-bottom: 36px; }
-    .stale-badge { background: rgba(245,158,11,0.15); color: #f59e0b; font-size: 10px; font-weight: 700; letter-spacing: 2px; padding: 3px 8px; border-radius: 4px; margin-left: 8px; }
+    /* BRAIN */
+    .brain-q-list{display:flex;flex-direction:column;gap:10px;}
+    .brain-q{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:10px;padding:14px 18px;}
+    .brain-q-text{font-size:13px;color:white;font-weight:600;margin-bottom:4px;}
+    .brain-q-meta{font-size:11px;color:rgba(255,255,255,0.35);font-weight:600;}
+
+    /* ANNOUNCEMENTS */
+    .ann-item{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:12px;padding:16px 20px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:10px;}
+    .ann-type{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#f59e0b;margin-bottom:5px;}
+    .ann-title{font-size:14px;font-weight:800;}
+    .ann-meta{font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px;}
+
+    /* PAYMENTS */
+    .pay-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+    .pay-row:last-child{border-bottom:none;}
+    .pay-name{font-size:13px;font-weight:700;}
+    .pay-date{font-size:11px;color:rgba(255,255,255,0.35);font-weight:600;}
+    .pay-amt{font-size:14px;font-weight:900;color:#10b981;}
+
+    .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.1);border-top-color:#6868ee;border-radius:50%;animation:spin .7s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .loading{display:flex;align-items:center;justify-content:center;gap:10px;padding:40px;color:rgba(255,255,255,0.3);font-size:12px;font-weight:600;}
+    .api-notice{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:14px 18px;font-size:12px;color:rgba(245,158,11,0.8);font-weight:600;margin-bottom:20px;}
   </style>
 </head>
 <body>
@@ -183,361 +159,378 @@
   <h2>Leadership Access</h2>
   <p>Restricted to authorized accounts only.</p>
   <form class="auth-form" id="auth-form">
-    <input type="email" class="auth-input" id="auth-email" placeholder="Email address" required>
-    <input type="password" class="auth-input" id="auth-password" placeholder="Password" required>
-    <button type="submit" class="auth-btn" id="auth-submit">Sign In</button>
-    <div class="auth-error" id="auth-error">Access denied or incorrect credentials.</div>
+    <input type="email" class="auth-input" id="ae" placeholder="Email address" required>
+    <input type="password" class="auth-input" id="ap" placeholder="Password" required>
+    <button type="submit" class="auth-btn" id="asub">Sign In</button>
+    <div class="auth-err" id="aerr">Access denied. Leadership accounts only.</div>
   </form>
 </div>
 
-<!-- LEADERSHIP DASHBOARD -->
-<div id="leadership-content">
-
-  <div class="ld-header">
-    <div class="ld-header-left">
+<!-- APP -->
+<div id="app">
+  <div class="top-bar">
+    <div class="top-bar-left">
       <img src="assets/logos/SERHANT-Orlando-White.svg" alt="SERHANT. Orlando">
       <div>
-        <div class="ld-title">Leadership Dashboard</div>
-        <div class="ld-subtitle" id="ld-data-date">Loading...</div>
+        <div class="top-bar-title">Leadership Dashboard</div>
+        <div class="top-bar-sub" id="data-date">Loading...</div>
       </div>
     </div>
-    <button class="ld-logout-btn" id="logout-btn">Sign Out</button>
+    <button class="sign-out" id="sign-out-btn">Sign Out</button>
   </div>
 
-  <div class="ld-tabs">
-    <button class="ld-tab active" data-tab="sales">Sales</button>
-    <button class="ld-tab" data-tab="gci">GCI</button>
-    <button class="ld-tab" data-tab="pace">Pace</button>
+  <!-- PIPELINE STRIP -->
+  <div class="pipeline-strip">
+    <div class="pp cl"><div class="pp-dot"></div><div><div class="pp-lbl">Closed YTD</div><div class="pp-val" id="pv-cl">--</div><div class="pp-sub" id="pu-cl">-- deals</div></div></div>
+    <div class="pp pe"><div class="pp-dot"></div><div><div class="pp-lbl">Pending</div><div class="pp-val" id="pv-pe">--</div><div class="pp-sub" id="pu-pe">-- deals</div></div></div>
+    <div class="pp li"><div class="pp-dot"></div><div><div class="pp-lbl">Active Listings</div><div class="pp-val" id="pv-li">--</div><div class="pp-sub" id="pu-li">-- listings</div></div></div>
+    <div class="pp to"><div class="pp-dot"></div><div><div class="pp-lbl">Total Pipeline</div><div class="pp-val" id="pv-to">--</div><div class="pp-sub">closed + pending + listed</div></div></div>
   </div>
 
-  <div class="ld-body">
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab on" data-tab="hub">Hub</button>
+    <button class="tab" data-tab="sales">Sales</button>
+    <button class="tab" data-tab="financials">Financials</button>
+    <button class="tab" data-tab="gci">GCI</button>
+    <button class="tab" data-tab="brain">Brain</button>
+  </div>
 
-    <!-- PIPELINE BAR (always visible) -->
-    <div class="pipeline-bar">
-      <div class="pipeline-pill closed">
-        <div class="pp-dot"></div>
-        <div>
-          <div class="pp-label">Closed YTD</div>
-          <div class="pp-value" id="pp-closed-vol">--</div>
-          <div class="pp-units" id="pp-closed-units">-- deals</div>
+  <div class="body">
+
+    <!-- HUB TAB -->
+    <div id="tab-hub">
+      <div class="sec">
+        <div class="sec-title">2026 Office Pace</div>
+        <div class="pace-card" id="pace-content"><div class="loading"><div class="spinner"></div>Calculating...</div></div>
+      </div>
+      <div class="sec">
+        <div class="sec-title">Office Stats</div>
+        <div class="cards-3">
+          <div class="card"><div class="card-lbl">Closed Volume YTD</div><div class="card-val gold" id="s-vol">--</div></div>
+          <div class="card"><div class="card-lbl">Units Closed</div><div class="card-val" id="s-units">--</div><div class="card-sub">transactions YTD</div></div>
+          <div class="card"><div class="card-lbl">Avg Sale Price</div><div class="card-val" id="s-avg">--</div></div>
+          <div class="card"><div class="card-lbl">Total GCI YTD</div><div class="card-val green" id="s-gci">--</div></div>
+          <div class="card"><div class="card-lbl">Pending Value</div><div class="card-val amber" id="s-pen">--</div></div>
+          <div class="card"><div class="card-lbl">Active Listings Value</div><div class="card-val purple" id="s-lst">--</div></div>
         </div>
       </div>
-      <div class="pipeline-pill pending">
-        <div class="pp-dot"></div>
-        <div>
-          <div class="pp-label">Pending</div>
-          <div class="pp-value" id="pp-pending-vol">--</div>
-          <div class="pp-units" id="pp-pending-units">-- deals</div>
-        </div>
+      <div class="sec">
+        <div class="sec-title">Announcements</div>
+        <div id="ann-list"><div class="api-notice">Announcements load after Claude Code wires the /api/leadership-data endpoint.</div></div>
       </div>
-      <div class="pipeline-pill listed">
-        <div class="pp-dot"></div>
-        <div>
-          <div class="pp-label">Active Listings</div>
-          <div class="pp-value" id="pp-listed-vol">--</div>
-          <div class="pp-units" id="pp-listed-units">-- listings</div>
-        </div>
-      </div>
-      <div class="pipeline-pill total">
-        <div class="pp-dot"></div>
-        <div>
-          <div class="pp-label">Total Pipeline</div>
-          <div class="pp-value" id="pp-total-vol">--</div>
-          <div class="pp-units">closed + pending + listed</div>
-        </div>
+      <div class="sec">
+        <div class="sec-title">Agent Engagement</div>
+        <div id="eng-content"><div class="api-notice">Engagement data loads after Claude Code wires the /api/leadership-data endpoint.</div></div>
       </div>
     </div>
 
     <!-- SALES TAB -->
-    <div id="tab-sales">
-      <div class="ld-section">
-        <div class="ld-section-title">Agent Leaderboard — Total Pipeline</div>
-        <div id="leaderboard-grid" class="ld-grid">
-          <div class="loading-spinner"><div class="spinner"></div>Loading agent data...</div>
-        </div>
+    <div id="tab-sales" style="display:none;">
+      <div class="sec">
+        <div class="sec-title">Agent Leaderboard — Total Pipeline</div>
+        <div class="lb-grid" id="lb-grid"><div class="loading"><div class="spinner"></div>Loading agents...</div></div>
+      </div>
+    </div>
+
+    <!-- FINANCIALS TAB -->
+    <div id="tab-financials" style="display:none;">
+      <div class="api-notice" id="fin-notice">Financials (Bill.com + Square) load after Claude Code wires the /api/leadership-data endpoint. Sales data below is live from TB.</div>
+      <div class="sec">
+        <div class="sec-title">This Month</div>
+        <div class="cards-3" id="fin-month"><div class="loading"><div class="spinner"></div></div></div>
+      </div>
+      <div class="sec">
+        <div class="sec-title">Year to Date</div>
+        <div class="cards-3" id="fin-ytd"><div class="loading"><div class="spinner"></div></div></div>
+      </div>
+      <div class="sec">
+        <div class="sec-title">Trailing 6 Months</div>
+        <div class="card" id="fin-chart"><div class="loading"><div class="spinner"></div></div></div>
+      </div>
+      <div class="sec">
+        <div class="sec-title">Recent Payments</div>
+        <div class="card" id="fin-payments"><div class="loading"><div class="spinner"></div></div></div>
+      </div>
+      <div class="sec">
+        <div class="sec-title">Revenue by Agent YTD</div>
+        <div class="gci-wrap" id="fin-agents"><div class="loading"><div class="spinner"></div></div></div>
       </div>
     </div>
 
     <!-- GCI TAB -->
     <div id="tab-gci" style="display:none;">
-      <div class="ld-section">
-        <div class="ld-section-title">GCI by Agent — YTD Closed</div>
-        <div style="background:rgba(18,18,117,0.35);border:1px solid rgba(80,80,200,0.2);border-radius:16px;overflow:hidden;">
-          <table class="gci-table" id="gci-table">
-            <thead><tr><th>Agent</th><th>Deals</th><th>Volume</th><th>GCI</th></tr></thead>
-            <tbody id="gci-tbody"><tr><td colspan="4"><div class="loading-spinner"><div class="spinner"></div>Loading...</div></td></tr></tbody>
-          </table>
-        </div>
+      <div class="sec">
+        <div class="sec-title">GCI by Agent — YTD Closed</div>
+        <div class="gci-wrap"><table><thead><tr><th>Agent</th><th>Deals</th><th>Volume</th><th>GCI</th></tr></thead><tbody id="gci-tbody"><tr><td colspan="4"><div class="loading"><div class="spinner"></div></div></td></tr></tbody></table></div>
       </div>
     </div>
 
-    <!-- PACE TAB -->
-    <div id="tab-pace" style="display:none;">
-      <div class="ld-section">
-        <div class="ld-section-title">2026 Office Pace</div>
-        <div class="pace-card">
-          <div id="pace-content">
-            <div class="loading-spinner"><div class="spinner"></div>Calculating...</div>
-          </div>
+    <!-- BRAIN TAB -->
+    <div id="tab-brain" style="display:none;">
+      <div class="api-notice">Brain stats load after Claude Code wires the /api/leadership-data endpoint.</div>
+      <div class="sec">
+        <div class="sec-title">Usage This Week</div>
+        <div class="cards-3">
+          <div class="card"><div class="card-lbl">Conversations</div><div class="card-val" id="br-convos">--</div></div>
+          <div class="card"><div class="card-lbl">Unique Agents</div><div class="card-val" id="br-agents">--</div></div>
+          <div class="card"><div class="card-lbl">vs Last Week</div><div class="card-val green" id="br-delta">--</div></div>
         </div>
       </div>
-      <div class="ld-section">
-        <div class="ld-section-title">Office Stats</div>
-        <div class="fin-cards" id="office-stats">
-          <div class="fin-card"><div class="fin-card-label">Closed YTD Volume</div><div class="fin-card-value gold" id="stat-vol">--</div></div>
-          <div class="fin-card"><div class="fin-card-label">Total GCI YTD</div><div class="fin-card-value green" id="stat-gci">--</div></div>
-          <div class="fin-card"><div class="fin-card-label">Avg Sale Price</div><div class="fin-card-value" style="color:white;" id="stat-avg">--</div></div>
-          <div class="fin-card"><div class="fin-card-label">Units Closed</div><div class="fin-card-value" style="color:white;" id="stat-units">--</div><div class="fin-card-sub">transactions YTD</div></div>
-          <div class="fin-card"><div class="fin-card-label">Pending Value</div><div class="fin-card-value" style="color:#f59e0b;" id="stat-pending">--</div></div>
-          <div class="fin-card"><div class="fin-card-label">Active Listings</div><div class="fin-card-value" style="color:#6868ee;" id="stat-listed">--</div></div>
-        </div>
+      <div class="sec">
+        <div class="sec-title">Recent Questions</div>
+        <div class="brain-q-list" id="brain-qs"><div class="api-notice">Questions load from Hub API.</div></div>
       </div>
     </div>
 
-  </div>
-</div>
+  </div><!-- /body -->
+</div><!-- /app -->
 
 <script>
-  const SUPABASE_URL = 'https://lqothpzxhxvhvyikmphx.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxb3RocHp4aHh2aHZ5aWttcGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5ODkzNjgsImV4cCI6MjA5MDU2NTM2OH0.zDE-lniLRF3TdYZmMMSQL20vF_H74_qiMlJM2tX_nKo';
-  const ALLOWED     = ['mark@serhant.com','sarah.raumaker@serhant.com'];
-  const GOALS       = { volume: 300_000_000, gci: 7_500_000 };
+const SB_URL = 'https://lqothpzxhxvhvyikmphx.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxb3RocHp4aHh2aHZ5aWttcGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5ODkzNjgsImV4cCI6MjA5MDU2NTM2OH0.zDE-lniLRF3TdYZmMMSQL20vF_H74_qiMlJM2tX_nKo';
+const HUB_API = 'https://app.serhantorlandohub.com/api/leadership-data';
+const ALLOWED = ['mark@serhant.com','sarah.raumaker@serhant.com'];
+const GOALS   = { vol: 300_000_000, gci: 7_500_000 };
+const CLOSED_S  = new Set(['Closed & Processed for Payment','Closed/Rented - Ready for processing','Rented & Processed for Payment']);
+const PENDING_S = new Set(['Contract Signed','Contract Signed - Approved','Approved to be PAT','ON HOLD - PENDING FUNDS','ON HOLD - Pending Commission Allocations']);
+const DEPARTED  = ['Alessandra Sermann Ulmann','Tyler Barnett','Kriselys Tapia','Gisele Abrantes Trautman','Gisele Abrantes','Gisele Trautman','Michael Mouris'];
 
-  const CLOSED_STATUSES = ['Closed & Processed for Payment','Closed/Rented - Ready for processing','Rented & Processed for Payment'];
-  const PENDING_STATUSES = ['Contract Signed','Contract Signed - Approved','Approved to be PAT','ON HOLD - PENDING FUNDS','ON HOLD - Pending Commission Allocations'];
-  const DEPARTED = ['Alessandra Sermann Ulmann','Tyler Barnett','Kriselys Tapia','Gisele Abrantes Trautman','Gisele Abrantes','Gisele Trautman','Michael Mouris'];
+const sb = supabase.createClient(SB_URL, SB_KEY);
 
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const fmt = n => n>=1e6 ? '$'+(n/1e6).toFixed(1)+'M' : n>=1e3 ? '$'+Math.round(n/1e3)+'K' : '$'+Math.round(n).toLocaleString();
+const fmtFull = n => '$'+Math.round(n).toLocaleString();
+const inits = name => name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+const pv = s => parseFloat((s||'0').replace(/[$,()]/g,''))||0;
 
-  function fmt(n) {
-    if (n >= 1e6) return '$' + (n/1e6).toFixed(1) + 'M';
-    if (n >= 1e3) return '$' + Math.round(n/1e3) + 'K';
-    return '$' + Math.round(n).toLocaleString();
-  }
-  function fmtFull(n) { return '$' + Math.round(n).toLocaleString(); }
-  function initials(name) {
-    return name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
-  }
+// AUTH
+async function checkSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session && ALLOWED.includes(session.user.email)) showApp(session);
+}
+document.getElementById('auth-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = document.getElementById('asub'), err = document.getElementById('aerr');
+  btn.textContent = 'Signing in...'; btn.disabled = true; err.style.display = 'none';
+  const email = document.getElementById('ae').value.trim().toLowerCase();
+  if (!ALLOWED.includes(email)) { err.style.display='block'; btn.textContent='Sign In'; btn.disabled=false; return; }
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: document.getElementById('ap').value });
+  if (error) { err.style.display='block'; btn.textContent='Sign In'; btn.disabled=false; }
+  else showApp(data.session);
+});
+document.getElementById('sign-out-btn').addEventListener('click', async () => { await sb.auth.signOut(); location.reload(); });
 
-  // ── AUTH ──
-  const gate    = document.getElementById('auth-gate');
-  const content = document.getElementById('leadership-content');
+function showApp(session) {
+  document.getElementById('auth-gate').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  loadSupabaseData();
+  loadHubAPI(session.access_token);
+}
 
-  async function checkSession() {
-    const { data: { session } } = await sb.auth.getSession();
-    if (session && ALLOWED.includes(session.user.email)) {
-      gate.style.display = 'none';
-      content.style.display = 'block';
-      loadAll();
-    }
-  }
-
-  document.getElementById('auth-form').addEventListener('submit', async e => {
-    e.preventDefault();
-    const btn = document.getElementById('auth-submit');
-    const err = document.getElementById('auth-error');
-    btn.textContent = 'Signing in...'; btn.disabled = true;
-    err.style.display = 'none';
-    const email = document.getElementById('auth-email').value.trim().toLowerCase();
-    const pass  = document.getElementById('auth-password').value;
-    if (!ALLOWED.includes(email)) {
-      err.style.display = 'block'; btn.textContent = 'Sign In'; btn.disabled = false; return;
-    }
-    const { error } = await sb.auth.signInWithPassword({ email, password: pass });
-    if (error) { err.style.display = 'block'; btn.textContent = 'Sign In'; btn.disabled = false; }
-    else { gate.style.display = 'none'; content.style.display = 'block'; loadAll(); }
+// TABS
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    ['hub','sales','financials','gci','brain'].forEach(t =>
+      document.getElementById('tab-'+t).style.display = t===btn.dataset.tab ? 'block' : 'none');
   });
+});
 
-  document.getElementById('logout-btn').addEventListener('click', async () => {
-    await sb.auth.signOut();
-    location.reload();
+// SUPABASE DATA
+async function loadSupabaseData() {
+  const [tbRes, courtedRes] = await Promise.all([
+    sb.from('tb_transactions').select('*'),
+    sb.from('courted_active_listings').select('*').order('snapshot_date',{ascending:false}).limit(1)
+  ]);
+
+  const tx = (tbRes.data||[]).filter(t => !DEPARTED.some(d=>(t.attributed_agent||'').includes(d)));
+  const snap = courtedRes.data?.[0];
+
+  const closed  = tx.filter(t => CLOSED_S.has(t.status));
+  const pending = tx.filter(t => PENDING_S.has(t.status));
+
+  const clVol  = closed.reduce((s,t)=>s+pv(t.volume),0);
+  const clGCI  = closed.reduce((s,t)=>s+pv(t.gci||'0'),0);
+  const clUnits = closed.reduce((s,t)=>s+(parseInt(t.units||'1')),0);
+  const peVol  = pending.reduce((s,t)=>s+pv(t.volume),0);
+  const peUnits = pending.length;
+
+  let liVol=0, liUnits=0;
+  if (snap?.agents) {
+    const ag = typeof snap.agents==='string' ? JSON.parse(snap.agents) : snap.agents;
+    liVol   = ag.reduce((s,a)=>s+(a.listings||[]).reduce((ls,l)=>ls+(l.price||0),0),0);
+    liUnits = ag.reduce((s,a)=>s+(a.active_count||0),0);
+  }
+
+  // Pipeline strip
+  qs('pv-cl',fmt(clVol)); qs('pu-cl',clUnits+' deals');
+  qs('pv-pe',fmt(peVol)); qs('pu-pe',peUnits+' deals');
+  qs('pv-li',fmt(liVol)); qs('pu-li',liUnits+' listings');
+  qs('pv-to',fmt(clVol+peVol+liVol));
+  document.getElementById('data-date').textContent = 'TB data as of '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+
+  // Stats
+  qs('s-vol',fmt(clVol)); qs('s-units',clUnits); qs('s-avg',clUnits>0?fmt(clVol/clUnits):'--');
+  qs('s-gci',fmtFull(clGCI)); qs('s-pen',fmt(peVol)); qs('s-lst',fmt(liVol));
+
+  // Pace
+  buildPace(clVol,clGCI,clUnits);
+
+  // Sales leaderboard
+  buildLeaderboard(tx, snap);
+
+  // GCI table
+  buildGCI(closed);
+}
+
+function qs(id,val) { const el=document.getElementById(id); if(el) el.textContent=val; }
+
+function buildPace(clVol,clGCI,clUnits) {
+  const yp = (Date.now()-new Date(new Date().getFullYear(),0,1))/(365.25*24*3600*1000);
+  const vp = Math.min(clVol/GOALS.vol*100,100);
+  const gp = Math.min(clGCI/GOALS.gci*100,100);
+  const gPct = Math.min(yp*100,100);
+  document.getElementById('pace-content').innerHTML = `
+    <div class="pace-row">
+      <div class="pace-lbl">Volume</div>
+      <div class="pace-track"><div class="pace-fill" style="width:${vp}%;background:#c9a84c;"></div><div class="pace-goal" style="left:${gPct}%;"></div></div>
+      <div class="pace-pct" style="color:#c9a84c;">${vp.toFixed(1)}%</div>
+      <div class="pace-info">${fmt(clVol)} / ${fmt(GOALS.vol)} &nbsp; Proj: ${fmt(yp>0?clVol/yp:0)}</div>
+    </div>
+    <div class="pace-row">
+      <div class="pace-lbl">GCI</div>
+      <div class="pace-track"><div class="pace-fill" style="width:${gp}%;background:#10b981;"></div><div class="pace-goal" style="left:${gPct}%;"></div></div>
+      <div class="pace-pct" style="color:#10b981;">${gp.toFixed(1)}%</div>
+      <div class="pace-info">${fmt(clGCI)} / ${fmt(GOALS.gci)} &nbsp; Proj: ${fmt(yp>0?clGCI/yp:0)}</div>
+    </div>
+    <div style="margin-top:14px;font-size:10px;color:rgba(255,255,255,0.25);font-weight:600;">${(yp*100).toFixed(0)}% of 2026 elapsed &nbsp;·&nbsp; ${clUnits} units closed &nbsp;·&nbsp; White line = on-pace marker</div>`;
+}
+
+function buildLeaderboard(tx, snap) {
+  const agents = {};
+  tx.forEach(t => {
+    const a = t.attributed_agent||'Unknown';
+    if (!agents[a]) agents[a]={cl:0,pe:0,li:0,clu:0,peu:0};
+    if (CLOSED_S.has(t.status))  { agents[a].cl+=pv(t.volume); agents[a].clu+=parseInt(t.units||'1'); }
+    if (PENDING_S.has(t.status)) { agents[a].pe+=pv(t.volume); agents[a].peu+=1; }
   });
-
-  // ── TABS ──
-  document.querySelectorAll('.ld-tab').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.ld-tab').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      ['sales','gci','pace'].forEach(t => {
-        document.getElementById('tab-'+t).style.display = t === btn.dataset.tab ? 'block' : 'none';
-      });
+  if (snap?.agents) {
+    const ag = typeof snap.agents==='string'?JSON.parse(snap.agents):snap.agents;
+    ag.forEach(ca => {
+      const n=ca.agent_name;
+      if (!agents[n]) agents[n]={cl:0,pe:0,li:0,clu:0,peu:0};
+      agents[n].li=(ca.listings||[]).reduce((s,l)=>s+(l.price||0),0);
     });
+  }
+  const sorted = Object.entries(agents).map(([n,s])=>({n,...s,tot:s.cl+s.pe+s.li})).sort((a,b)=>b.tot-a.tot);
+  document.getElementById('lb-grid').innerHTML = sorted.map((a,i)=>`
+    <div class="agent-row">
+      <div class="agent-top">
+        <div class="agent-num">#${i+1}</div>
+        <div class="agent-av">${inits(a.n)}</div>
+        <div class="agent-nm">${a.n}</div>
+        <div class="agent-pipe">${fmt(a.tot)}</div>
+      </div>
+      <div class="agent-bk">
+        <span><span class="cl-val">${fmt(a.cl)}</span> closed (${a.clu})</span>
+        ${a.pe>0?`<span><span class="pe-val">${fmt(a.pe)}</span> pending (${a.peu})</span>`:''}
+        ${a.li>0?`<span><span class="li-val">${fmt(a.li)}</span> listed</span>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function buildGCI(closed) {
+  const ag = {};
+  closed.forEach(t => {
+    const a=t.attributed_agent||'Unknown';
+    if (!ag[a]) ag[a]={gci:0,vol:0,units:0};
+    ag[a].gci+=pv(t.gci||'0'); ag[a].vol+=pv(t.volume); ag[a].units+=parseInt(t.units||'1');
   });
+  const sorted = Object.entries(ag).sort((a,b)=>b[1].gci-a[1].gci);
+  const totG = sorted.reduce((s,[,d])=>s+d.gci,0);
+  const totV = sorted.reduce((s,[,d])=>s+d.vol,0);
+  document.getElementById('gci-tbody').innerHTML = sorted.map(([n,s])=>`
+    <tr><td>${n}</td><td style="color:rgba(255,255,255,0.4);font-size:11px;">${s.units} deal${s.units!==1?'s':''}</td><td>${fmt(s.vol)}</td><td>${fmtFull(s.gci)}</td></tr>
+  `).join('') + `<tr class="total-row"><td>OFFICE TOTAL</td><td></td><td>${fmt(totV)}</td><td>${fmtFull(totG)}</td></tr>`;
+}
 
-  // ── LOAD DATA ──
-  async function loadAll() {
-    const [tbRes, courtedRes] = await Promise.all([
-      sb.from('tb_transactions').select('*'),
-      sb.from('courted_active_listings').select('*').order('snapshot_date', { ascending: false }).limit(1)
-    ]);
+// HUB API (financial, engagement, brain)
+async function loadHubAPI(token) {
+  try {
+    const res = await fetch(HUB_API, { headers: { Authorization: 'Bearer '+token } });
+    if (!res.ok) return; // endpoint not yet live
+    const d = await res.json();
+    if (d.financials) renderFinancials(d.financials);
+    if (d.engagement) renderEngagement(d.engagement);
+    if (d.brain)      renderBrain(d.brain);
+    if (d.announcements) renderAnnouncements(d.announcements);
+    // Remove api-notice banners
+    document.querySelectorAll('.api-notice').forEach(el=>el.remove());
+  } catch(e) { /* endpoint not live yet */ }
+}
 
-    const tx       = tbRes.data || [];
-    const snapshot = courtedRes.data?.[0];
-
-    // Filter departed
-    const clean = tx.filter(t => !DEPARTED.some(d => (t.attributed_agent||'').includes(d)));
-
-    // Parse volume
-    function pv(s) { return parseFloat((s||'0').replace(/[$,()]/g,'')) || 0; }
-
-    // Closed
-    const closed  = clean.filter(t => CLOSED_STATUSES.includes(t.status));
-    const pending = clean.filter(t => PENDING_STATUSES.includes(t.status));
-
-    const closedVol  = closed.reduce((s,t)=>s+pv(t.volume),0);
-    const closedGCI  = closed.reduce((s,t)=>s+pv(t.gci||'0'),0);
-    const closedUnits = closed.reduce((s,t)=>s+(parseInt(t.units||'1')),0);
-    const pendingVol = pending.reduce((s,t)=>s+pv(t.volume),0);
-    const pendingUnits = pending.length;
-
-    // Courted listings
-    let listedVol = 0, listedUnits = 0;
-    if (snapshot?.agents) {
-      const agents = typeof snapshot.agents === 'string' ? JSON.parse(snapshot.agents) : snapshot.agents;
-      listedVol   = agents.reduce((s,a)=>s+(a.listings||[]).reduce((ls,l)=>ls+(l.price||0),0),0);
-      listedUnits = agents.reduce((s,a)=>s+(a.active_count||0),0);
-    }
-
-    const totalVol = closedVol + pendingVol + listedVol;
-
-    // Pipeline bar
-    document.getElementById('pp-closed-vol').textContent   = fmt(closedVol);
-    document.getElementById('pp-closed-units').textContent = closedUnits + ' deals';
-    document.getElementById('pp-pending-vol').textContent  = fmt(pendingVol);
-    document.getElementById('pp-pending-units').textContent= pendingUnits + ' deals';
-    document.getElementById('pp-listed-vol').textContent   = fmt(listedVol);
-    document.getElementById('pp-listed-units').textContent = listedUnits + ' listings';
-    document.getElementById('pp-total-vol').textContent    = fmt(totalVol);
-
-    // Date
-    document.getElementById('ld-data-date').textContent = 'TB data as of ' + new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-
-    buildLeaderboard(clean, snapshot);
-    buildGCI(closed);
-    buildPace(closedVol, closedGCI, closedUnits, pendingVol, listedVol);
-    buildStats(closedVol, closedGCI, closedUnits, pendingVol, listedVol, listedUnits);
+function renderFinancials(f) {
+  const m = f.this_month, y = f.ytd;
+  document.getElementById('fin-month').innerHTML = `
+    <div class="card"><div class="card-lbl">Revenue</div><div class="card-val green">${fmtFull(m.revenue+m.studios_revenue)}</div><div class="card-sub">Commission: ${fmtFull(m.revenue)} · Studios: ${fmtFull(m.studios_revenue)}</div></div>
+    <div class="card"><div class="card-lbl">Costs</div><div class="card-val red">${fmtFull(m.costs)}</div></div>
+    <div class="card"><div class="card-lbl">Net</div><div class="card-val ${m.net>=0?'green':'red'}">${fmtFull(m.net)}</div></div>`;
+  document.getElementById('fin-ytd').innerHTML = `
+    <div class="card"><div class="card-lbl">Total Revenue YTD</div><div class="card-val green">${fmtFull(y.revenue+y.studios_revenue)}</div><div class="card-sub">Commission: ${fmtFull(y.revenue)} · Studios: ${fmtFull(y.studios_revenue)}</div></div>
+    <div class="card"><div class="card-lbl">Costs YTD</div><div class="card-val red">${fmtFull(y.costs)}</div></div>
+    <div class="card"><div class="card-lbl">Net YTD</div><div class="card-val ${y.net>=0?'green':'red'}">${fmtFull(y.net)}</div></div>`;
+  if (f.trailing_6_months?.length) {
+    const maxRev = Math.max(...f.trailing_6_months.map(m=>m.revenue));
+    const burnH  = f.this_month.costs / maxRev * 100;
+    document.getElementById('fin-chart').innerHTML = `
+      <div class="chart-bars">
+        <div class="burn-line" style="bottom:${burnH}%;"></div>
+        ${f.trailing_6_months.map(m=>`
+          <div class="chart-bar-wrap">
+            <div class="chart-amt">${fmt(m.revenue)}</div>
+            <div class="chart-bar" style="height:${Math.max(m.revenue/maxRev*100,4)}%;background:${m.revenue>=f.this_month.costs?'#10b981':'#f59e0b'};"></div>
+            <div class="chart-lbl">${m.month}</div>
+          </div>`).join('')}
+      </div>`;
   }
-
-  function buildLeaderboard(clean, snapshot) {
-    function pv(s) { return parseFloat((s||'0').replace(/[$,()]/g,'')) || 0; }
-    const CLOSED_S  = new Set(CLOSED_STATUSES);
-    const PENDING_S = new Set(PENDING_STATUSES);
-
-    const agents = {};
-    clean.forEach(t => {
-      const a = t.attributed_agent || 'Unknown';
-      if (!agents[a]) agents[a] = { closed:0, pending:0, listed:0, closedUnits:0, pendingUnits:0 };
-      if (CLOSED_S.has(t.status))  { agents[a].closed  += pv(t.volume); agents[a].closedUnits  += parseInt(t.units||'1'); }
-      if (PENDING_S.has(t.status)) { agents[a].pending += pv(t.volume); agents[a].pendingUnits += 1; }
-    });
-
-    // Add listings from Courted
-    if (snapshot?.agents) {
-      const courtedAgents = typeof snapshot.agents === 'string' ? JSON.parse(snapshot.agents) : snapshot.agents;
-      courtedAgents.forEach(ca => {
-        const name = ca.agent_name;
-        if (!agents[name]) agents[name] = { closed:0, pending:0, listed:0, closedUnits:0, pendingUnits:0 };
-        agents[name].listed = (ca.listings||[]).reduce((s,l)=>s+(l.price||0),0);
-      });
-    }
-
-    const sorted = Object.entries(agents)
-      .map(([name, s]) => ({ name, ...s, total: s.closed + s.pending + s.listed }))
-      .sort((a,b) => b.total - a.total);
-
-    const grid = document.getElementById('leaderboard-grid');
-    grid.innerHTML = sorted.map((a, i) => `
-      <div class="agent-card">
-        <div class="agent-card-top">
-          <div class="agent-rank">#${i+1}</div>
-          <div class="agent-avatar">${initials(a.name)}</div>
-          <div class="agent-name">${a.name}</div>
-          <div class="agent-pipeline">${fmt(a.total)}</div>
-        </div>
-        <div class="agent-breakdown">
-          <span><span class="val-closed">${fmt(a.closed)}</span> closed (${a.closedUnits})</span>
-          ${a.pending > 0 ? `<span><span class="val-pending">${fmt(a.pending)}</span> pending (${a.pendingUnits})</span>` : ''}
-          ${a.listed  > 0 ? `<span><span class="val-listed">${fmt(a.listed)}</span> listed</span>` : ''}
-        </div>
-      </div>
-    `).join('');
+  if (f.recent_payments?.length) {
+    document.getElementById('fin-payments').innerHTML = f.recent_payments.map(p=>`
+      <div class="pay-row"><div><div class="pay-name">${p.agent_name}</div><div class="pay-date">${new Date(p.date).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div></div><div class="pay-amt">${fmtFull(p.amount)}</div></div>`).join('');
   }
-
-  function buildGCI(closed) {
-    function pv(s) { return parseFloat((s||'0').replace(/[$,()]/g,'')) || 0; }
-    const agents = {};
-    closed.forEach(t => {
-      const a = t.attributed_agent || 'Unknown';
-      if (!agents[a]) agents[a] = { gci:0, vol:0, units:0 };
-      agents[a].gci   += pv(t.gci||'0');
-      agents[a].vol   += pv(t.volume);
-      agents[a].units += parseInt(t.units||'1');
-    });
-    const sorted = Object.entries(agents).sort((a,b)=>b[1].gci-a[1].gci);
-    const tbody = document.getElementById('gci-tbody');
-    tbody.innerHTML = sorted.map(([name,s]) => `
-      <tr>
-        <td>${name}</td>
-        <td><span class="gci-units">${s.units} deal${s.units!==1?'s':''}</span></td>
-        <td>${fmt(s.vol)}</td>
-        <td>${fmtFull(s.gci)}</td>
-      </tr>
-    `).join('');
-    // Total row
-    const totalGCI = sorted.reduce((s,[,d])=>s+d.gci,0);
-    const totalVol = sorted.reduce((s,[,d])=>s+d.vol,0);
-    tbody.innerHTML += `<tr style="border-top:1px solid rgba(255,255,255,0.15)">
-      <td style="font-weight:800;color:white;">OFFICE TOTAL</td>
-      <td></td>
-      <td style="color:white;font-weight:800;">${fmt(totalVol)}</td>
-      <td style="color:#c9a84c;font-weight:900;font-size:15px;">${fmtFull(totalGCI)}</td>
-    </tr>`;
+  if (f.revenue_by_agent?.length) {
+    document.getElementById('fin-agents').innerHTML = `<table><thead><tr><th>Agent</th><th>Commission</th><th>Studios</th><th>Total</th></tr></thead><tbody>
+      ${f.revenue_by_agent.map(a=>`<tr><td>${a.agent_name}</td><td>${fmtFull(a.commission_revenue)}</td><td>${fmtFull(a.studios_revenue)}</td><td>${fmtFull(a.total_revenue)}</td></tr>`).join('')}
+    </tbody></table>`;
   }
+}
 
-  function buildPace(closedVol, closedGCI, closedUnits, pendingVol, listedVol) {
-    const yearPct = (new Date() - new Date(new Date().getFullYear(),0,1)) / (365.25*24*3600*1000);
-    const projected = yearPct > 0 ? closedVol / yearPct : 0;
-    const projGCI   = yearPct > 0 ? closedGCI  / yearPct : 0;
-    const volPct    = Math.min(closedVol / GOALS.volume * 100, 100);
-    const gciPct    = Math.min(closedGCI  / GOALS.gci    * 100, 100);
-    const goalPct   = yearPct * 100;
+function renderEngagement(e) {
+  document.getElementById('eng-content').innerHTML = `
+    <div class="eng-section">
+      <div class="eng-header"><div class="dot-green"></div><div class="eng-title">Crushing It</div></div>
+      <div class="eng-list">${e.crushing_it.map(a=>`<div class="eng-row"><div class="eng-av">${inits(a.agent_name)}</div><div><div class="eng-name">${a.agent_name}</div><div class="eng-meta">${a.metric}</div></div></div>`).join('')}</div>
+    </div>
+    <div class="eng-section ghost">
+      <div class="eng-header"><div class="eng-title" style="color:#f87171;">Haven't Engaged</div></div>
+      <div class="eng-list">${e.not_engaged.map(a=>`<div class="eng-row ghost"><div class="eng-av" style="background:rgba(248,113,113,0.15);">${inits(a.agent_name)}</div><div><div class="eng-name">${a.agent_name}</div><div class="eng-meta">${a.status}</div></div></div>`).join('')}</div>
+    </div>`;
+}
 
-    document.getElementById('pace-content').innerHTML = `
-      <div class="pace-row">
-        <div class="pace-label">Volume</div>
-        <div class="pace-bar-wrap">
-          <div class="pace-bar-fill" style="width:${volPct}%;background:#c9a84c;"></div>
-          <div class="pace-bar-goal" style="left:${Math.min(goalPct,100)}%;"></div>
-        </div>
-        <div class="pace-pct" style="color:#c9a84c;">${volPct.toFixed(1)}%</div>
-        <div class="pace-nums">${fmt(closedVol)} / ${fmt(GOALS.volume)} &nbsp; Proj: ${fmt(projected)}</div>
-      </div>
-      <div class="pace-row">
-        <div class="pace-label">GCI</div>
-        <div class="pace-bar-wrap">
-          <div class="pace-bar-fill" style="width:${gciPct}%;background:#10b981;"></div>
-          <div class="pace-bar-goal" style="left:${Math.min(goalPct,100)}%;"></div>
-        </div>
-        <div class="pace-pct" style="color:#10b981;">${gciPct.toFixed(1)}%</div>
-        <div class="pace-nums">${fmt(closedGCI)} / ${fmt(GOALS.gci)} &nbsp; Proj: ${fmt(projGCI)}</div>
-      </div>
-      <div style="margin-top:16px;font-size:11px;color:rgba(255,255,255,0.3);font-weight:600;">
-        ${(yearPct*100).toFixed(0)}% of 2026 elapsed &nbsp;·&nbsp; ${closedUnits} units closed
-        &nbsp;·&nbsp; White line = where you should be
-      </div>
-    `;
-  }
+function renderBrain(b) {
+  qs('br-convos',b.conversations_this_week); qs('br-agents',b.unique_agents_this_week);
+  document.getElementById('br-delta').textContent = (b.vs_last_week_pct>0?'+':'')+b.vs_last_week_pct+'%';
+  document.getElementById('brain-qs').innerHTML = b.recent_questions.map(q=>`
+    <div class="brain-q"><div class="brain-q-text">${q.question}</div><div class="brain-q-meta">${q.agent_name} · ${new Date(q.asked_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div></div>`).join('');
+}
 
-  function buildStats(closedVol, closedGCI, closedUnits, pendingVol, listedVol, listedUnits) {
-    document.getElementById('stat-vol').textContent    = fmt(closedVol);
-    document.getElementById('stat-gci').textContent    = fmtFull(closedGCI);
-    document.getElementById('stat-avg').textContent    = closedUnits > 0 ? fmt(closedVol/closedUnits) : '--';
-    document.getElementById('stat-units').textContent  = closedUnits;
-    document.getElementById('stat-pending').textContent= fmt(pendingVol);
-    document.getElementById('stat-listed').textContent = fmt(listedVol);
-  }
+function renderAnnouncements(anns) {
+  document.getElementById('ann-list').innerHTML = anns.length ? anns.map(a=>`
+    <div class="ann-item"><div><div class="ann-type">${a.type.toUpperCase()}</div><div class="ann-title">${a.title}</div><div class="ann-meta">${a.created_by} · Expires ${new Date(a.expires_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div></div></div>`).join('')
+    : '<div style="color:rgba(255,255,255,0.3);font-size:13px;padding:8px 0;">No active announcements.</div>';
+}
 
-  checkSession();
+checkSession();
 </script>
 </body>
 </html>
