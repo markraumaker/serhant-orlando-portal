@@ -308,6 +308,22 @@
       border-left-color: rgba(104,104,238,0.4);
     }
 
+    /* Instagram phone variant -- hide the fake "9:41" time, let screenshot breathe */
+    .studios-phone-mockup.sp-phone-ig::after {
+      display: none;
+    }
+    /* Full-bleed Instagram screenshot inside phone frame */
+    .sp-ig-screen {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      border-radius: 28px;
+      display: block;
+    }
+
     @media (max-width: 520px) {
       .studios-phones {
         width: 100%;
@@ -657,28 +673,14 @@
             </div>
           </div>
         </div>
-        <!-- Phone Front: Recording UI -->
+        <!-- Phone Front: Real @serhantorlando Instagram -->
         <div class="studios-phone-wrap sp-front">
-          <div class="studios-phone-mockup">
-            <div class="sp-screen">
-              <div class="sp-rec-header">
-                <div class="sp-rec-dot"></div>
-                <div class="sp-rec-label">Now Recording</div>
-              </div>
-              <div class="sp-rec-address">1247 Lakeshore Dr</div>
-              <div class="sp-rec-sub">Windermere, FL 34786</div>
-              <div class="sp-rec-viewfinder">
-                <div class="sp-rec-viewfinder-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                    <path d="M22 8l-4 4 4 4V8z"/><rect x="2" y="6" width="14" height="12" rx="2"/>
-                  </svg>
-                </div>
-              </div>
-              <div class="sp-rec-timer">02:34</div>
-              <div class="sp-rec-btn">
-                <div class="sp-rec-btn-inner"></div>
-              </div>
-            </div>
+          <div class="studios-phone-mockup sp-phone-ig">
+            <img
+              src="assets/ig-screenshot.jpg"
+              alt="@serhantorlando on Instagram"
+              class="sp-ig-screen"
+            >
           </div>
         </div>
       </div>
