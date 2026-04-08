@@ -75,3 +75,19 @@
   });
 
 })();
+
+// Show Leaders nav link only for leadership emails
+(async function() {
+  const LEADER_EMAILS = ['mark@serhant.com','sarah.raumaker@serhant.com'];
+  const SUPABASE_URL = 'https://lqothpzxhxvhvyikmphx.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxb3RocHp4aHh2aHZ5aWttcGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5ODkzNjgsImV4cCI6MjA5MDU2NTM2OH0.zDE-lniLRF3TdYZmMMSQL20vF_H74_qiMlJM2tX_nKo';
+  try {
+    if (typeof supabase === 'undefined') return;
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const { data: { session } } = await sb.auth.getSession();
+    if (session && LEADER_EMAILS.includes(session.user.email)) {
+      const el = document.getElementById('leadership-nav-link');
+      if (el) el.style.display = '';
+    }
+  } catch(e) {}
+})();

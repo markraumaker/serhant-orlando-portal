@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leadership | SERHANT. ORLANDO</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <style>
+    /* ── AUTH GATE ── */
+    #auth-gate {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #0a0a55;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 20px;
+    }
+    #auth-gate img { height: 36px; margin-bottom: 16px; }
+    #auth-gate h2 { font-size: 22px; font-weight: 800; color: white; }
+    #auth-gate p { font-size: 14px; color: rgba(255,255,255,0.45); }
+    .auth-form { display: flex; flex-direction: column; gap: 12px; width: 320px; }
+    .auth-input {
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px; padding: 14px 18px; font-size: 14px;
+      color: white; font-family: 'Montserrat', sans-serif; outline: none;
+    }
+    .auth-input::placeholder { color: rgba(255,255,255,0.3); }
+    .auth-input:focus { border-color: rgba(255,255,255,0.4); }
+    .auth-btn {
+      background: #121275; border: none; border-radius: 10px;
+      padding: 14px; font-size: 14px; font-weight: 700;
+      color: white; cursor: pointer; font-family: 'Montserrat', sans-serif;
+      transition: background 0.2s;
+    }
+    .auth-btn:hover { background: #1a1a9a; }
+    .auth-error { font-size: 12px; color: #ff6b6b; text-align: center; display: none; }
+
+    /* ── LEADERSHIP LAYOUT ── */
+    #leadership-content { display: none; }
+
+    .ld-header {
+      background: linear-gradient(135deg, #0a0a33 0%, #121275 100%);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 24px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .ld-header-left { display: flex; align-items: center; gap: 20px; }
+    .ld-header-left img { height: 28px; }
+    .ld-title { font-size: 20px; font-weight: 900; color: white; }
+    .ld-subtitle { font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 600; margin-top: 2px; }
+    .ld-logout-btn {
+      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; padding: 8px 16px; cursor: pointer;
+      font-family: 'Montserrat', sans-serif; transition: all 0.2s;
+    }
+    .ld-logout-btn:hover { color: white; background: rgba(255,255,255,0.1); }
+
+    /* ── TABS ── */
+    .ld-tabs {
+      background: rgba(10,10,55,0.95);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 0 48px;
+      display: flex; gap: 0;
+    }
+    .ld-tab {
+      padding: 16px 28px; font-size: 13px; font-weight: 700;
+      color: rgba(255,255,255,0.4); cursor: pointer; border: none;
+      background: none; font-family: 'Montserrat', sans-serif;
+      border-bottom: 3px solid transparent; transition: all 0.2s;
+      letter-spacing: 0.03em;
+    }
+    .ld-tab:hover { color: rgba(255,255,255,0.7); }
+    .ld-tab.active { color: white; border-bottom-color: #c9a84c; }
+
+    /* ── MAIN CONTENT ── */
+    .ld-body { background: #0d0d2e; min-height: calc(100vh - 130px); padding: 40px 48px; }
+
+    /* ── PIPELINE BAR ── */
+    .pipeline-bar {
+      display: flex; gap: 16px; margin-bottom: 32px; flex-wrap: wrap;
+    }
+    .pipeline-pill {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 24px; border-radius: 12px; flex: 1; min-width: 200px;
+    }
+    .pipeline-pill.closed { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); }
+    .pipeline-pill.pending { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25); }
+    .pipeline-pill.listed { background: rgba(104,104,238,0.12); border: 1px solid rgba(104,104,238,0.25); }
+    .pipeline-pill.total { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); }
+    .pp-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .closed .pp-dot { background: #10b981; }
+    .pending .pp-dot { background: #f59e0b; }
+    .listed .pp-dot { background: #6868ee; }
+    .total .pp-dot { background: rgba(255,255,255,0.4); }
+    .pp-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+    .pp-value { font-size: 22px; font-weight: 900; color: white; }
+    .pp-units { font-size: 11px; color: rgba(255,255,255,0.35); font-weight: 600; }
+
+    /* ── PACE ── */
+    .ld-section-title { font-size: 11px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 14px; }
+    .pace-card { background: rgba(18,18,117,0.35); border: 1px solid rgba(80,80,200,0.2); border-radius: 16px; padding: 24px 28px; margin-bottom: 24px; }
+    .pace-row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+    .pace-row:last-child { margin-bottom: 0; }
+    .pace-label { font-size: 13px; font-weight: 700; color: white; width: 80px; flex-shrink: 0; }
+    .pace-bar-wrap { flex: 1; background: rgba(255,255,255,0.08); border-radius: 6px; height: 8px; position: relative; }
+    .pace-bar-fill { height: 100%; border-radius: 6px; transition: width 0.8s ease; }
+    .pace-bar-goal { position: absolute; top: -4px; bottom: -4px; width: 2px; background: rgba(255,255,255,0.3); }
+    .pace-nums { font-size: 12px; color: rgba(255,255,255,0.5); width: 200px; text-align: right; flex-shrink: 0; }
+    .pace-pct { font-size: 12px; font-weight: 700; width: 52px; text-align: right; flex-shrink: 0; }
+
+    /* ── LEADERBOARD ── */
+    .ld-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 1100px) { .ld-grid { grid-template-columns: 1fr; } }
+
+    .agent-card {
+      background: rgba(18,18,117,0.25); border: 1px solid rgba(80,80,200,0.18);
+      border-radius: 14px; padding: 18px 22px;
+      transition: border-color 0.2s;
+    }
+    .agent-card:hover { border-color: rgba(104,104,238,0.4); }
+    .agent-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .agent-rank { font-size: 11px; font-weight: 900; color: rgba(255,255,255,0.25); width: 28px; }
+    .agent-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(104,104,238,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; color: white; flex-shrink: 0;
+    }
+    .agent-name { font-size: 15px; font-weight: 800; color: white; flex: 1; margin-left: 10px; }
+    .agent-pipeline { font-size: 18px; font-weight: 900; color: white; }
+    .agent-breakdown {
+      display: flex; gap: 16px; font-size: 11px; font-weight: 600;
+    }
+    .agent-breakdown span { color: rgba(255,255,255,0.4); }
+    .agent-breakdown .val-closed { color: #10b981; }
+    .agent-breakdown .val-pending { color: #f59e0b; }
+    .agent-breakdown .val-listed { color: #6868ee; }
+
+    /* ── GCI TABLE ── */
+    .gci-table { width: 100%; border-collapse: collapse; }
+    .gci-table th {
+      font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+      color: rgba(255,255,255,0.3); padding: 0 12px 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .gci-table th:last-child { text-align: right; }
+    .gci-table td { padding: 14px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; color: rgba(255,255,255,0.75); font-weight: 600; }
+    .gci-table td:last-child { text-align: right; font-weight: 800; color: #c9a84c; }
+    .gci-table tr:last-child td { border-bottom: none; }
+    .gci-table tr:hover td { background: rgba(255,255,255,0.03); }
+    .gci-units { font-size: 11px; color: rgba(255,255,255,0.3); font-weight: 600; }
+
+    /* ── FINANCIALS ── */
+    .fin-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 28px; }
+    .fin-card { background: rgba(18,18,117,0.35); border: 1px solid rgba(80,80,200,0.2); border-radius: 14px; padding: 22px 24px; }
+    .fin-card-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 8px; }
+    .fin-card-value { font-size: 28px; font-weight: 900; }
+    .fin-card-value.green { color: #10b981; }
+    .fin-card-value.red { color: #f87171; }
+    .fin-card-value.gold { color: #c9a84c; }
+    .fin-card-sub { font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 6px; font-weight: 600; }
+
+    .loading-spinner {
+      display: flex; align-items: center; justify-content: center;
+      padding: 48px; color: rgba(255,255,255,0.3); font-size: 13px; font-weight: 600;
+      gap: 12px;
+    }
+    .spinner { width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.1); border-top-color: #6868ee; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .ld-section { margin-bottom: 36px; }
+    .stale-badge { background: rgba(245,158,11,0.15); color: #f59e0b; font-size: 10px; font-weight: 700; letter-spacing: 2px; padding: 3px 8px; border-radius: 4px; margin-left: 8px; }
+  </style>
+</head>
+<body>
+
+<!-- AUTH GATE -->
+<div id="auth-gate">
+  <img src="assets/logos/SERHANT-Orlando-White.svg" alt="SERHANT. Orlando">
+  <h2>Leadership Access</h2>
+  <p>Restricted to authorized accounts only.</p>
+  <form class="auth-form" id="auth-form">
+    <input type="email" class="auth-input" id="auth-email" placeholder="Email address" required>
+    <input type="password" class="auth-input" id="auth-password" placeholder="Password" required>
+    <button type="submit" class="auth-btn" id="auth-submit">Sign In</button>
+    <div class="auth-error" id="auth-error">Access denied or incorrect credentials.</div>
+  </form>
+</div>
+
+<!-- LEADERSHIP DASHBOARD -->
+<div id="leadership-content">
+
+  <div class="ld-header">
+    <div class="ld-header-left">
+      <img src="assets/logos/SERHANT-Orlando-White.svg" alt="SERHANT. Orlando">
+      <div>
+        <div class="ld-title">Leadership Dashboard</div>
+        <div class="ld-subtitle" id="ld-data-date">Loading...</div>
+      </div>
+    </div>
+    <button class="ld-logout-btn" id="logout-btn">Sign Out</button>
+  </div>
+
+  <div class="ld-tabs">
+    <button class="ld-tab active" data-tab="sales">Sales</button>
+    <button class="ld-tab" data-tab="gci">GCI</button>
+    <button class="ld-tab" data-tab="pace">Pace</button>
+  </div>
+
+  <div class="ld-body">
+
+    <!-- PIPELINE BAR (always visible) -->
+    <div class="pipeline-bar">
+      <div class="pipeline-pill closed">
+        <div class="pp-dot"></div>
+        <div>
+          <div class="pp-label">Closed YTD</div>
+          <div class="pp-value" id="pp-closed-vol">--</div>
+          <div class="pp-units" id="pp-closed-units">-- deals</div>
+        </div>
+      </div>
+      <div class="pipeline-pill pending">
+        <div class="pp-dot"></div>
+        <div>
+          <div class="pp-label">Pending</div>
+          <div class="pp-value" id="pp-pending-vol">--</div>
+          <div class="pp-units" id="pp-pending-units">-- deals</div>
+        </div>
+      </div>
+      <div class="pipeline-pill listed">
+        <div class="pp-dot"></div>
+        <div>
+          <div class="pp-label">Active Listings</div>
+          <div class="pp-value" id="pp-listed-vol">--</div>
+          <div class="pp-units" id="pp-listed-units">-- listings</div>
+        </div>
+      </div>
+      <div class="pipeline-pill total">
+        <div class="pp-dot"></div>
+        <div>
+          <div class="pp-label">Total Pipeline</div>
+          <div class="pp-value" id="pp-total-vol">--</div>
+          <div class="pp-units">closed + pending + listed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SALES TAB -->
+    <div id="tab-sales">
+      <div class="ld-section">
+        <div class="ld-section-title">Agent Leaderboard — Total Pipeline</div>
+        <div id="leaderboard-grid" class="ld-grid">
+          <div class="loading-spinner"><div class="spinner"></div>Loading agent data...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GCI TAB -->
+    <div id="tab-gci" style="display:none;">
+      <div class="ld-section">
+        <div class="ld-section-title">GCI by Agent — YTD Closed</div>
+        <div style="background:rgba(18,18,117,0.35);border:1px solid rgba(80,80,200,0.2);border-radius:16px;overflow:hidden;">
+          <table class="gci-table" id="gci-table">
+            <thead><tr><th>Agent</th><th>Deals</th><th>Volume</th><th>GCI</th></tr></thead>
+            <tbody id="gci-tbody"><tr><td colspan="4"><div class="loading-spinner"><div class="spinner"></div>Loading...</div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PACE TAB -->
+    <div id="tab-pace" style="display:none;">
+      <div class="ld-section">
+        <div class="ld-section-title">2026 Office Pace</div>
+        <div class="pace-card">
+          <div id="pace-content">
+            <div class="loading-spinner"><div class="spinner"></div>Calculating...</div>
+          </div>
+        </div>
+      </div>
+      <div class="ld-section">
+        <div class="ld-section-title">Office Stats</div>
+        <div class="fin-cards" id="office-stats">
+          <div class="fin-card"><div class="fin-card-label">Closed YTD Volume</div><div class="fin-card-value gold" id="stat-vol">--</div></div>
+          <div class="fin-card"><div class="fin-card-label">Total GCI YTD</div><div class="fin-card-value green" id="stat-gci">--</div></div>
+          <div class="fin-card"><div class="fin-card-label">Avg Sale Price</div><div class="fin-card-value" style="color:white;" id="stat-avg">--</div></div>
+          <div class="fin-card"><div class="fin-card-label">Units Closed</div><div class="fin-card-value" style="color:white;" id="stat-units">--</div><div class="fin-card-sub">transactions YTD</div></div>
+          <div class="fin-card"><div class="fin-card-label">Pending Value</div><div class="fin-card-value" style="color:#f59e0b;" id="stat-pending">--</div></div>
+          <div class="fin-card"><div class="fin-card-label">Active Listings</div><div class="fin-card-value" style="color:#6868ee;" id="stat-listed">--</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://lqothpzxhxvhvyikmphx.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxb3RocHp4aHh2aHZ5aWttcGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5ODkzNjgsImV4cCI6MjA5MDU2NTM2OH0.zDE-lniLRF3TdYZmMMSQL20vF_H74_qiMlJM2tX_nKo';
+  const ALLOWED     = ['mark@serhant.com','sarah.raumaker@serhant.com'];
+  const GOALS       = { volume: 300_000_000, gci: 7_500_000 };
+
+  const CLOSED_STATUSES = ['Closed & Processed for Payment','Closed/Rented - Ready for processing','Rented & Processed for Payment'];
+  const PENDING_STATUSES = ['Contract Signed','Contract Signed - Approved','Approved to be PAT','ON HOLD - PENDING FUNDS','ON HOLD - Pending Commission Allocations'];
+  const DEPARTED = ['Alessandra Sermann Ulmann','Tyler Barnett','Kriselys Tapia','Gisele Abrantes Trautman','Gisele Abrantes','Gisele Trautman','Michael Mouris'];
+
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  function fmt(n) {
+    if (n >= 1e6) return '$' + (n/1e6).toFixed(1) + 'M';
+    if (n >= 1e3) return '$' + Math.round(n/1e3) + 'K';
+    return '$' + Math.round(n).toLocaleString();
+  }
+  function fmtFull(n) { return '$' + Math.round(n).toLocaleString(); }
+  function initials(name) {
+    return name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+  }
+
+  // ── AUTH ──
+  const gate    = document.getElementById('auth-gate');
+  const content = document.getElementById('leadership-content');
+
+  async function checkSession() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session && ALLOWED.includes(session.user.email)) {
+      gate.style.display = 'none';
+      content.style.display = 'block';
+      loadAll();
+    }
+  }
+
+  document.getElementById('auth-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = document.getElementById('auth-submit');
+    const err = document.getElementById('auth-error');
+    btn.textContent = 'Signing in...'; btn.disabled = true;
+    err.style.display = 'none';
+    const email = document.getElementById('auth-email').value.trim().toLowerCase();
+    const pass  = document.getElementById('auth-password').value;
+    if (!ALLOWED.includes(email)) {
+      err.style.display = 'block'; btn.textContent = 'Sign In'; btn.disabled = false; return;
+    }
+    const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+    if (error) { err.style.display = 'block'; btn.textContent = 'Sign In'; btn.disabled = false; }
+    else { gate.style.display = 'none'; content.style.display = 'block'; loadAll(); }
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', async () => {
+    await sb.auth.signOut();
+    location.reload();
+  });
+
+  // ── TABS ──
+  document.querySelectorAll('.ld-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.ld-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      ['sales','gci','pace'].forEach(t => {
+        document.getElementById('tab-'+t).style.display = t === btn.dataset.tab ? 'block' : 'none';
+      });
+    });
+  });
+
+  // ── LOAD DATA ──
+  async function loadAll() {
+    const [tbRes, courtedRes] = await Promise.all([
+      sb.from('tb_transactions').select('*'),
+      sb.from('courted_active_listings').select('*').order('snapshot_date', { ascending: false }).limit(1)
+    ]);
+
+    const tx       = tbRes.data || [];
+    const snapshot = courtedRes.data?.[0];
+
+    // Filter departed
+    const clean = tx.filter(t => !DEPARTED.some(d => (t.attributed_agent||'').includes(d)));
+
+    // Parse volume
+    function pv(s) { return parseFloat((s||'0').replace(/[$,()]/g,'')) || 0; }
+
+    // Closed
+    const closed  = clean.filter(t => CLOSED_STATUSES.includes(t.status));
+    const pending = clean.filter(t => PENDING_STATUSES.includes(t.status));
+
+    const closedVol  = closed.reduce((s,t)=>s+pv(t.volume),0);
+    const closedGCI  = closed.reduce((s,t)=>s+pv(t.gci||'0'),0);
+    const closedUnits = closed.reduce((s,t)=>s+(parseInt(t.units||'1')),0);
+    const pendingVol = pending.reduce((s,t)=>s+pv(t.volume),0);
+    const pendingUnits = pending.length;
+
+    // Courted listings
+    let listedVol = 0, listedUnits = 0;
+    if (snapshot?.agents) {
+      const agents = typeof snapshot.agents === 'string' ? JSON.parse(snapshot.agents) : snapshot.agents;
+      listedVol   = agents.reduce((s,a)=>s+(a.listings||[]).reduce((ls,l)=>ls+(l.price||0),0),0);
+      listedUnits = agents.reduce((s,a)=>s+(a.active_count||0),0);
+    }
+
+    const totalVol = closedVol + pendingVol + listedVol;
+
+    // Pipeline bar
+    document.getElementById('pp-closed-vol').textContent   = fmt(closedVol);
+    document.getElementById('pp-closed-units').textContent = closedUnits + ' deals';
+    document.getElementById('pp-pending-vol').textContent  = fmt(pendingVol);
+    document.getElementById('pp-pending-units').textContent= pendingUnits + ' deals';
+    document.getElementById('pp-listed-vol').textContent   = fmt(listedVol);
+    document.getElementById('pp-listed-units').textContent = listedUnits + ' listings';
+    document.getElementById('pp-total-vol').textContent    = fmt(totalVol);
+
+    // Date
+    document.getElementById('ld-data-date').textContent = 'TB data as of ' + new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+
+    buildLeaderboard(clean, snapshot);
+    buildGCI(closed);
+    buildPace(closedVol, closedGCI, closedUnits, pendingVol, listedVol);
+    buildStats(closedVol, closedGCI, closedUnits, pendingVol, listedVol, listedUnits);
+  }
+
+  function buildLeaderboard(clean, snapshot) {
+    function pv(s) { return parseFloat((s||'0').replace(/[$,()]/g,'')) || 0; }
+    const CLOSED_S  = new Set(CLOSED_STATUSES);
+    const PENDING_S = new Set(PENDING_STATUSES);
+
+    const agents = {};
+    clean.forEach(t => {
+      const a = t.attributed_agent || 'Unknown';
+      if (!agents[a]) agents[a] = { closed:0, pending:0, listed:0, closedUnits:0, pendingUnits:0 };
+      if (CLOSED_S.has(t.status))  { agents[a].closed  += pv(t.volume); agents[a].closedUnits  += parseInt(t.units||'1'); }
+      if (PENDING_S.has(t.status)) { agents[a].pending += pv(t.volume); agents[a].pendingUnits += 1; }
+    });
+
+    // Add listings from Courted
+    if (snapshot?.agents) {
+      const courtedAgents = typeof snapshot.agents === 'string' ? JSON.parse(snapshot.agents) : snapshot.agents;
+      courtedAgents.forEach(ca => {
+        const name = ca.agent_name;
+        if (!agents[name]) agents[name] = { closed:0, pending:0, listed:0, closedUnits:0, pendingUnits:0 };
+        agents[name].listed = (ca.listings||[]).reduce((s,l)=>s+(l.price||0),0);
+      });
+    }
+
+    const sorted = Object.entries(agents)
+      .map(([name, s]) => ({ name, ...s, total: s.closed + s.pending + s.listed }))
+      .sort((a,b) => b.total - a.total);
+
+    const grid = document.getElementById('leaderboard-grid');
+    grid.innerHTML = sorted.map((a, i) => `
+      <div class="agent-card">
+        <div class="agent-card-top">
+          <div class="agent-rank">#${i+1}</div>
+          <div class="agent-avatar">${initials(a.name)}</div>
+          <div class="agent-name">${a.name}</div>
+          <div class="agent-pipeline">${fmt(a.total)}</div>
+        </div>
+        <div class="agent-breakdown">
+          <span><span class="val-closed">${fmt(a.closed)}</span> closed (${a.closedUnits})</span>
+          ${a.pending > 0 ? `<span><span class="val-pending">${fmt(a.pending)}</span> pending (${a.pendingUnits})</span>` : ''}
+          ${a.listed  > 0 ? `<span><span class="val-listed">${fmt(a.listed)}</span> listed</span>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function buildGCI(closed) {
+    function pv(s) { return parseFloat((s||'0').replace(/[$,()]/g,'')) || 0; }
+    const agents = {};
+    closed.forEach(t => {
+      const a = t.attributed_agent || 'Unknown';
+      if (!agents[a]) agents[a] = { gci:0, vol:0, units:0 };
+      agents[a].gci   += pv(t.gci||'0');
+      agents[a].vol   += pv(t.volume);
+      agents[a].units += parseInt(t.units||'1');
+    });
+    const sorted = Object.entries(agents).sort((a,b)=>b[1].gci-a[1].gci);
+    const tbody = document.getElementById('gci-tbody');
+    tbody.innerHTML = sorted.map(([name,s]) => `
+      <tr>
+        <td>${name}</td>
+        <td><span class="gci-units">${s.units} deal${s.units!==1?'s':''}</span></td>
+        <td>${fmt(s.vol)}</td>
+        <td>${fmtFull(s.gci)}</td>
+      </tr>
+    `).join('');
+    // Total row
+    const totalGCI = sorted.reduce((s,[,d])=>s+d.gci,0);
+    const totalVol = sorted.reduce((s,[,d])=>s+d.vol,0);
+    tbody.innerHTML += `<tr style="border-top:1px solid rgba(255,255,255,0.15)">
+      <td style="font-weight:800;color:white;">OFFICE TOTAL</td>
+      <td></td>
+      <td style="color:white;font-weight:800;">${fmt(totalVol)}</td>
+      <td style="color:#c9a84c;font-weight:900;font-size:15px;">${fmtFull(totalGCI)}</td>
+    </tr>`;
+  }
+
+  function buildPace(closedVol, closedGCI, closedUnits, pendingVol, listedVol) {
+    const yearPct = (new Date() - new Date(new Date().getFullYear(),0,1)) / (365.25*24*3600*1000);
+    const projected = yearPct > 0 ? closedVol / yearPct : 0;
+    const projGCI   = yearPct > 0 ? closedGCI  / yearPct : 0;
+    const volPct    = Math.min(closedVol / GOALS.volume * 100, 100);
+    const gciPct    = Math.min(closedGCI  / GOALS.gci    * 100, 100);
+    const goalPct   = yearPct * 100;
+
+    document.getElementById('pace-content').innerHTML = `
+      <div class="pace-row">
+        <div class="pace-label">Volume</div>
+        <div class="pace-bar-wrap">
+          <div class="pace-bar-fill" style="width:${volPct}%;background:#c9a84c;"></div>
+          <div class="pace-bar-goal" style="left:${Math.min(goalPct,100)}%;"></div>
+        </div>
+        <div class="pace-pct" style="color:#c9a84c;">${volPct.toFixed(1)}%</div>
+        <div class="pace-nums">${fmt(closedVol)} / ${fmt(GOALS.volume)} &nbsp; Proj: ${fmt(projected)}</div>
+      </div>
+      <div class="pace-row">
+        <div class="pace-label">GCI</div>
+        <div class="pace-bar-wrap">
+          <div class="pace-bar-fill" style="width:${gciPct}%;background:#10b981;"></div>
+          <div class="pace-bar-goal" style="left:${Math.min(goalPct,100)}%;"></div>
+        </div>
+        <div class="pace-pct" style="color:#10b981;">${gciPct.toFixed(1)}%</div>
+        <div class="pace-nums">${fmt(closedGCI)} / ${fmt(GOALS.gci)} &nbsp; Proj: ${fmt(projGCI)}</div>
+      </div>
+      <div style="margin-top:16px;font-size:11px;color:rgba(255,255,255,0.3);font-weight:600;">
+        ${(yearPct*100).toFixed(0)}% of 2026 elapsed &nbsp;·&nbsp; ${closedUnits} units closed
+        &nbsp;·&nbsp; White line = where you should be
+      </div>
+    `;
+  }
+
+  function buildStats(closedVol, closedGCI, closedUnits, pendingVol, listedVol, listedUnits) {
+    document.getElementById('stat-vol').textContent    = fmt(closedVol);
+    document.getElementById('stat-gci').textContent    = fmtFull(closedGCI);
+    document.getElementById('stat-avg').textContent    = closedUnits > 0 ? fmt(closedVol/closedUnits) : '--';
+    document.getElementById('stat-units').textContent  = closedUnits;
+    document.getElementById('stat-pending').textContent= fmt(pendingVol);
+    document.getElementById('stat-listed').textContent = fmt(listedVol);
+  }
+
+  checkSession();
+</script>
+</body>
+</html>
