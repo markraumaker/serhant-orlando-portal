@@ -3580,3 +3580,43 @@ table { border-collapse: collapse; width: 100%; }
   transition: background 0.2s, color 0.2s, border-color 0.2s; flex-shrink: 0;
 }
 .lv-btn:hover { background: rgba(104,104,238,0.28); color: white; border-color: rgba(104,104,238,0.5); }
+
+/* ============================================================
+   STUDIOS PHONE — FLOAT + SCREEN SCROLL ANIMATIONS
+   ============================================================ */
+
+@keyframes phone-float {
+  0%   { transform: translateY(0px) rotate(-4deg); }
+  50%  { transform: translateY(-14px) rotate(-4deg); }
+  100% { transform: translateY(0px) rotate(-4deg); }
+}
+@keyframes phone-float-back {
+  0%   { transform: translateY(0px) rotate(4deg); }
+  50%  { transform: translateY(-10px) rotate(4deg); }
+  100% { transform: translateY(0px) rotate(4deg); }
+}
+@keyframes screen-scroll {
+  0%   { object-position: top center; }
+  40%  { object-position: center center; }
+  80%  { object-position: bottom center; }
+  100% { object-position: top center; }
+}
+@keyframes glow-pulse {
+  0%   { box-shadow: 0 30px 80px rgba(18,18,117,0.5), 0 0 0 1px rgba(255,255,255,0.08); }
+  50%  { box-shadow: 0 40px 100px rgba(18,18,117,0.7), 0 0 30px rgba(104,104,238,0.15), 0 0 0 1px rgba(255,255,255,0.12); }
+  100% { box-shadow: 0 30px 80px rgba(18,18,117,0.5), 0 0 0 1px rgba(255,255,255,0.08); }
+}
+
+/* Front phone floats with glow */
+.studios-phone-wrap.sp-front .studios-phone-mockup {
+  animation: phone-float 5s ease-in-out infinite, glow-pulse 5s ease-in-out infinite;
+}
+/* Back phone floats offset — starts mid-cycle */
+.studios-phone-wrap.sp-back .studios-phone-mockup {
+  animation: phone-float-back 6s ease-in-out infinite;
+  animation-delay: -2s;
+}
+/* Screenshot slowly pans down and back up */
+.sp-ig-screen {
+  animation: screen-scroll 18s ease-in-out infinite !important;
+}
