@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style></style>
   <style>
     /* HOME-SPECIFIC STYLES */
@@ -497,53 +496,43 @@
 
   <script src="shared.js"></script>
   <script>
-    // Live stats from Supabase
-    const SUPABASE_URL = 'https://lqothpzxhxvhvyikmphx.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxb3RocHp4aHh2aHZ5aWttcGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5ODkzNjgsImV4cCI6MjA5MDU2NTM2OH0.zDE-lniLRF3TdYZmMMSQL20vF_H74_qiMlJM2tX_nKo';
-    const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const SB = 'https://lqothpzxhxvhvyikmphx.supabase.co/rest/v1';
+    const SK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxb3RocHp4aHh2aHZ5aWttcGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5ODkzNjgsImV4cCI6MjA5MDU2NTM2OH0.zDE-lniLRF3TdYZmMMSQL20vF_H74_qiMlJM2tX_nKo';
+    const SH = { 'apikey': SK, 'Authorization': 'Bearer ' + SK };
 
-    function fmtM(val) {
-      if (!val) return '--';
-      const n = parseFloat(String(val).replace(/[$,]/g,''));
-      if (isNaN(n)) return '--';
-      return n >= 1000000 ? '$' + (n/1000000).toFixed(1) + 'M' : '$' + Math.round(n/1000) + 'K';
-    }
-    function fmtN(val) {
-      if (!val && val !== 0) return '--';
-      return Number(val).toLocaleString();
-    }
+    function sb(path) { return fetch(SB + path, { headers: SH }).then(r => r.json()); }
+    function fmtM(n) { return n >= 1e6 ? '$' + (n/1e6).toFixed(1) + 'M' : '$' + Math.round(n/1000) + 'K'; }
+    function fmtN(n) { return Number(n).toLocaleString(); }
+    function set(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
 
-    async function loadLiveStats() {
+    async function loadStats() {
       try {
-        // Closed volume from TB
-        const CLOSED = ['Closed & Processed for Payment','Closed/Rented - Ready for processing','Rented & Processed for Payment'];
-        const { data: txns } = await _sb.from('tb_transactions').select('volume,status').in('status', CLOSED);
-        let closedVol = 0;
-        if (txns) txns.forEach(t => {
-          const v = parseFloat(String(t.volume||'0').replace(/[$,]/g,''));
-          if (!isNaN(v)) closedVol += v;
-        });
-        const volStr = fmtM(closedVol);
-        document.getElementById('hero-volume').textContent = volStr + ' Closed YTD';
-        document.getElementById('stat-volume').textContent = volStr;
+        // Closed volume
+        const closed = encodeURIComponent('("Closed & Processed for Payment","Closed/Rented - Ready for processing","Rented & Processed for Payment")');
+        const txns = await sb('/tb_transactions?select=volume&status=in.' + closed);
+        const vol = txns.reduce ? txns.reduce((s,t) => s + parseFloat((t.volume||'0').replace(/[$,]/g,'')), 0) : 0;
+        const volStr = fmtM(vol);
+        set('hero-volume', volStr + ' Closed YTD');
+        set('stat-volume', volStr);
 
-        // Active listings from Courted -- latest snapshot only
-        const { data: latestDate } = await _sb.from('courted_active_listings').select('snapshot_date').order('snapshot_date', {ascending:false}).limit(1).single();
-        const { data: courted } = latestDate ? await _sb.from('courted_active_listings').select('active_count').eq('snapshot_date', latestDate.snapshot_date) : {data: null};
-        const listings = courted ? courted.reduce((sum, a) => sum + (a.active_count || 0), 0) : '--';
-        document.getElementById('hero-listings').textContent = fmtN(listings) + ' Active Listings';
-        document.getElementById('stat-listings').textContent = fmtN(listings);
+        // Active listings -- latest snapshot
+        const snap = await sb('/courted_active_listings?select=snapshot_date&order=snapshot_date.desc&limit=1');
+        if (snap && snap[0]) {
+          const rows = await sb('/courted_active_listings?select=active_count&snapshot_date=eq.' + snap[0].snapshot_date);
+          const total = rows.reduce ? rows.reduce((s,r) => s + (r.active_count||0), 0) : 0;
+          set('hero-listings', fmtN(total) + ' Active Listings');
+          set('stat-listings', fmtN(total));
+        }
 
-        // Followers from Vista Social
-        const { data: vista } = await _sb.from('vista_social_snapshots').select('followers').order('snapshot_date', {ascending:false}).limit(1).single();
-        const followers = vista ? vista.followers : '--';
-        document.getElementById('hero-followers').textContent = fmtN(followers) + ' Followers';
-        document.getElementById('stat-followers').textContent = fmtN(followers);
-      } catch(e) {
-        console.warn('Stats load failed:', e);
-      }
+        // Followers
+        const vs = await sb('/vista_social_snapshots?select=followers&order=snapshot_date.desc&limit=1');
+        if (vs && vs[0]) {
+          set('hero-followers', fmtN(vs[0].followers) + ' Followers');
+          set('stat-followers', fmtN(vs[0].followers));
+        }
+      } catch(e) { console.warn('Stats:', e); }
     }
-    loadLiveStats();
+    loadStats();
   </script>
 </body>
 </html>
