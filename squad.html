@@ -13,6 +13,37 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <style>
+    /* ---- LOGO KIT ---- */
+    .logo-packages-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+    @media(max-width:800px){ .logo-packages-grid { grid-template-columns:1fr; } }
+    .logo-package-card { background:rgba(18,18,117,0.45); border:1px solid rgba(80,80,200,0.25); border-radius:18px; overflow:hidden; transition:border-color .2s,box-shadow .2s; }
+    .logo-package-card:hover { border-color:rgba(104,104,238,0.45); box-shadow:0 8px 30px rgba(104,104,238,0.12); }
+    .logo-preview { height:130px; display:flex; align-items:center; justify-content:center; padding:24px 32px; position:relative; overflow:hidden; }
+    .logo-preview.lp-dark { background:linear-gradient(135deg,#0a0a55 0%,#121275 100%); }
+    .logo-preview.lp-light { background:#ffffff; }
+    .logo-preview img { max-height:52px; max-width:100%; width:auto; object-fit:contain; position:relative; z-index:1; }
+    .logo-preview.lp-mark img { max-height:64px; }
+    .logo-preview.lp-wide img { max-height:36px; }
+    .logo-package-info { padding:20px 24px 24px; }
+    .logo-package-name { font-size:15px; font-weight:800; color:#fff; margin-bottom:4px; }
+    .logo-package-desc { font-size:12px; color:rgba(255,255,255,0.4); line-height:1.55; margin-bottom:18px; }
+    .logo-variants { display:flex; flex-direction:column; gap:10px; }
+    .logo-variant { display:flex; align-items:center; gap:8px; }
+    .lv-dot { width:12px; height:12px; border-radius:50%; flex-shrink:0; display:inline-block; }
+    .lv-dot.lv-white  { background:#fff; border:1px solid rgba(255,255,255,0.3); }
+    .lv-dot.lv-blue   { background:#121275; border:1px solid rgba(104,104,238,0.5); }
+    .lv-dot.lv-black  { background:#111; border:1px solid rgba(255,255,255,0.15); }
+    .lv-dot.lv-orange { background:#F37021; border:1px solid rgba(243,112,33,0.5); }
+    .lv-dot.lv-gray   { background:#888; border:1px solid rgba(255,255,255,0.2); }
+    .lv-dot.lv-blue-orange { background:linear-gradient(90deg,#121275 50%,#F37021 50%); border:1px solid rgba(255,255,255,0.15); }
+    .lv-dot.lv-gray-orange { background:linear-gradient(90deg,#888 50%,#F37021 50%); border:1px solid rgba(255,255,255,0.15); }
+    .lv-dot.lv-white-orange { background:linear-gradient(90deg,#fff 50%,#F37021 50%); border:1px solid rgba(255,255,255,0.2); }
+    .lv-label { font-size:12px; color:rgba(255,255,255,0.6); font-weight:600; flex:1; }
+    a.lv-btn { display:inline-flex; align-items:center; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,0.7) !important; background:rgba(104,104,238,0.15); border:1px solid rgba(104,104,238,0.3); border-radius:6px; padding:5px 12px; text-decoration:none !important; transition:all .2s; flex-shrink:0; }
+    a.lv-btn:hover { background:rgba(104,104,238,0.3); color:#fff !important; border-color:rgba(104,104,238,0.6); }
+    .brand-kit-intro { font-size:15px; color:rgba(255,255,255,0.45); line-height:1.7; max-width:600px; margin:0 auto 40px; text-align:center; }
+  </style>
 </head>
 <body>
 
