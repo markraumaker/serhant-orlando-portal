@@ -71,112 +71,8 @@
                 <th>Active Listings</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td><span class="rank-num rank-1">1</span></td>
-                <td><span class="agent-name">Sarah Chen</span></td>
-                <td class="vol-value">$8.4M</td>
-                <td>14</td>
-                <td>9</td>
-              </tr>
-              <tr>
-                <td><span class="rank-num rank-2">2</span></td>
-                <td><span class="agent-name">Marcus Williams</span></td>
-                <td class="vol-value">$7.1M</td>
-                <td>11</td>
-                <td>7</td>
-              </tr>
-              <tr>
-                <td><span class="rank-num rank-3">3</span></td>
-                <td><span class="agent-name">Priya Nair</span></td>
-                <td class="vol-value">$6.8M</td>
-                <td>10</td>
-                <td>8</td>
-              </tr>
-              <tr>
-                <td><span class="rank-num rank-other">4</span></td>
-                <td><span class="agent-name">Jordan Pierce</span></td>
-                <td class="vol-value">$5.9M</td>
-                <td>9</td>
-                <td>6</td>
-              </tr>
-              <tr>
-                <td><span class="rank-num rank-other">5</span></td>
-                <td><span class="agent-name">Alexis Monroe</span></td>
-                <td class="vol-value">$5.2M</td>
-                <td>8</td>
-                <td>5</td>
-              </tr>
-              <tr>
-                <td><span class="rank-num rank-other">6</span></td>
-                <td><span class="agent-name">Daniel Torres</span></td>
-                <td class="vol-value">$4.8M</td>
-                <td>7</td>
-                <td>6</td>
-              </tr>
-              <tr>
-                <td><span class="rank-num rank-other">7</span></td>
-                <td><span class="agent-name">Rachel Kim</span></td>
-                <td class="vol-value">$4.3M</td>
-                <td>7</td>
-                <td>4</td>
-              </tr>
-              <tr>
-                <td><span class="rank-num rank-other">8</span></td>
-                <td><span class="agent-name">Brandon Scott</span></td>
-                <td class="vol-value">$4.1M</td>
-                <td>6</td>
-                <td>5</td>
-              </tr>
-              <tr>
-                <td><span class="rank-num rank-other">9</span></td>
-                <td><span class="agent-name">Nadia Okafor</span></td>
-                <td class="vol-value">$3.7M</td>
-                <td>6</td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <td><span class="rank-num rank-other">10</span></td>
-                <td><span class="agent-name">Tyler Reeves</span></td>
-                <td class="vol-value">$3.4M</td>
-                <td>5</td>
-                <td>4</td>
-              </tr>
-              <tr>
-                <td><span class="rank-num rank-other">11</span></td>
-                <td><span class="agent-name">Camille Fontaine</span></td>
-                <td class="vol-value">$3.1M</td>
-                <td>5</td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <td><span class="rank-num rank-other">12</span></td>
-                <td><span class="agent-name">Derek Nguyen</span></td>
-                <td class="vol-value">$2.9M</td>
-                <td>4</td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <td><span class="rank-num rank-other">13</span></td>
-                <td><span class="agent-name">Jasmine Brooks</span></td>
-                <td class="vol-value">$2.6M</td>
-                <td>4</td>
-                <td>2</td>
-              </tr>
-              <tr>
-                <td><span class="rank-num rank-other">14</span></td>
-                <td><span class="agent-name">Carlos Vega</span></td>
-                <td class="vol-value">$2.1M</td>
-                <td>3</td>
-                <td>2</td>
-              </tr>
-              <tr>
-                <td><span class="rank-num rank-other">15</span></td>
-                <td><span class="agent-name">Simone Hartley</span></td>
-                <td class="vol-value">$1.8M</td>
-                <td>3</td>
-                <td>1</td>
-              </tr>
+            <tbody id="ranks-tbody">
+              <tr><td colspan="5" style="text-align:center;padding:40px;color:rgba(255,255,255,0.3);letter-spacing:0.1em;font-size:12px;">LOADING...</td></tr>
             </tbody>
           </table>
         </div>
@@ -185,15 +81,15 @@
       <!-- Total Row -->
       <div class="stat-grid" style="margin-top: var(--space-8);">
         <div class="stat-card fade-in">
-          <div class="stat-value">$68.3M</div>
+          <div class="stat-value" id="rank-total-vol">--</div>
           <div class="stat-label">Total Volume YTD</div>
         </div>
         <div class="stat-card fade-in fade-in-delay-1">
-          <div class="stat-value">115</div>
+          <div class="stat-value" id="rank-total-sales">--</div>
           <div class="stat-label">Total Sales YTD</div>
         </div>
         <div class="stat-card fade-in fade-in-delay-2">
-          <div class="stat-value">97</div>
+          <div class="stat-value" id="rank-total-listings">--</div>
           <div class="stat-label">Active Listings</div>
         </div>
       </div>
@@ -204,14 +100,78 @@
   <!-- FOOTER -->
   <footer class="site-footer">
     <div class="footer-inner">
-      <div class="footer-logo">
-        <img src="assets/S-Orlando-White.svg" alt="S. Orlando" style="height:32px;width:auto;>
+      <div class="footer-bottom-bar">
+        <span class="footer-copy">&copy; 2026 SERHANT. ORLANDO. All rights reserved.</span>
+        <span class="footer-addr">37 N. Orange Ave #900B, Orlando FL 32801</span>
       </div>
-      <div class="footer-line"></div>
-      <div class="footer-address">SERHANT. ORLANDO &nbsp;&bull;&nbsp; 37 N. Orange Ave #900B, Orlando FL 32801</div>
     </div>
   </footer>
 
   <script src="shared.js"></script>
+  <script>
+    const SB = 'https://lqothpzxhxvhvyikmphx.supabase.co/rest/v1';
+    const SK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxb3RocHp4aHh2aHZ5aWttcGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5ODkzNjgsImV4cCI6MjA5MDU2NTM2OH0.zDE-lniLRF3TdYZmMMSQL20vF_H74_qiMlJM2tX_nKo';
+    const SH = { 'apikey': SK, 'Authorization': 'Bearer ' + SK };
+    const CLOSED = encodeURIComponent('("Closed & Processed for Payment","Closed/Rented - Ready for processing","Rented & Processed for Payment")');
+
+    function sb(path) { return fetch(SB + path, { headers: SH }).then(r => r.json()); }
+    function fmtM(n) { return n >= 1e6 ? '$' + (n/1e6).toFixed(1) + 'M' : n >= 1e3 ? '$' + (n/1e3).toFixed(0) + 'K' : '$' + n; }
+    function fmtN(n) { return Number(n).toLocaleString(); }
+
+    async function loadRanks() {
+      try {
+        // Pull all closed transactions
+        const txns = await sb('/tb_transactions?select=attributed_agent,volume,units&status=in.' + CLOSED);
+
+        // Aggregate by agent
+        const agents = {};
+        txns.forEach(t => {
+          const name = t.attributed_agent || 'Unknown';
+          const vol = parseFloat((t.volume || '0').replace(/[$,]/g, ''));
+          const units = parseInt(t.units || '1');
+          if (!agents[name]) agents[name] = { vol: 0, sales: 0 };
+          agents[name].vol += vol;
+          agents[name].sales += units;
+        });
+
+        // Sort by volume
+        const ranked = Object.entries(agents)
+          .sort((a, b) => b[1].vol - a[1].vol)
+          .filter(([_, d]) => d.vol > 0);
+
+        // Pull active listings (latest snapshot)
+        const snap = await sb('/courted_active_listings?select=snapshot_date&order=snapshot_date.desc&limit=1');
+        let listingsMap = {};
+        if (snap && snap[0]) {
+          const rows = await sb('/courted_active_listings?select=agent_name,active_count&snapshot_date=eq.' + snap[0].snapshot_date);
+          rows.forEach(r => { listingsMap[r.agent_name] = (listingsMap[r.agent_name] || 0) + r.active_count; });
+        }
+
+        // Build table
+        const tbody = document.getElementById('ranks-tbody');
+        tbody.innerHTML = ranked.map(([name, data], i) => {
+          const rank = i + 1;
+          const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
+          const listings = listingsMap[name] || 0;
+          return `<tr>
+            <td><span class="rank-num ${rankClass}">${rank}</span></td>
+            <td><span class="agent-name">${name}</span></td>
+            <td class="vol-value">${fmtM(data.vol)}</td>
+            <td>${data.sales}</td>
+            <td>${listings || '--'}</td>
+          </tr>`;
+        }).join('');
+
+        // Totals
+        const totalVol = ranked.reduce((s, [_, d]) => s + d.vol, 0);
+        const totalSales = ranked.reduce((s, [_, d]) => s + d.sales, 0);
+        const totalListings = Object.values(listingsMap).reduce((s, v) => s + v, 0);
+        document.getElementById('rank-total-vol').textContent = fmtM(totalVol);
+        document.getElementById('rank-total-sales').textContent = fmtN(totalSales);
+        document.getElementById('rank-total-listings').textContent = fmtN(totalListings);
+      } catch(e) { console.warn('Ranks:', e); }
+    }
+    loadRanks();
+  </script>
 </body>
 </html>
