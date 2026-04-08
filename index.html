@@ -527,8 +527,9 @@
         document.getElementById('hero-volume').textContent = volStr + ' Closed YTD';
         document.getElementById('stat-volume').textContent = volStr;
 
-        // Active listings from Courted
-        const { data: courted } = await _sb.from('courted_active_listings').select('agent_name,active_count');
+        // Active listings from Courted -- latest snapshot only
+        const { data: latestDate } = await _sb.from('courted_active_listings').select('snapshot_date').order('snapshot_date', {ascending:false}).limit(1).single();
+        const { data: courted } = latestDate ? await _sb.from('courted_active_listings').select('active_count').eq('snapshot_date', latestDate.snapshot_date) : {data: null};
         const listings = courted ? courted.reduce((sum, a) => sum + (a.active_count || 0), 0) : '--';
         document.getElementById('hero-listings').textContent = fmtN(listings) + ' Active Listings';
         document.getElementById('stat-listings').textContent = fmtN(listings);
