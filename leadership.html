@@ -156,7 +156,7 @@
 <!-- Auth gate handled by auth-check.js -->
 
 <!-- APP -->
-<div id="app">
+<div id="app" style="display:block;">
   <div class="top-bar">
     <div class="top-bar-left">
       <img src="assets/logos/SERHANT-Orlando-White.svg" alt="SERHANT. Orlando">
@@ -522,7 +522,12 @@ function renderAnnouncements(anns) {
     : '<div style="color:rgba(255,255,255,0.3);font-size:13px;padding:8px 0;">No active announcements.</div>';
 }
 
-checkSession();
+// Open access -- load data directly
+  loadSupabaseData();
+  // Try Hub API with anon token if available
+  sb.auth.getSession().then(({data:{session}}) => {
+    if (session) loadHubAPI(session.access_token);
+  });
 </script>
 </body>
 </html>
