@@ -3373,3 +3373,119 @@ table { border-collapse: collapse; width: 100%; }
   pointer-events: none;
   z-index: 0;
 }
+
+/* ============================================================
+   HOME SQUAD LOGO KIT
+   ============================================================ */
+.hs-logo-kit-section { background: var(--color-bg); }
+.hs-kit-intro {
+  font-size: 15px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.7;
+  max-width: 600px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+.hs-logo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+@media (max-width: 800px) {
+  .hs-logo-grid { grid-template-columns: 1fr; }
+}
+.hs-logo-card {
+  background: rgba(243,112,33,0.06);
+  border: 1px solid rgba(243,112,33,0.18);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.hs-logo-card:hover {
+  border-color: rgba(243,112,33,0.4);
+  box-shadow: 0 8px 30px rgba(243,112,33,0.08);
+}
+.hs-logo-preview {
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 28px;
+  position: relative;
+  overflow: hidden;
+}
+.hs-lp-light {
+  background: #ffffff;
+}
+.hs-lp-light img {
+  max-height: 70px;
+  max-width: 100%;
+  object-fit: contain;
+}
+.hs-lp-dark {
+  background: linear-gradient(135deg, #0a0a55 0%, #121275 100%);
+}
+.hs-lp-pattern {
+  background-image: url('assets/home-squad-pattern.jpg');
+  background-size: 180px;
+  background-repeat: repeat;
+  background-color: #0a0a55;
+}
+.hs-lp-pattern::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10,10,85,0.82);
+}
+.hs-bb-label {
+  position: relative;
+  z-index: 1;
+  font-size: 22px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: 3px;
+  text-align: center;
+}
+.hs-bb-sub {
+  position: relative;
+  z-index: 1;
+  font-size: 11px;
+  color: #F37021;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-align: center;
+  margin-top: 6px;
+}
+.hs-logo-info { padding: 18px 22px 22px; display: flex; flex-direction: column; }
+.hs-logo-name { font-size: 15px; font-weight: 800; color: white; margin-bottom: 5px; }
+.hs-logo-desc { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.55; margin-bottom: 16px; }
+.hs-logo-variants { display: flex; flex-direction: column; gap: 9px; }
+.hs-logo-variant { display: flex; align-items: center; gap: 8px; }
+.hs-lv-swatch {
+  width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
+}
+.hs-lv-label { font-size: 12px; color: rgba(255,255,255,0.55); font-weight: 600; flex: 1; }
+.hs-lv-btn {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+  background: rgba(243,112,33,0.15);
+  border: 1px solid rgba(243,112,33,0.3);
+  border-radius: 6px;
+  padding: 5px 12px;
+  text-decoration: none;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.hs-lv-btn:hover {
+  background: rgba(243,112,33,0.3);
+  border-color: rgba(243,112,33,0.6);
+  color: white;
+}
