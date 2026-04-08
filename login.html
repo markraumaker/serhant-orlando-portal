@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In | SERHANT. ORLANDO</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;font-family:'Montserrat',sans-serif;background:#06061a;}
+    body{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+
+    .login-card{
+      width:360px;
+      display:flex;flex-direction:column;align-items:center;
+      text-align:center;gap:0;
+    }
+    .login-logo{height:30px;margin-bottom:36px;}
+    .login-title{font-size:22px;font-weight:900;color:white;margin-bottom:8px;}
+    .login-sub{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.6;margin-bottom:28px;}
+
+    .login-form{width:100%;display:flex;flex-direction:column;gap:12px;}
+    .login-input{
+      background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);
+      border-radius:10px;padding:14px 18px;font-size:14px;
+      color:white;font-family:'Montserrat',sans-serif;outline:none;
+      transition:border-color .2s;
+    }
+    .login-input:focus{border-color:rgba(255,255,255,0.3);}
+    .login-input::placeholder{color:rgba(255,255,255,0.25);}
+    .login-btn{
+      background:#121275;border:none;border-radius:10px;
+      padding:14px;font-size:14px;font-weight:700;
+      color:white;cursor:pointer;font-family:'Montserrat',sans-serif;
+      transition:background .2s;
+    }
+    .login-btn:hover:not(:disabled){background:#1a1a9a;}
+    .login-btn:disabled{opacity:0.6;cursor:default;}
+
+    .login-err{font-size:12px;color:#f87171;margin-top:4px;display:none;}
+    .login-success{
+      display:none;text-align:center;
+      background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);
+      border-radius:12px;padding:24px;margin-top:8px;
+    }
+    .login-success h3{font-size:16px;font-weight:800;color:#10b981;margin-bottom:8px;}
+    .login-success p{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6;}
+    .login-success .email-shown{color:white;font-weight:700;}
+  </style>
+</head>
+<body>
+<div class="login-card">
+  <img src="assets/logos/SERHANT-Orlando-White.svg" alt="SERHANT. Orlando" class="login-logo">
+  <div class="login-title">Agent Portal</div>
+  <div class="login-sub">Enter your @serhant.com email.<br>We'll send you a sign-in link.</div>
+
+  <form class="login-form" id="login-form">
+    <input type="email" class="login-input" id="email-input" placeholder="you@serhant.com" required autocomplete="email">
+    <button type="submit" class="login-btn" id="login-btn">Send Sign-In Link</button>
+    <div class="login-err" id="login-err"></div>
+  </form>
+
+  <div class="login-success" id="login-success">
+    <h3>Check your inbox</h3>
+    <p>We sent a sign-in link to<br><span class="email-shown" id="sent-email"></span><br><br>Click the link in that email to access the portal.</p>
+  </div>
+</div>
+
+<script>
+  const SB_URL = 'https://lqothpzxhxvhvyikmphx.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxb3RocHp4aHh2aHZ5aWttcGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5ODkzNjgsImV4cCI6MjA5MDU2NTM2OH0.zDE-lniLRF3TdYZmMMSQL20vF_H74_qiMlJM2tX_nKo';
+  const sb = supabase.createClient(SB_URL, SB_KEY);
+
+  // Handle magic link callback (token in URL hash or query)
+  async function handleCallback() {
+    const hash = window.location.hash;
+    const query = window.location.search;
+    if (hash.includes('access_token') || query.includes('code=')) {
+      const { data: { session }, error } = await sb.auth.getSession();
+      if (session) {
+        window.history.replaceState(null, '', window.location.pathname);
+        const dest = sessionStorage.getItem('portal_redirect') || 'index.html';
+        sessionStorage.removeItem('portal_redirect');
+        window.location.replace(dest);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Check if already logged in
+  async function init() {
+    if (await handleCallback()) return;
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+      const dest = sessionStorage.getItem('portal_redirect') || 'index.html';
+      sessionStorage.removeItem('portal_redirect');
+      window.location.replace(dest);
+    }
+  }
+
+  document.getElementById('login-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = document.getElementById('email-input').value.trim().toLowerCase();
+    const btn   = document.getElementById('login-btn');
+    const err   = document.getElementById('login-err');
+    err.style.display = 'none';
+
+    if (!email.endsWith('@serhant.com')) {
+      err.textContent = 'Only @serhant.com email addresses are allowed.';
+      err.style.display = 'block'; return;
+    }
+
+    btn.textContent = 'Sending...'; btn.disabled = true;
+
+    const { error } = await sb.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: window.location.origin + '/login.html',
+        shouldCreateUser: false  // only allow existing users
+      }
+    });
+
+    if (error) {
+      btn.textContent = 'Send Sign-In Link'; btn.disabled = false;
+      err.textContent = error.message.includes('not found') || error.message.includes('not authorized')
+        ? 'This email is not authorized. Contact Mark.'
+        : 'Something went wrong. Try again.';
+      err.style.display = 'block';
+    } else {
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('sent-email').textContent = email;
+      document.getElementById('login-success').style.display = 'block';
+    }
+  });
+
+  init();
+</script>
+</body>
+</html>
