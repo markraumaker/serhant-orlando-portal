@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style></style>
   <style>
     /* HOME-SPECIFIC STYLES */
@@ -171,7 +172,7 @@
   <nav class="site-nav" role="navigation">
     <div class="nav-inner">
       <a href="index.html" class="nav-logo" aria-label="SERHANT. Orlando Home">
-        <img src="assets/logo-full-white.png" alt="SERHANT. Orlando">
+        <img src="assets/S-Orlando-White-800px.jpg" alt="S. Orlando" style="height:36px;width:auto;">
       </a>
       <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -198,9 +199,9 @@
         Your Brokerage.<br><span>One Place.</span>
       </div>
       <div class="hero-pills fade-in fade-in-delay-2">
-        <span class="pill"><span class="pill-dot"></span>97 Active Listings</span>
-        <span class="pill"><span class="pill-dot"></span>$68.3M Closed YTD</span>
-        <span class="pill"><span class="pill-dot"></span>6,592 Followers</span>
+        <span class="pill"><span class="pill-dot"></span><span id="hero-listings">-- Active Listings</span></span>
+        <span class="pill"><span class="pill-dot"></span><span id="hero-volume">-- Closed YTD</span></span>
+        <span class="pill"><span class="pill-dot"></span><span id="hero-followers">-- Followers</span></span>
       </div>
     </div>
     <div class="hero-scroll">
@@ -355,6 +356,21 @@
           </div>
         </a>
 
+        <!-- SHAIR -->
+        <a href="https://serhant.com/shair" target="_blank" rel="noopener" class="tool-card fade-in">
+          <div class="tool-card-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a5 5 0 0 0-5 5c0 2.5 2 4.5 4 6-2 1-5 3-5 7h12c0-4-3-6-5-7 2-1.5 4-3.5 4-6a5 5 0 0 0-5-5z"/>
+            </svg>
+          </div>
+          <div class="tool-card-name">SHair</div>
+          <div class="tool-card-desc">SERHANT. signature style — personal brand aesthetics and image consulting.</div>
+          <div class="tool-card-arrow">
+            Open
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+
         <!-- GLOW UP -->
         <a href="#" class="tool-card fade-in">
           <div class="tool-card-icon">
@@ -441,20 +457,20 @@
     <div class="section-inner">
       <div class="section-header fade-in">
         <span class="section-eyebrow">Performance</span>
-        <h2 class="section-title">Team Overview</h2>
+        <h2 class="section-title">Office Overview</h2>
         <div class="section-rule"></div>
       </div>
       <div class="stat-grid">
         <div class="stat-card fade-in">
-          <div class="stat-value">$68.3M</div>
+          <div class="stat-value" id="stat-volume">--</div>
           <div class="stat-label">Closed Volume YTD</div>
         </div>
         <div class="stat-card fade-in fade-in-delay-1">
-          <div class="stat-value">97</div>
+          <div class="stat-value" id="stat-listings">--</div>
           <div class="stat-label">Active Listings</div>
         </div>
         <div class="stat-card fade-in fade-in-delay-2">
-          <div class="stat-value">6,592</div>
+          <div class="stat-value" id="stat-followers">--</div>
           <div class="stat-label">Instagram Followers</div>
         </div>
       </div>
@@ -495,5 +511,53 @@
   </footer>
 
   <script src="shared.js"></script>
+  <script>
+    // Live stats from Supabase
+    const SUPABASE_URL = 'https://lqothpzxhxvhvyikmphx.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxb3RocHp4aHh2aHZ5aWttcGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5ODkzNjgsImV4cCI6MjA5MDU2NTM2OH0.zDE-lniLRF3TdYZmMMSQL20vF_H74_qiMlJM2tX_nKo';
+    const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    function fmtM(val) {
+      if (!val) return '--';
+      const n = parseFloat(String(val).replace(/[$,]/g,''));
+      if (isNaN(n)) return '--';
+      return n >= 1000000 ? '$' + (n/1000000).toFixed(1) + 'M' : '$' + Math.round(n/1000) + 'K';
+    }
+    function fmtN(val) {
+      if (!val && val !== 0) return '--';
+      return Number(val).toLocaleString();
+    }
+
+    async function loadLiveStats() {
+      try {
+        // Closed volume from TB
+        const CLOSED = ['Closed & Processed for Payment','Closed/Rented - Ready for processing','Rented & Processed for Payment'];
+        const { data: txns } = await _sb.from('tb_transactions').select('volume,status').in('status', CLOSED);
+        let closedVol = 0;
+        if (txns) txns.forEach(t => {
+          const v = parseFloat(String(t.volume||'0').replace(/[$,]/g,''));
+          if (!isNaN(v)) closedVol += v;
+        });
+        const volStr = fmtM(closedVol);
+        document.getElementById('hero-volume').textContent = volStr + ' Closed YTD';
+        document.getElementById('stat-volume').textContent = volStr;
+
+        // Active listings from Courted snapshot
+        const { data: courted } = await _sb.from('courted_snapshots').select('total_active_listings').order('snapshot_date', {ascending:false}).limit(1).single();
+        const listings = courted ? courted.total_active_listings || courted.total_listings || '--' : '--';
+        document.getElementById('hero-listings').textContent = fmtN(listings) + ' Active Listings';
+        document.getElementById('stat-listings').textContent = fmtN(listings);
+
+        // Followers from Vista Social
+        const { data: vista } = await _sb.from('vista_social_snapshots').select('followers').order('snapshot_date', {ascending:false}).limit(1).single();
+        const followers = vista ? vista.followers : '--';
+        document.getElementById('hero-followers').textContent = fmtN(followers) + ' Followers';
+        document.getElementById('stat-followers').textContent = fmtN(followers);
+      } catch(e) {
+        console.warn('Stats load failed:', e);
+      }
+    }
+    loadLiveStats();
+  </script>
 </body>
 </html>
