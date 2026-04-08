@@ -10,6 +10,96 @@
   <link rel="stylesheet" href="style.css">
   <style>
     /* =========================================================
+       DOC ITEMS - UPGRADED WITH DOWNLOAD + EMAIL
+       ========================================================= */
+    .doc-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      background: rgba(18,18,117,0.25);
+      border: 1px solid rgba(80,80,200,0.18);
+      transition: border-color 0.2s, background 0.2s;
+      text-decoration: none;
+    }
+    .doc-item:hover {
+      background: rgba(18,18,117,0.4);
+      border-color: rgba(104,104,238,0.35);
+    }
+    .doc-item-left { flex: 1; min-width: 0; }
+    .doc-name { font-size: 14px; font-weight: 700; color: white; margin-bottom: 3px; }
+    .doc-type { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 600; letter-spacing: 0.04em; }
+    .doc-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .doc-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: 1px solid;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      white-space: nowrap;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .doc-btn-download {
+      background: rgba(104,104,238,0.15);
+      border-color: rgba(104,104,238,0.3);
+      color: rgba(255,255,255,0.75);
+    }
+    .doc-btn-download:hover {
+      background: rgba(104,104,238,0.3);
+      border-color: rgba(104,104,238,0.55);
+      color: white;
+    }
+    .doc-btn-email {
+      background: rgba(18,18,117,0.5);
+      border-color: rgba(80,80,200,0.3);
+      color: rgba(255,255,255,0.6);
+    }
+    .doc-btn-email:hover {
+      background: rgba(48,48,176,0.4);
+      border-color: rgba(104,104,238,0.5);
+      color: white;
+    }
+    /* Toast */
+    #doc-toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(18,18,117,0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(104,104,238,0.4);
+      border-radius: 12px;
+      padding: 14px 24px;
+      font-size: 13px;
+      font-weight: 600;
+      color: white;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s, transform 0.3s;
+      white-space: nowrap;
+    }
+    #doc-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    #doc-toast.toast-error { border-color: rgba(255,80,80,0.5); }
+
+    /* =========================================================
        BRAND KIT SECTION
        ========================================================= */
     .brand-kit-section { background: var(--color-bg); }
@@ -215,18 +305,21 @@
                 <span class="lv-label">White</span>
                 <a href="assets/logos/SERHANT-Orlando-White.svg" download class="lv-btn">SVG</a>
                 <a href="assets/logos/SERHANT-Orlando-White.pdf" download class="lv-btn">PDF</a>
+                <a href="assets/logos/SERHANT-Orlando-White-4000px.png" download class="lv-btn">PNG</a>
               </div>
               <div class="logo-variant">
                 <span class="lv-dot lv-blue"></span>
                 <span class="lv-label">SERHANT. Blue</span>
                 <a href="assets/logos/SERHANT-Orlando-SerhantBlue.svg" download class="lv-btn">SVG</a>
                 <a href="assets/logos/SERHANT-Orlando-SerhantBlue.pdf" download class="lv-btn">PDF</a>
+                <a href="assets/logos/SERHANT-Orlando-SerhantBlue-4000px.png" download class="lv-btn">PNG</a>
               </div>
               <div class="logo-variant">
                 <span class="lv-dot lv-black"></span>
                 <span class="lv-label">Black</span>
                 <a href="assets/logos/SERHANT-Orlando-Black.svg" download class="lv-btn">SVG</a>
                 <a href="assets/logos/SERHANT-Orlando-Black.pdf" download class="lv-btn">PDF</a>
+                <a href="assets/logos/SERHANT-Orlando-Black-4000px.png" download class="lv-btn">PNG</a>
               </div>
             </div>
           </div>
@@ -246,18 +339,21 @@
                 <span class="lv-label">White</span>
                 <a href="assets/logos/S-Orlando-White.svg" download class="lv-btn">SVG</a>
                 <a href="assets/logos/S-Orlando-White.pdf" download class="lv-btn">PDF</a>
+                <a href="assets/logos/S-Orlando-White-4000px.png" download class="lv-btn">PNG</a>
               </div>
               <div class="logo-variant">
                 <span class="lv-dot lv-blue"></span>
                 <span class="lv-label">SERHANT. Blue</span>
                 <a href="assets/logos/S-Orlando-SerhantBlue.svg" download class="lv-btn">SVG</a>
                 <a href="assets/logos/S-Orlando-SerhantBlue.pdf" download class="lv-btn">PDF</a>
+                <a href="assets/logos/S-Orlando-SerhantBlue-4000px.png" download class="lv-btn">PNG</a>
               </div>
               <div class="logo-variant">
                 <span class="lv-dot lv-black"></span>
                 <span class="lv-label">Black</span>
                 <a href="assets/logos/S-Orlando-Black.svg" download class="lv-btn">SVG</a>
                 <a href="assets/logos/S-Orlando-Black.pdf" download class="lv-btn">PDF</a>
+                <a href="assets/logos/S-Orlando-Black-4000px.png" download class="lv-btn">PNG</a>
               </div>
             </div>
           </div>
@@ -277,18 +373,21 @@
                 <span class="lv-label">White</span>
                 <a href="assets/logos/S-Mark-White.svg" download class="lv-btn">SVG</a>
                 <a href="assets/logos/S-Mark-White.pdf" download class="lv-btn">PDF</a>
+                <a href="assets/logos/S-Mark-White-4000px.png" download class="lv-btn">PNG</a>
               </div>
               <div class="logo-variant">
                 <span class="lv-dot lv-blue"></span>
                 <span class="lv-label">SERHANT. Blue</span>
                 <a href="assets/logos/S-Mark-SerhantBlue.svg" download class="lv-btn">SVG</a>
                 <a href="assets/logos/S-Mark-SerhantBlue.pdf" download class="lv-btn">PDF</a>
+                <a href="assets/logos/S-Mark-SerhantBlue-4000px.png" download class="lv-btn">PNG</a>
               </div>
               <div class="logo-variant">
                 <span class="lv-dot lv-black"></span>
                 <span class="lv-label">Black</span>
                 <a href="assets/logos/S-Mark-Black.svg" download class="lv-btn">SVG</a>
                 <a href="assets/logos/S-Mark-Black.pdf" download class="lv-btn">PDF</a>
+                <a href="assets/logos/S-Mark-Black-4000px.png" download class="lv-btn">PNG</a>
               </div>
             </div>
           </div>
@@ -308,18 +407,21 @@
                 <span class="lv-label">White</span>
                 <a href="assets/logos/SERHANT-White.svg" download class="lv-btn">SVG</a>
                 <a href="assets/logos/SERHANT-White.pdf" download class="lv-btn">PDF</a>
+                <a href="assets/logos/SERHANT-White-4000px.png" download class="lv-btn">PNG</a>
               </div>
               <div class="logo-variant">
                 <span class="lv-dot lv-blue"></span>
                 <span class="lv-label">SERHANT. Blue</span>
                 <a href="assets/logos/SERHANT-SerhantBlue.svg" download class="lv-btn">SVG</a>
                 <a href="assets/logos/SERHANT-SerhantBlue.pdf" download class="lv-btn">PDF</a>
+                <a href="assets/logos/SERHANT-SerhantBlue-4000px.png" download class="lv-btn">PNG</a>
               </div>
               <div class="logo-variant">
                 <span class="lv-dot lv-black"></span>
                 <span class="lv-label">Black</span>
                 <a href="assets/logos/SERHANT-Black.svg" download class="lv-btn">SVG</a>
                 <a href="assets/logos/SERHANT-Black.pdf" download class="lv-btn">PDF</a>
+                <a href="assets/logos/SERHANT-Black-4000px.png" download class="lv-btn">PNG</a>
               </div>
             </div>
           </div>
@@ -339,95 +441,158 @@
       </div>
       <div class="docs-list">
 
-        <a href="assets/S-Orlando-White.pdf" download class="doc-item fade-in">
-          <div>
+        <div class="doc-item fade-in">
+          <div class="doc-item-left">
             <div class="doc-name">W-9 (2026)</div>
             <div class="doc-type">PDF &bull; Tax Form</div>
           </div>
-          <div class="doc-download">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <div class="doc-actions">
+            <a href="assets/docs/w9-2026-serhant-florida.pdf" download class="doc-btn doc-btn-download">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </a>
+            <button class="doc-btn doc-btn-email" onclick="emailDoc('w9-2026-serhant-florida.pdf','W-9 (2026)')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Email to Me
+            </button>
           </div>
-        </a>
+        </div>
 
-        <a href="#" class="doc-item fade-in">
-          <div>
+        <div class="doc-item fade-in">
+          <div class="doc-item-left">
             <div class="doc-name">Broker Info Sheet</div>
             <div class="doc-type">PDF &bull; Brokerage</div>
           </div>
-          <div class="doc-download">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <div class="doc-actions">
+            <a href="assets/docs/broker-info.pdf" download class="doc-btn doc-btn-download">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </a>
+            <button class="doc-btn doc-btn-email" onclick="emailDoc('broker-info.pdf','Broker Info Sheet')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Email to Me
+            </button>
           </div>
-        </a>
+        </div>
 
-        <a href="#" class="doc-item fade-in">
-          <div>
+        <div class="doc-item fade-in">
+          <div class="doc-item-left">
             <div class="doc-name">Wire Transfer Form</div>
             <div class="doc-type">PDF &bull; Finance</div>
           </div>
-          <div class="doc-download">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <div class="doc-actions">
+            <a href="assets/docs/wire-transfer-form-serhant-florida-llc.pdf" download class="doc-btn doc-btn-download">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </a>
+            <button class="doc-btn doc-btn-email" onclick="emailDoc('wire-transfer-form-serhant-florida-llc.pdf','Wire Transfer Form')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Email to Me
+            </button>
           </div>
-        </a>
+        </div>
 
-        <a href="#" class="doc-item fade-in">
-          <div>
+        <div class="doc-item fade-in">
+          <div class="doc-item-left">
             <div class="doc-name">Branch Office License</div>
             <div class="doc-type">PDF &bull; License</div>
           </div>
-          <div class="doc-download">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <div class="doc-actions">
+            <a href="assets/docs/branch-office-license-orlando.pdf" download class="doc-btn doc-btn-download">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </a>
+            <button class="doc-btn doc-btn-email" onclick="emailDoc('branch-office-license-orlando.pdf','Branch Office License')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Email to Me
+            </button>
           </div>
-        </a>
+        </div>
 
-        <a href="#" class="doc-item fade-in">
-          <div>
+        <div class="doc-item fade-in">
+          <div class="doc-item-left">
             <div class="doc-name">Referral Agreement</div>
             <div class="doc-type">PDF &bull; Legal</div>
           </div>
-          <div class="doc-download">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <div class="doc-actions">
+            <a href="assets/docs/referral-agreement.pdf" download class="doc-btn doc-btn-download">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </a>
+            <button class="doc-btn doc-btn-email" onclick="emailDoc('referral-agreement.pdf','Referral Agreement')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Email to Me
+            </button>
           </div>
-        </a>
+        </div>
 
-        <a href="#" class="doc-item fade-in">
-          <div>
+        <div class="doc-item fade-in">
+          <div class="doc-item-left">
             <div class="doc-name">General Referral Template</div>
-            <div class="doc-type">DOCX &bull; Template</div>
+            <div class="doc-type">PDF &bull; Template</div>
           </div>
-          <div class="doc-download">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <div class="doc-actions">
+            <a href="assets/docs/general-referral-agreement-template-updated-01.26.2026.pdf" download class="doc-btn doc-btn-download">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </a>
+            <button class="doc-btn doc-btn-email" onclick="emailDoc('general-referral-agreement-template-updated-01.26.2026.pdf','General Referral Template')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Email to Me
+            </button>
           </div>
-        </a>
+        </div>
 
-        <a href="#" class="doc-item fade-in">
-          <div>
+        <div class="doc-item fade-in">
+          <div class="doc-item-left">
             <div class="doc-name">SERHANT. Brand Guidelines</div>
             <div class="doc-type">PDF &bull; Branding</div>
           </div>
-          <div class="doc-download">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <div class="doc-actions">
+            <a href="assets/docs/serhant-brand-guidelines.pdf" download class="doc-btn doc-btn-download">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </a>
+            <button class="doc-btn doc-btn-email" onclick="emailDoc('serhant-brand-guidelines.pdf','SERHANT. Brand Guidelines')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Email to Me
+            </button>
           </div>
-        </a>
+        </div>
 
-        <a href="#" class="doc-item fade-in">
-          <div>
+        <div class="doc-item fade-in">
+          <div class="doc-item-left">
             <div class="doc-name">Energy Brochure</div>
             <div class="doc-type">PDF &bull; Disclosure</div>
           </div>
-          <div class="doc-download">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <div class="doc-actions">
+            <a href="assets/docs/energy-brochure.pdf" download class="doc-btn doc-btn-download">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </a>
+            <button class="doc-btn doc-btn-email" onclick="emailDoc('energy-brochure.pdf','Energy Brochure')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Email to Me
+            </button>
           </div>
-        </a>
+        </div>
 
-        <a href="#" class="doc-item fade-in">
-          <div>
+        <div class="doc-item fade-in">
+          <div class="doc-item-left">
             <div class="doc-name">Lead Paint Disclosure</div>
             <div class="doc-type">PDF &bull; Disclosure</div>
           </div>
-          <div class="doc-download">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <div class="doc-actions">
+            <a href="assets/docs/protect-your-family-from-lead-paint.pdf" download class="doc-btn doc-btn-download">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </a>
+            <button class="doc-btn doc-btn-email" onclick="emailDoc('protect-your-family-from-lead-paint.pdf','Lead Paint Disclosure')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Email to Me
+            </button>
           </div>
-        </a>
+        </div>
 
       </div>
     </div>
@@ -579,5 +744,45 @@
   </footer>
 
   <script src="shared.js"></script>
+
+  <!-- TOAST -->
+  <div id="doc-toast"></div>
+
+  <script>
+    const HUB_EMAIL_API = 'https://app.serhantorlandohub.com/api/send-doc-email';
+    const PORTAL_BASE   = 'https://portal.serhantorlandohub.com/assets/docs/';
+
+    function showToast(msg, isError) {
+      const t = document.getElementById('doc-toast');
+      t.textContent = msg;
+      t.classList.toggle('toast-error', !!isError);
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    async function emailDoc(filename, docName) {
+      let email = localStorage.getItem('agent_email');
+      if (!email) {
+        email = prompt('Enter your email address to receive documents:');
+        if (!email || !email.includes('@')) { showToast('Invalid email — not sent.', true); return; }
+        localStorage.setItem('agent_email', email.trim());
+      }
+      showToast('Sending to ' + email + '…');
+      try {
+        const res = await fetch(HUB_EMAIL_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filename, docName, recipientEmail: email, docUrl: PORTAL_BASE + filename })
+        });
+        if (res.ok) {
+          showToast('Sent! Check your inbox for ' + docName + '.');
+        } else {
+          showToast('Send failed — try again.', true);
+        }
+      } catch(e) {
+        showToast('Send failed — check connection.', true);
+      }
+    }
+  </script>
 </body>
 </html>
