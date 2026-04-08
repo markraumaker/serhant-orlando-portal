@@ -12,7 +12,42 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <style></style>
+  <style>
+    /* CHAT MESSAGES THREAD */
+    .chat-messages {
+      display: none; flex-direction: column; gap: 14px;
+      margin-bottom: 20px; max-height: 42vh; overflow-y: auto;
+      padding-right: 4px; scroll-behavior: smooth;
+    }
+    .chat-messages.active { display: flex; }
+    .msg { max-width: 88%; }
+    .msg-user { align-self: flex-end; }
+    .msg-user .msg-bubble {
+      background: #121275; color: white;
+      border-radius: 18px 18px 4px 18px;
+      padding: 12px 18px; font-size: 14px; line-height: 1.55; font-weight: 500;
+    }
+    .msg-assistant .msg-bubble {
+      background: rgba(18,18,117,0.07); border: 1px solid rgba(18,18,117,0.1);
+      border-radius: 18px 18px 18px 4px;
+      padding: 12px 18px; font-size: 14px; line-height: 1.65; color: #0a0a33;
+    }
+    .msg-loading .msg-bubble {
+      display: flex; gap: 6px; align-items: center;
+      padding: 14px 18px;
+    }
+    .blink-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #9090ff;
+      animation: brainBounce 1.2s infinite;
+    }
+    .blink-dot:nth-child(2) { animation-delay: 0.2s; }
+    .blink-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes brainBounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
+      40% { transform: translateY(-7px); opacity: 1; }
+    }
+    .brain-hidden { display: none !important; }
+  </style>
   <style>
     .brain-section {
       min-height: calc(100vh - 40vh - var(--nav-h));
@@ -89,8 +124,11 @@
         </svg>
       </div>
 
+      <!-- Chat messages thread -->
+      <div class="chat-messages" id="chatMessages"></div>
+
       <!-- Prompt suggestions -->
-      <div class="prompt-grid fade-in">
+      <div class="prompt-grid fade-in" id="promptGrid">
         <button class="prompt-card" onclick="fillPrompt(this)">
           How do I submit a new listing in Total Brokerage?
         </button>
@@ -129,19 +167,74 @@
 
   <script src="shared.js"></script>
   <script>
+    const BRAIN_API = 'https://app.serhantorlandohub.com/api/brain/chat';
+    let conversationHistory = [];
+    let chatStarted = false;
+
     function fillPrompt(btn) {
       const input = document.getElementById('chatInput');
-      if (input) input.value = btn.textContent.trim();
-      input.focus();
+      if (input) { input.value = btn.textContent.trim(); input.focus(); }
     }
-    function handleSend() {
+
+    async function handleSend() {
       const input = document.getElementById('chatInput');
-      if (input && input.value.trim()) {
-        // Mock response — in production this would call an LLM endpoint
-        alert('The Brain is coming soon. Your question has been noted: "' + input.value + '"');
-        input.value = '';
+      const message = input?.value.trim();
+      if (!message) return;
+      input.value = '';
+
+      if (!chatStarted) {
+        chatStarted = true;
+        document.querySelector('.brain-hero-icon')?.classList.add('brain-hidden');
+        document.getElementById('promptGrid')?.classList.add('brain-hidden');
+        document.getElementById('chatMessages').classList.add('active');
+      }
+
+      appendMessage('user', message);
+      const loadingEl = appendLoading();
+
+      try {
+        const res = await fetch(BRAIN_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message, history: conversationHistory })
+        });
+
+        loadingEl.remove();
+
+        if (!res.ok) throw new Error('API error ' + res.status);
+        const data = await res.json();
+        const reply = data.response || data.message || 'No response received.';
+        appendMessage('assistant', reply);
+        conversationHistory.push({ role: 'user', content: message });
+        conversationHistory.push({ role: 'assistant', content: reply });
+
+      } catch (err) {
+        loadingEl.remove();
+        console.error('Brain API error:', err);
+        appendMessage('assistant', 'The Brain is having trouble connecting right now. Please try again in a moment.');
       }
     }
+
+    function appendMessage(role, text) {
+      const container = document.getElementById('chatMessages');
+      const div = document.createElement('div');
+      div.className = 'msg msg-' + role;
+      const escaped = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+      div.innerHTML = '<div class="msg-bubble">' + escaped + '</div>';
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function appendLoading() {
+      const container = document.getElementById('chatMessages');
+      const div = document.createElement('div');
+      div.className = 'msg msg-assistant msg-loading';
+      div.innerHTML = '<div class="msg-bubble"><span class="blink-dot"></span><span class="blink-dot"></span><span class="blink-dot"></span></div>';
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+      return div;
+    }
+
     document.getElementById('chatInput')?.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') handleSend();
     });
