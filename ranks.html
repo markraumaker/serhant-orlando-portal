@@ -8,12 +8,231 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <style></style>
   <style>
-    /* Mobile table scroll */
-    .table-scroll { overflow-x: auto; }
-    .leaderboard-table { min-width: 560px; }
-    .vol-value { font-weight: 600; color: var(--color-white); }
+    /* Rankings hero override */
+    .ranks-hero {
+      background: linear-gradient(160deg, #0a0a55 0%, #121275 60%, #1616a0 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 80px var(--space-6) 60px;
+      text-align: center;
+    }
+    .ranks-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% -10%, rgba(90,90,255,0.25) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 30% at 10% 90%, rgba(60,60,200,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 30% at 90% 90%, rgba(60,60,200,0.1) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .ranks-hero-inner { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+    .ranks-official-logo { width: clamp(200px, 35vw, 400px); height: auto; margin-bottom: 24px; display: block; margin-left: auto; margin-right: auto; }
+    .ranks-sub { font-size: 13px; color: rgba(255,255,255,0.45); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 32px; }
+
+    /* Office stats strip */
+    .ranks-stats-strip {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .rss-pill {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 100px;
+      padding: 10px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 110px;
+    }
+    .rss-val { font-size: 20px; font-weight: 800; color: white; line-height: 1; }
+    .rss-label { font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.4); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 3px; }
+
+    /* Leaderboard section */
+    .ranks-section { background: var(--color-bg); padding: 60px 0; }
+    .ranks-inner { max-width: 960px; margin: 0 auto; padding: 0 var(--space-6); }
+
+    /* Period filter */
+    .period-filter {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 36px;
+      justify-content: center;
+    }
+    .pf-btn {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: rgba(255,255,255,0.55);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .pf-btn:hover { border-color: rgba(80,80,220,0.4); color: white; }
+    .pf-btn.active {
+      background: rgba(18,18,117,0.8);
+      border-color: rgba(100,100,230,0.5);
+      color: white;
+      box-shadow: 0 0 16px rgba(60,60,190,0.25);
+    }
+
+    /* Podium top 3 */
+    .podium {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .podium-card {
+      background: rgba(18,18,117,0.5);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(80,80,200,0.25);
+      border-radius: 20px;
+      padding: 28px 20px 24px;
+      text-align: center;
+      flex: 1;
+      max-width: 220px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .podium-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 20px 20px 0 0;
+    }
+    .podium-card.rank-1 { order: 2; min-height: 260px; border-color: rgba(201,168,76,0.4); box-shadow: 0 0 30px rgba(201,168,76,0.1); }
+    .podium-card.rank-1::before { background: linear-gradient(90deg, #c9a84c, #e8cc80, #c9a84c); }
+    .podium-card.rank-2 { order: 1; min-height: 220px; border-color: rgba(160,170,190,0.35); }
+    .podium-card.rank-2::before { background: linear-gradient(90deg, #9ba3b4, #d0d8e8, #9ba3b4); }
+    .podium-card.rank-3 { order: 3; min-height: 200px; border-color: rgba(192,120,72,0.35); }
+    .podium-card.rank-3::before { background: linear-gradient(90deg, #c07849, #e09060, #c07849); }
+    .podium-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.3); }
+    .podium-crown { font-size: 24px; margin-bottom: 8px; }
+    .podium-initials {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 800; color: white;
+      margin: 0 auto 12px;
+    }
+    .rank-1 .podium-initials { background: linear-gradient(135deg, #c9a84c, #a08030); }
+    .rank-2 .podium-initials { background: linear-gradient(135deg, #8090aa, #606880); }
+    .rank-3 .podium-initials { background: linear-gradient(135deg, #c07849, #905030); }
+    .podium-name { font-size: 14px; font-weight: 700; color: white; margin-bottom: 4px; }
+    .podium-vol { font-size: 20px; font-weight: 800; color: white; margin-bottom: 4px; }
+    .rank-1 .podium-vol { color: #c9a84c; }
+    .podium-sales { font-size: 11px; color: rgba(255,255,255,0.45); }
+    .podium-rank-badge {
+      display: inline-flex;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .rank-1 .podium-rank-badge { background: #c9a84c; color: #3a2800; }
+    .rank-2 .podium-rank-badge { background: #9ba3b4; color: #1a2030; }
+    .rank-3 .podium-rank-badge { background: #c07849; color: #3a1800; }
+
+    /* Rankings table */
+    .ranks-table-wrap {
+      background: rgba(18,18,117,0.35);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(80,80,200,0.2);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .ranks-table { width: 100%; border-collapse: collapse; }
+    .ranks-table thead tr {
+      background: rgba(18,18,117,0.6);
+      border-bottom: 1px solid rgba(80,80,200,0.25);
+    }
+    .ranks-table th {
+      padding: 14px 20px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      text-align: left;
+    }
+    .ranks-table th:not(:first-child) { text-align: right; }
+    .ranks-table tbody tr {
+      border-bottom: 1px solid rgba(80,80,200,0.1);
+      transition: background 0.15s;
+    }
+    .ranks-table tbody tr:last-child { border-bottom: none; }
+    .ranks-table tbody tr:hover { background: rgba(80,80,200,0.08); }
+    .ranks-table td { padding: 16px 20px; }
+    .rt-rank { width: 48px; }
+    .rt-rank-num {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 800;
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.4);
+    }
+    .rt-agent { display: flex; align-items: center; gap: 12px; }
+    .rt-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; color: white;
+      flex-shrink: 0;
+    }
+    .rt-name { font-size: 14px; font-weight: 600; color: white; }
+    .rt-vol { font-size: 15px; font-weight: 700; color: white; text-align: right; }
+    .rt-num { font-size: 13px; color: rgba(255,255,255,0.6); text-align: right; }
+    .rt-bar-cell { text-align: right; width: 120px; }
+    .rt-bar { height: 4px; border-radius: 4px; background: rgba(255,255,255,0.08); overflow: hidden; margin-top: 4px; }
+    .rt-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #3030b0, #6060ee); }
+
+    /* Progress bar animation */
+    .rt-bar-fill { animation: bar-grow 0.8s ease-out forwards; }
+    @keyframes bar-grow { from { width: 0 !important; } }
+
+    /* Office totals strip */
+    .office-totals {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .ot-card {
+      background: rgba(18,18,117,0.4);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(80,80,200,0.2);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+    }
+    .ot-val { font-size: 32px; font-weight: 800; color: white; line-height: 1; margin-bottom: 6px; }
+    .ot-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+
+    /* Loading state */
+    .ranks-loading { text-align: center; padding: 60px; color: rgba(255,255,255,0.3); font-size: 12px; letter-spacing: 0.1em; }
+
+    @media (max-width: 640px) {
+      .podium { gap: 8px; }
+      .podium-card { padding: 20px 12px 16px; max-width: none; }
+      .podium-vol { font-size: 16px; }
+      .ranks-table th:nth-child(4), .ranks-table td:nth-child(4),
+      .ranks-table th:nth-child(5), .ranks-table td:nth-child(5) { display: none; }
+      .office-totals { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -22,14 +241,14 @@
   <nav class="site-nav">
     <div class="nav-inner">
       <a href="index.html" class="nav-logo">
-        <img src="assets/S-Orlando-White.svg" alt="S. Orlando" style="height:32px;width:auto;>
+        <img src="assets/S-Orlando-White.svg" alt="S. Orlando" style="height:32px;width:auto;">
       </a>
       <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="ranks.html">Ranks</a></li>
+        <li><a href="ranks.html" class="active">Ranks</a></li>
         <li><a href="resources.html">Resources</a></li>
         <li><a href="squad.html">Squad</a></li>
         <li><a href="studios.html">Studios</a></li>
@@ -38,59 +257,73 @@
     </div>
   </nav>
 
-  <!-- PAGE HERO -->
-  <section class="page-hero">
-    <div class="page-hero-content">
-      <span class="page-hero-eyebrow fade-in">SERHANT. Orlando</span>
-      <h1 class="page-hero-title fade-in fade-in-delay-1">Agent Rankings</h1>
-      <p class="page-hero-sub fade-in fade-in-delay-2">Production leaders, updated in real time. YTD 2026.</p>
+  <!-- HERO -->
+  <section class="ranks-hero">
+    <div class="ranks-hero-inner">
+      <img src="assets/SERHANT-Orlando-White-Official.svg" alt="SERHANT. Orlando" class="ranks-official-logo fade-in">
+      <div class="ranks-sub fade-in">Agent Rankings &nbsp;·&nbsp; YTD 2026</div>
+      <div class="ranks-stats-strip fade-in">
+        <div class="rss-pill">
+          <span class="rss-val" id="hero-vol">--</span>
+          <span class="rss-label">Volume</span>
+        </div>
+        <div class="rss-pill">
+          <span class="rss-val" id="hero-sales">--</span>
+          <span class="rss-label">Sales</span>
+        </div>
+        <div class="rss-pill">
+          <span class="rss-val" id="hero-listings">--</span>
+          <span class="rss-label">Listings</span>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- LEADERBOARD SECTION -->
-  <section class="section">
-    <div class="section-inner">
+  <!-- LEADERBOARD -->
+  <section class="ranks-section">
+    <div class="ranks-inner">
 
-      <!-- Filter Pills -->
-      <div class="filter-pills fade-in">
-        <button class="filter-pill active">YTD</button>
-        <button class="filter-pill">Q1</button>
-        <button class="filter-pill">This Month</button>
+      <!-- Period filter -->
+      <div class="period-filter fade-in">
+        <button class="pf-btn active" data-period="ytd">YTD</button>
+        <button class="pf-btn" data-period="q1">Q1 2026</button>
+        <button class="pf-btn" data-period="month">This Month</button>
       </div>
 
-      <!-- Table -->
-      <div class="leaderboard-wrap fade-in">
-        <div class="table-scroll">
-          <table class="leaderboard-table">
-            <thead>
-              <tr>
-                <th style="width:72px">Rank</th>
-                <th>Agent</th>
-                <th>Volume YTD</th>
-                <th>Sales</th>
-                <th>Active Listings</th>
-              </tr>
-            </thead>
-            <tbody id="ranks-tbody">
-              <tr><td colspan="5" style="text-align:center;padding:40px;color:rgba(255,255,255,0.3);letter-spacing:0.1em;font-size:12px;">LOADING...</td></tr>
-            </tbody>
-          </table>
-        </div>
+      <!-- Podium -->
+      <div class="podium fade-in" id="podium"></div>
+
+      <!-- Table ranks 4-15 -->
+      <div class="ranks-table-wrap fade-in">
+        <table class="ranks-table">
+          <thead>
+            <tr>
+              <th class="rt-rank"></th>
+              <th>Agent</th>
+              <th style="text-align:right">Volume</th>
+              <th style="text-align:right">Sales</th>
+              <th style="text-align:right">Active Listings</th>
+            </tr>
+          </thead>
+          <tbody id="ranks-tbody">
+            <tr><td colspan="5" class="ranks-loading">LOADING RANKINGS...</td></tr>
+          </tbody>
+        </table>
       </div>
 
-      <!-- Total Row -->
-      <div class="stat-grid" style="margin-top: var(--space-8);">
-        <div class="stat-card fade-in">
-          <div class="stat-value" id="rank-total-vol">--</div>
-          <div class="stat-label">Total Volume YTD</div>
+      <!-- Office totals -->
+      <div class="office-totals fade-in" style="margin-top:32px">
+        <div class="ot-card">
+          <div class="ot-val" id="total-vol">--</div>
+          <div class="ot-label">Total Volume YTD</div>
         </div>
-        <div class="stat-card fade-in fade-in-delay-1">
-          <div class="stat-value" id="rank-total-sales">--</div>
-          <div class="stat-label">Total Sales YTD</div>
+        <div class="ot-card">
+          <div class="ot-val" id="total-sales">--</div>
+          <div class="ot-label">Total Sales YTD</div>
         </div>
-        <div class="stat-card fade-in fade-in-delay-2">
-          <div class="stat-value" id="rank-total-listings">--</div>
-          <div class="stat-label">Active Listings</div>
+        <div class="ot-card">
+          <div class="ot-val" id="total-listings">--</div>
+          <div class="ot-label">Active Listings</div>
         </div>
       </div>
 
@@ -112,66 +345,174 @@
     const SB = 'https://lqothpzxhxvhvyikmphx.supabase.co/rest/v1';
     const SK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxb3RocHp4aHh2aHZ5aWttcGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5ODkzNjgsImV4cCI6MjA5MDU2NTM2OH0.zDE-lniLRF3TdYZmMMSQL20vF_H74_qiMlJM2tX_nKo';
     const SH = { 'apikey': SK, 'Authorization': 'Bearer ' + SK };
-    const CLOSED = encodeURIComponent('("Closed & Processed for Payment","Closed/Rented - Ready for processing","Rented & Processed for Payment")');
+    const CLOSED_STATUSES = '("Closed & Processed for Payment","Closed/Rented - Ready for processing","Rented & Processed for Payment")';
+
+    // Agents who left the brokerage -- exclude from rankings
+    const DEPARTED = ['Alessandra Sermann Ulmann', 'Kriselys Tapia'];
 
     function sb(path) { return fetch(SB + path, { headers: SH }).then(r => r.json()); }
     function fmtM(n) { return n >= 1e6 ? '$' + (n/1e6).toFixed(1) + 'M' : n >= 1e3 ? '$' + (n/1e3).toFixed(0) + 'K' : '$' + n; }
     function fmtN(n) { return Number(n).toLocaleString(); }
+    function set(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
 
-    async function loadRanks() {
-      try {
-        // Pull all closed transactions
-        const txns = await sb('/tb_transactions?select=attributed_agent,volume,units&status=in.' + CLOSED);
-
-        // Aggregate by agent
-        const agents = {};
-        txns.forEach(t => {
-          const name = t.attributed_agent || 'Unknown';
-          const vol = parseFloat((t.volume || '0').replace(/[$,]/g, ''));
-          const units = parseInt(t.units || '1');
-          if (!agents[name]) agents[name] = { vol: 0, sales: 0 };
-          agents[name].vol += vol;
-          agents[name].sales += units;
-        });
-
-        // Sort by volume
-        const ranked = Object.entries(agents)
-          .sort((a, b) => b[1].vol - a[1].vol)
-          .filter(([_, d]) => d.vol > 0);
-
-        // Pull active listings (latest snapshot)
-        const snap = await sb('/courted_active_listings?select=snapshot_date&order=snapshot_date.desc&limit=1');
-        let listingsMap = {};
-        if (snap && snap[0]) {
-          const rows = await sb('/courted_active_listings?select=agent_name,active_count&snapshot_date=eq.' + snap[0].snapshot_date);
-          rows.forEach(r => { listingsMap[r.agent_name] = (listingsMap[r.agent_name] || 0) + r.active_count; });
-        }
-
-        // Build table
-        const tbody = document.getElementById('ranks-tbody');
-        tbody.innerHTML = ranked.map(([name, data], i) => {
-          const rank = i + 1;
-          const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
-          const listings = listingsMap[name] || 0;
-          return `<tr>
-            <td><span class="rank-num ${rankClass}">${rank}</span></td>
-            <td><span class="agent-name">${name}</span></td>
-            <td class="vol-value">${fmtM(data.vol)}</td>
-            <td>${data.sales}</td>
-            <td>${listings || '--'}</td>
-          </tr>`;
-        }).join('');
-
-        // Totals
-        const totalVol = ranked.reduce((s, [_, d]) => s + d.vol, 0);
-        const totalSales = ranked.reduce((s, [_, d]) => s + d.sales, 0);
-        const totalListings = Object.values(listingsMap).reduce((s, v) => s + v, 0);
-        document.getElementById('rank-total-vol').textContent = fmtM(totalVol);
-        document.getElementById('rank-total-sales').textContent = fmtN(totalSales);
-        document.getElementById('rank-total-listings').textContent = fmtN(totalListings);
-      } catch(e) { console.warn('Ranks:', e); }
+    // Deterministic avatar color from name
+    function avatarColor(name) {
+      const colors = ['#2D2D9E','#3B82F6','#7C3AED','#0D9488','#B45309','#BE185D','#065F46','#1D4ED8'];
+      let h = 0; for (let c of name) h = (h * 31 + c.charCodeAt(0)) & 0xffff;
+      return colors[h % colors.length];
     }
-    loadRanks();
+    function initials(name) {
+      const parts = name.trim().split(/\s+/);
+      return parts.length >= 2 ? (parts[0][0] + parts[parts.length-1][0]).toUpperCase() : name.slice(0,2).toUpperCase();
+    }
+
+    // Date filter
+    function getPeriodFilter(period) {
+      const now = new Date();
+      if (period === 'ytd') {
+        return `${now.getFullYear()}-01-01`;
+      }
+      if (period === 'q1') {
+        return `${now.getFullYear()}-01-01`;  // Q1 = Jan-Mar
+      }
+      if (period === 'month') {
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        return `${now.getFullYear()}-${m}-01`;
+      }
+      return `${now.getFullYear()}-01-01`;
+    }
+
+    function isInPeriod(closingDate, period) {
+      if (!closingDate) return false;
+      const now = new Date();
+      let d;
+      try {
+        // Handle MM/DD/YYYY format
+        if (closingDate.includes('/')) {
+          const [m, day, y] = closingDate.split('/');
+          d = new Date(y, m-1, day);
+        } else {
+          d = new Date(closingDate);
+        }
+      } catch { return false; }
+      if (period === 'ytd') return d.getFullYear() === now.getFullYear();
+      if (period === 'q1') return d.getFullYear() === now.getFullYear() && d.getMonth() < 3;
+      if (period === 'month') return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+      return true;
+    }
+
+    let allTransactions = [];
+    let listingsMap = {};
+    let currentPeriod = 'ytd';
+
+    async function fetchData() {
+      const closed = encodeURIComponent(CLOSED_STATUSES);
+      allTransactions = await sb('/tb_transactions?select=attributed_agent,volume,units,closing_date&status=in.' + closed);
+
+      // Active listings
+      const snap = await sb('/courted_active_listings?select=snapshot_date&order=snapshot_date.desc&limit=1');
+      if (snap && snap[0]) {
+        const rows = await sb('/courted_active_listings?select=agent_name,active_count&snapshot_date=eq.' + snap[0].snapshot_date);
+        rows.forEach(r => { listingsMap[r.agent_name] = (listingsMap[r.agent_name] || 0) + r.active_count; });
+      }
+
+      // Hero listings total
+      const totalListings = Object.values(listingsMap).reduce((s, v) => s + v, 0);
+      set('hero-listings', fmtN(totalListings));
+
+      renderRankings();
+    }
+
+    function renderRankings() {
+      // Filter and aggregate
+      const txns = allTransactions.filter(t => isInPeriod(t.closing_date, currentPeriod));
+      const agents = {};
+      txns.forEach(t => {
+        const name = t.attributed_agent || 'Unknown';
+        if (DEPARTED.some(d => name.includes(d))) return; // skip departed
+        const vol = parseFloat((t.volume || '0').replace(/[$,]/g, ''));
+        const units = parseInt(t.units || '1');
+        if (!agents[name]) agents[name] = { vol: 0, sales: 0 };
+        agents[name].vol += vol;
+        agents[name].sales += units;
+      });
+
+      const ranked = Object.entries(agents)
+        .sort((a, b) => b[1].vol - a[1].vol)
+        .filter(([_, d]) => d.vol > 0)
+        .slice(0, 15);
+
+      const topVol = ranked[0] ? ranked[0][1].vol : 1;
+
+      // Hero stats
+      const totalVol = ranked.reduce((s, [_, d]) => s + d.vol, 0);
+      const totalSales = ranked.reduce((s, [_, d]) => s + d.sales, 0);
+      set('hero-vol', fmtM(totalVol));
+      set('hero-sales', fmtN(totalSales));
+      set('total-vol', fmtM(totalVol));
+      set('total-sales', fmtN(totalSales));
+      const totalListings = Object.values(listingsMap).reduce((s, v) => s + v, 0);
+      set('total-listings', fmtN(totalListings));
+
+      // Podium (top 3)
+      const podium = document.getElementById('podium');
+      const top3 = ranked.slice(0, 3);
+      podium.innerHTML = top3.map(([name, data], i) => {
+        const rank = i + 1;
+        const crown = rank === 1 ? '👑' : '';
+        return `<div class="podium-card rank-${rank}">
+          ${crown ? `<div class="podium-crown">${crown}</div>` : ''}
+          <div class="podium-rank-badge">${rank}</div>
+          <div class="podium-initials" style="background:${rank===1?'linear-gradient(135deg,#c9a84c,#a08030)':rank===2?'linear-gradient(135deg,#8090aa,#606880)':'linear-gradient(135deg,#c07849,#905030)'}">
+            ${initials(name)}
+          </div>
+          <div class="podium-name">${name}</div>
+          <div class="podium-vol">${fmtM(data.vol)}</div>
+          <div class="podium-sales">${data.sales} sale${data.sales !== 1 ? 's' : ''}</div>
+        </div>`;
+      }).join('');
+
+      // Table (rank 4-15)
+      const tbody = document.getElementById('ranks-tbody');
+      const rest = ranked.slice(3);
+      if (rest.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="ranks-loading">No data for this period.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rest.map(([name, data], i) => {
+        const rank = i + 4;
+        const barPct = Math.round((data.vol / topVol) * 100);
+        const listings = listingsMap[name] || 0;
+        const color = avatarColor(name);
+        return `<tr>
+          <td class="rt-rank"><span class="rt-rank-num">${rank}</span></td>
+          <td>
+            <div class="rt-agent">
+              <div class="rt-avatar" style="background:${color}">${initials(name)}</div>
+              <span class="rt-name">${name}</span>
+            </div>
+          </td>
+          <td>
+            <div class="rt-vol">${fmtM(data.vol)}</div>
+            <div class="rt-bar"><div class="rt-bar-fill" style="width:${barPct}%"></div></div>
+          </td>
+          <td class="rt-num">${data.sales}</td>
+          <td class="rt-num">${listings || '--'}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    // Period filter buttons
+    document.querySelectorAll('.pf-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.pf-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentPeriod = btn.dataset.period;
+        renderRankings();
+      });
+    });
+
+    fetchData();
   </script>
 </body>
 </html>
