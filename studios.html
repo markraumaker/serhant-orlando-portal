@@ -745,19 +745,14 @@
       </div>
 
       <div class="ig-feed-container fade-in">
-        <!-- Behold Instagram feed will be placed here once connected -->
-        <!-- Replace WIDGET_ID below with the actual widget ID from behold.so -->
-        <div id="behold-widget-PLACEHOLDER" class="ig-feed-placeholder">
-          <div class="ig-placeholder-inner">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.5"/></svg>
-            <p>Live Instagram feed coming soon</p>
-            <a href="https://www.instagram.com/serhantorlando/" target="_blank" rel="noopener" class="ig-follow-btn">Follow @serhantorlando</a>
-          </div>
-        </div>
+        <behold-widget feed-id="sEaGICgObCJCzVPJEUrp"></behold-widget>
+        <script>
+          (() => {
+            const d=document,s=d.createElement("script");s.type="module";
+            s.src="https://w.behold.so/widget.js";d.head.append(s);
+          })();
+        </script>
       </div>
-      <!-- TO ACTIVATE LIVE FEED: Replace div above with: -->
-      <!-- <div id="behold-widget-YOUR_WIDGET_ID"></div> -->
-      <!-- <script src="https://w.behold.so/widget.js" type="module"></script> -->
     </div>
   </section>
 
