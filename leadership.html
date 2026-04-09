@@ -1031,7 +1031,7 @@ document.getElementById('teach-submit').addEventListener('click', async () => {
 // ── Open access — load data directly ──
 loadSupabaseData();
 sb.auth.getSession().then(({data:{session}}) => {
-  if (session) loadHubAPI(session.access_token);
+  loadHubAPI(session ? session.access_token : null); // key auth — no session required
 });
 </script>
 </body>
