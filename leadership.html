@@ -3,639 +3,485 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Leadership | SERHANT. ORLANDO</title>
+  <title>Leadership — SERHANT. ORLANDO</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="auth-check.js"></script>
   <style>
-    /* ═══════════════════════════════════════════════════
-       RESET & BASE
-       ═══════════════════════════════════════════════════ */
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    html{font-family:'Montserrat',sans-serif;background:#060618;color:white;min-height:100vh;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
-    body{background:#060618;min-height:100vh;}
-    ::-webkit-scrollbar{width:5px;}
-    ::-webkit-scrollbar-track{background:transparent;}
-    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:10px;}
-    ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.14);}
-    a{text-decoration:none;color:inherit;}
+    /* ── LEADERSHIP-SPECIFIC OVERRIDES ── */
 
-    /* ═══════════════════════════════════════════════════
-       AUTH GATE
-       ═══════════════════════════════════════════════════ */
-    #auth-gate{position:fixed;inset:0;z-index:9999;background:#060618;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
-    #auth-gate img{height:32px;margin-bottom:16px;}
-    #auth-gate h2{font-size:20px;font-weight:900;}
-    #auth-gate p{font-size:13px;color:rgba(255,255,255,0.4);}
-    .auth-form{display:flex;flex-direction:column;gap:10px;width:300px;margin-top:8px;}
-    .auth-input{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:13px 16px;font-size:13px;color:white;font-family:'Montserrat',sans-serif;outline:none;}
-    .auth-input:focus{border-color:rgba(255,255,255,0.3);}
-    .auth-input::placeholder{color:rgba(255,255,255,0.25);}
-    .auth-btn{background:#121275;border:none;border-radius:10px;padding:13px;font-size:13px;font-weight:700;color:white;cursor:pointer;font-family:'Montserrat',sans-serif;}
-    .auth-btn:hover{background:#1a1a9a;}
-    .auth-err{font-size:11px;color:#f87171;text-align:center;display:none;}
+    /* Pipeline Strip */
+    .pipeline-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-4);
+      padding: var(--space-6) var(--space-8);
+      background: rgba(10,10,80,0.6);
+      border-bottom: 1px solid var(--color-border);
+      position: sticky;
+      top: var(--nav-h);
+      z-index: 90;
+      backdrop-filter: blur(20px);
+    }
+    .pp {
+      display: flex; align-items: center; gap: var(--space-4);
+      background: linear-gradient(135deg, rgba(26,26,140,0.4) 0%, rgba(18,18,117,0.25) 100%);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4) var(--space-5);
+    }
+    .pp-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .pp.cl .pp-dot { background: #10b981; box-shadow: 0 0 8px rgba(16,185,129,0.5); }
+    .pp.pe .pp-dot { background: var(--color-gold); box-shadow: 0 0 8px rgba(201,168,76,0.5); }
+    .pp.li .pp-dot { background: var(--color-accent-bright); box-shadow: 0 0 8px rgba(104,104,238,0.5); }
+    .pp.to .pp-dot { background: white; opacity: 0.5; }
+    .pp-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-text-faint); }
+    .pp-val { font-size: var(--text-lg); font-weight: 800; color: white; line-height: 1.1; }
+    .pp.cl .pp-val { color: #10b981; }
+    .pp.pe .pp-val { color: var(--color-gold); }
+    .pp.li .pp-val { color: var(--color-accent-bright); }
+    .pp-sub { font-size: 10px; color: var(--color-text-faint); }
 
-    /* ═══════════════════════════════════════════════════
-       TOP BAR — sticky, 60px
-       ═══════════════════════════════════════════════════ */
-    #app{display:none;}
-    .topbar{
-      position:sticky;top:0;z-index:200;
-      height:60px;
-      background:#080820;
-      border-bottom:1px solid rgba(255,255,255,0.06);
-      padding:0 48px;
-      display:flex;align-items:center;justify-content:space-between;
-      backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    /* Tab Bar */
+    .tab-bar {
+      display: flex; gap: 0;
+      padding: 0 var(--space-8);
+      background: rgba(10,10,72,0.7);
+      border-bottom: 1px solid var(--color-border);
+      position: sticky;
+      top: calc(var(--nav-h) + 78px);
+      z-index: 89;
+      backdrop-filter: blur(20px);
     }
-    .topbar-left{display:flex;align-items:center;gap:18px;}
-    .topbar-logo{height:26px;flex-shrink:0;}
-    .topbar-title{font-size:15px;font-weight:800;letter-spacing:0.01em;white-space:nowrap;}
-    .topbar-sub{font-size:10px;color:rgba(255,255,255,0.35);font-weight:600;margin-top:1px;white-space:nowrap;}
-    .topbar-right{display:flex;align-items:center;gap:8px;}
-    .pill-btn{
-      font-size:11px;font-weight:700;
-      color:rgba(255,255,255,0.45);
-      background:rgba(255,255,255,0.04);
-      border:1px solid rgba(255,255,255,0.08);
-      border-radius:20px;
-      padding:7px 16px;
-      cursor:pointer;
-      font-family:'Montserrat',sans-serif;
-      transition:all .2s ease;
-      display:inline-flex;align-items:center;gap:5px;
-      white-space:nowrap;
+    .tab-btn {
+      padding: var(--space-4) var(--space-6);
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--color-text-faint);
+      border: none; background: none; cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color var(--transition), border-color var(--transition);
+      font-family: var(--font-body);
     }
-    .pill-btn:hover{color:white;background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.14);}
+    .tab-btn:hover { color: white; }
+    .tab-btn.on { color: white; border-bottom-color: var(--color-accent-bright); }
 
-    /* ═══════════════════════════════════════════════════
-       PIPELINE STRIP — sticky below top bar
-       ═══════════════════════════════════════════════════ */
-    .pipeline-strip{
-      position:sticky;top:60px;z-index:190;
-      display:flex;gap:10px;
-      padding:16px 48px;
-      background:#060618;
-      border-bottom:1px solid rgba(255,255,255,0.05);
-    }
-    .pp{
-      display:flex;align-items:center;gap:12px;
-      padding:12px 20px;border-radius:12px;flex:1;
-      transition:background .2s;
-    }
-    .pp:hover{background:rgba(255,255,255,0.02);}
-    .pp.cl{background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.14);}
-    .pp.pe{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.14);}
-    .pp.li{background:rgba(104,104,238,0.06);border:1px solid rgba(104,104,238,0.14);}
-    .pp.to{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);}
-    .pp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-    .cl .pp-dot{background:#10b981;}
-    .pe .pp-dot{background:#c9a84c;}
-    .li .pp-dot{background:#6868ee;}
-    .to .pp-dot{background:rgba(255,255,255,0.3);}
-    .pp-lbl{font-size:8px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);}
-    .pp-val{font-size:18px;font-weight:900;line-height:1.2;}
-    .cl .pp-val{color:#10b981;}
-    .pe .pp-val{color:#c9a84c;}
-    .li .pp-val{color:#6868ee;}
-    .pp-sub{font-size:9px;color:rgba(255,255,255,0.22);font-weight:600;}
+    /* Tab Content */
+    .tab-content { display: none; }
+    .tab-content.on { display: block; }
 
-    /* ═══════════════════════════════════════════════════
-       TAB BAR — sticky below pipeline
-       ═══════════════════════════════════════════════════ */
-    .tabs{
-      position:sticky;top:104px;z-index:180;
-      display:flex;
-      padding:0 48px;
-      background:#06061a;
-      border-bottom:1px solid rgba(255,255,255,0.07);
-    }
-    .tab{
-      padding:14px 32px;
-      font-size:12px;font-weight:700;
-      letter-spacing:0.08em;
-      color:rgba(255,255,255,0.35);
-      cursor:pointer;border:none;background:none;
-      font-family:'Montserrat',sans-serif;
-      border-radius:8px 8px 0 0;
-      transition:all .2s ease;
-      margin-right:2px;
-    }
-    .tab:hover{color:rgba(255,255,255,0.6);}
-    .tab.on{color:white;background:#121275;}
+    /* Content container */
+    .l-wrap { max-width: 1280px; margin: 0 auto; padding: var(--space-8) var(--space-8); }
 
-    /* ═══════════════════════════════════════════════════
-       BODY CONTENT
-       ═══════════════════════════════════════════════════ */
-    .body{padding:32px 48px 64px;}
+    /* Dashboard card */
+    .l-card {
+      background: linear-gradient(160deg, rgba(26,26,140,0.45) 0%, rgba(18,18,117,0.28) 100%);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6) var(--space-8);
+      position: relative; overflow: hidden;
+    }
+    .l-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(100,100,255,0.6) 30%, rgba(160,130,255,0.8) 50%, rgba(100,100,255,0.6) 70%, transparent 100%);
+    }
+    .l-card-title {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--color-accent-bright);
+      margin-bottom: var(--space-5);
+    }
+
+    /* 2-column layout */
+    .l-cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
+    .l-cols-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+    .l-cols-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
+
+    /* Pace bars */
+    .pace-row { display: flex; align-items: center; gap: var(--space-6); margin-bottom: var(--space-5); }
+    .pace-lbl { font-size: 11px; font-weight: 700; color: var(--color-text-muted); width: 52px; flex-shrink: 0; }
+    .pace-track { flex: 1; height: 6px; background: rgba(255,255,255,0.08); border-radius: 4px; position: relative; }
+    .pace-fill { height: 100%; border-radius: 4px; transition: width 0.8s cubic-bezier(0.16,1,0.3,1); }
+    .pace-goal { position: absolute; top: -5px; bottom: -5px; width: 1px; background: rgba(255,255,255,0.3); }
+    .pace-pct { font-size: 12px; font-weight: 800; width: 44px; text-align: right; flex-shrink: 0; }
+    .pace-info { font-size: 11px; color: var(--color-text-faint); width: 230px; flex-shrink: 0; text-align: right; }
+    .pace-status { font-size: 10px; color: var(--color-text-faint); margin-top: var(--space-3); }
+
+    /* Stat pills row */
+    .stat-pills-row { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--space-4); margin-top: var(--space-6); }
+    .stat-pill-box {
+      background: rgba(18,18,117,0.2); border: 1px solid rgba(80,80,200,0.18);
+      border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); text-align: center;
+    }
+    .spb-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-text-faint); margin-bottom: 4px; }
+    .spb-val { font-size: var(--text-lg); font-weight: 800; color: white; }
+
+    /* Announcement items */
+    .ann-item {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-4) var(--space-5);
+      border-radius: var(--radius-md);
+      background: rgba(18,18,117,0.18);
+      border: 1px solid rgba(80,80,200,0.14);
+      margin-bottom: var(--space-3);
+    }
+    .ann-type {
+      font-size: 9px; font-weight: 800; letter-spacing: 0.1em;
+      padding: 3px 8px; border-radius: 4px; flex-shrink: 0;
+    }
+    .ann-type.event { background: rgba(16,185,129,0.15); color: #10b981; }
+    .ann-type.update { background: rgba(104,104,238,0.15); color: var(--color-accent-bright); }
+    .ann-title { font-size: 13px; font-weight: 700; color: white; }
+    .ann-meta { font-size: 11px; color: var(--color-text-faint); margin-top: 2px; }
+
+    /* Engagement */
+    .eng-header { font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: var(--space-4); padding-bottom: var(--space-2); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .eng-header.green { color: #10b981; }
+    .eng-header.amber { color: var(--color-gold); }
+    .eng-row { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3); }
+    .eng-av { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; }
+    .eng-name { font-size: 13px; font-weight: 700; color: white; }
+    .eng-meta { font-size: 11px; color: var(--color-text-faint); }
+
+    /* Tables */
+    .l-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .l-table th { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-faint); padding: var(--space-3) var(--space-4); text-align: left; border-bottom: 1px solid rgba(80,80,200,0.18); }
+    .l-table td { padding: var(--space-3) var(--space-4); border-bottom: 1px solid rgba(80,80,200,0.08); color: var(--color-text); vertical-align: middle; }
+    .l-table tr:hover td { background: rgba(18,18,117,0.2); }
+    .rank-num { font-size: 11px; font-weight: 800; color: var(--color-text-faint); }
+    .agent-av { width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; margin-right: var(--space-2); flex-shrink: 0; }
+    .agent-name { font-weight: 700; color: white; }
+    .money-val { font-weight: 700; color: white; }
+    .money-green { color: #10b981; font-weight: 800; }
+    .money-amber { color: var(--color-gold); }
+    .money-red { color: #f87171; }
+    .money-blue { color: var(--color-accent-bright); }
+
+    /* Fin cards */
+    .fin-metric { text-align: center; padding: var(--space-4) 0; }
+    .fin-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-text-faint); margin-bottom: var(--space-1); }
+    .fin-val { font-size: var(--text-xl); font-weight: 800; }
+    .fin-sub { font-size: 10px; color: var(--color-text-faint); margin-top: 2px; }
+
+    /* Bar chart */
+    .bar-chart { display: flex; align-items: flex-end; gap: var(--space-4); height: 120px; position: relative; padding-bottom: var(--space-5); }
+    .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-2); }
+    .bar-fill { width: 100%; background: linear-gradient(to top, var(--color-accent) 0%, var(--color-accent-bright) 100%); border-radius: 4px 4px 0 0; min-height: 4px; }
+    .bar-lbl { font-size: 9px; font-weight: 700; color: var(--color-text-faint); letter-spacing: 0.08em; }
+    .burn-line { position: absolute; left: 0; right: 0; border-top: 1px dashed rgba(255,255,255,0.2); }
+
+    /* Brain */
+    .brain-q { background: rgba(18,18,117,0.18); border: 1px solid rgba(80,80,200,0.14); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3); }
+    .brain-q-text { font-size: 13px; font-weight: 600; color: white; margin-bottom: 4px; }
+    .brain-q-meta { font-size: 11px; color: var(--color-text-faint); }
+
+    /* Teach Brain */
+    .teach-input, .teach-textarea {
+      width: 100%; background: rgba(10,10,60,0.6); border: 1px solid var(--color-border);
+      border-radius: var(--radius-md); padding: var(--space-4); font-size: 13px;
+      color: white; font-family: var(--font-body); resize: vertical;
+      margin-bottom: var(--space-3);
+    }
+    .teach-input::placeholder, .teach-textarea::placeholder { color: var(--color-text-faint); }
+    .teach-btn {
+      width: 100%; background: var(--color-surface); border: 1px solid var(--color-accent-bright);
+      border-radius: var(--radius-md); padding: var(--space-4); font-size: 13px; font-weight: 800;
+      color: white; cursor: pointer; font-family: var(--font-body); letter-spacing: 0.05em;
+      transition: background var(--transition);
+    }
+    .teach-btn:hover { background: var(--color-surface-2); }
 
     /* Section label */
-    .sec-title{
-      font-size:10px;font-weight:700;
-      letter-spacing:4px;text-transform:uppercase;
-      color:rgba(255,255,255,0.35);
-      margin-bottom:14px;
-    }
-    .sec{margin-bottom:28px;}
+    .l-section-label { font-size: 9px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-accent-bright); margin-bottom: var(--space-4); display: block; }
 
-    /* ═══════════════════════════════════════════════════
-       CARDS — shared
-       ═══════════════════════════════════════════════════ */
-    .card{
-      background:rgba(18,18,117,0.2);
-      border:1px solid rgba(80,80,200,0.15);
-      border-radius:14px;
-      padding:20px 24px;
-    }
-    .card-lbl{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px;}
-    .card-val{font-size:24px;font-weight:900;}
-    .card-val.green{color:#10b981;}
-    .card-val.amber{color:#f59e0b;}
-    .card-val.red{color:#f87171;}
-    .card-val.gold{color:#c9a84c;}
-    .card-val.blue{color:#6868ee;}
-    .card-sub{font-size:11px;color:rgba(255,255,255,0.3);margin-top:6px;font-weight:600;}
+    /* Notice */
+    .api-notice { background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2); border-radius: var(--radius-md); padding: var(--space-3) var(--space-5); font-size: 12px; color: var(--color-gold); font-weight: 600; margin-bottom: var(--space-5); }
 
-    /* ═══════════════════════════════════════════════════
-       HUB TAB — 2-column layout
-       ═══════════════════════════════════════════════════ */
-    .hub-grid{
-      display:grid;
-      grid-template-columns:1fr 380px;
-      gap:24px;
-      align-items:start;
-    }
-    .hub-main{display:flex;flex-direction:column;gap:28px;}
-    .hub-side{display:flex;flex-direction:column;gap:28px;position:sticky;top:180px;}
-
-    /* PACE CARD */
-    .pace-card{
-      background:rgba(18,18,117,0.2);
-      border:1px solid rgba(80,80,200,0.15);
-      border-radius:14px;
-      padding:26px 28px;
-    }
-    .pace-row{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
-    .pace-row:last-of-type{margin-bottom:0;}
-    .pace-lbl{font-size:12px;font-weight:700;color:white;width:70px;flex-shrink:0;}
-    .pace-track{flex:1;background:rgba(255,255,255,0.06);border-radius:6px;height:8px;position:relative;overflow:hidden;}
-    .pace-fill{height:100%;border-radius:6px;transition:width .8s cubic-bezier(.4,0,.2,1);}
-    .pace-goal{position:absolute;top:-3px;bottom:-3px;width:2px;background:rgba(255,255,255,0.25);border-radius:1px;z-index:2;}
-    .pace-pct{font-size:13px;font-weight:800;width:52px;text-align:right;flex-shrink:0;}
-    .pace-info{font-size:11px;color:rgba(255,255,255,0.35);width:220px;text-align:right;flex-shrink:0;font-weight:600;}
-    .pace-stats{display:flex;gap:10px;margin-top:18px;}
-    .pace-pill{
-      background:rgba(255,255,255,0.03);
-      border:1px solid rgba(255,255,255,0.06);
-      border-radius:12px;padding:14px 18px;flex:1;text-align:center;
-    }
-    .pace-pill-lbl{font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.22);margin-bottom:5px;}
-    .pace-pill-val{font-size:18px;font-weight:900;}
-
-    /* ANNOUNCEMENTS */
-    .ann-card{
-      background:rgba(18,18,117,0.2);
-      border:1px solid rgba(80,80,200,0.15);
-      border-radius:14px;
-      padding:20px 24px;
-    }
-    .ann-item{
-      padding:14px 0;
-      border-bottom:1px solid rgba(255,255,255,0.04);
-      display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
-    }
-    .ann-item:last-child{border-bottom:none;}
-    .ann-item:first-child{padding-top:0;}
-    .ann-type{display:inline-block;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-bottom:6px;}
-    .ann-type-event{background:rgba(16,185,129,0.12);color:#10b981;}
-    .ann-type-update{background:rgba(104,104,238,0.12);color:#6868ee;}
-    .ann-title{font-size:14px;font-weight:800;line-height:1.4;}
-    .ann-meta{font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px;font-weight:600;}
-
-    /* ENGAGEMENT */
-    .eng-card{
-      background:rgba(18,18,117,0.2);
-      border:1px solid rgba(80,80,200,0.15);
-      border-radius:14px;
-      padding:20px 24px;
-    }
-    .eng-grid{display:flex;flex-direction:column;gap:0;}
-    .eng-section{padding:0;}
-    .eng-section + .eng-section{margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.05);}
-    .eng-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
-    .eng-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-    .eng-title{font-size:12px;font-weight:800;letter-spacing:0.03em;}
-    .eng-list{display:flex;flex-direction:column;gap:10px;}
-    .eng-row{display:flex;align-items:center;gap:12px;}
-    .eng-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
-    .eng-name{font-size:13px;font-weight:700;}
-    .eng-meta{font-size:11px;color:rgba(255,255,255,0.4);font-weight:600;}
-
-    /* ═══════════════════════════════════════════════════
-       SALES TAB
-       ═══════════════════════════════════════════════════ */
-    .summary-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
-    .summary-card{
-      background:rgba(18,18,117,0.2);
-      border:1px solid rgba(80,80,200,0.15);
-      border-radius:14px;
-      padding:20px 24px;
-    }
-    .summary-card .sc-lbl{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px;}
-    .summary-card .sc-val{font-size:24px;font-weight:900;}
-    .summary-card .sc-sub{font-size:10px;color:rgba(255,255,255,0.28);margin-top:5px;font-weight:600;}
-
-    /* LEADERBOARD TABLE */
-    .lb-wrap{
-      background:rgba(18,18,117,0.2);
-      border:1px solid rgba(80,80,200,0.15);
-      border-radius:14px;
-      overflow:hidden;
-    }
-    table{width:100%;border-collapse:collapse;}
-    th{
-      font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
-      color:rgba(255,255,255,0.22);
-      padding:14px 16px;text-align:left;
-      border-bottom:1px solid rgba(255,255,255,0.06);
-      white-space:nowrap;
-      background:rgba(8,8,32,0.4);
-      position:sticky;top:0;
-    }
-    th.right,td.right{text-align:right;}
-    td{
-      padding:13px 16px;
-      border-bottom:1px solid rgba(255,255,255,0.03);
-      font-size:13px;color:rgba(255,255,255,0.65);font-weight:600;
-    }
-    tr:last-child td{border-bottom:none;}
-    tr:nth-child(even) td{background:rgba(255,255,255,0.01);}
-    tr:hover td{background:rgba(104,104,238,0.04);}
-    .rank-cell{font-size:11px;font-weight:800;color:rgba(255,255,255,0.18);width:40px;}
-    .agent-cell{display:flex;align-items:center;gap:10px;}
-    .agent-cell .av{
-      width:30px;height:30px;border-radius:50%;
-      background:rgba(104,104,238,0.15);
-      display:flex;align-items:center;justify-content:center;
-      font-size:10px;font-weight:800;flex-shrink:0;
-      color:#9090ff;
-    }
-    .agent-cell .nm{font-size:13px;font-weight:700;color:white;}
-    .cl-val{color:#10b981;}
-    .pe-val{color:#c9a84c;}
-    .li-val{color:#6868ee;}
-    .tot-val{font-weight:900;color:white;}
-    .ct-dim{color:rgba(255,255,255,0.22);font-size:11px;}
-
-    /* ═══════════════════════════════════════════════════
-       FINANCIALS TAB
-       ═══════════════════════════════════════════════════ */
-    .fin-top-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;}
-    .fin-block{
-      background:rgba(18,18,117,0.2);
-      border:1px solid rgba(80,80,200,0.15);
-      border-radius:14px;
-      padding:24px 28px;
-    }
-    .fin-block-title{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:18px;}
-    .fin-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;}
-    .fin-row:last-child{margin-bottom:0;}
-    .fin-label{font-size:13px;font-weight:600;color:rgba(255,255,255,0.5);}
-    .fin-value{font-size:20px;font-weight:900;}
-    .fin-breakdown{font-size:10px;color:rgba(255,255,255,0.28);font-weight:600;margin-top:2px;}
-
-    /* Chart */
-    .chart-card{
-      background:rgba(18,18,117,0.2);
-      border:1px solid rgba(80,80,200,0.15);
-      border-radius:14px;
-      padding:26px 28px;
-    }
-    .chart-bars{display:flex;align-items:flex-end;gap:10px;height:150px;padding:0 4px;position:relative;}
-    .chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
-    .chart-bar{width:100%;border-radius:5px 5px 0 0;min-height:4px;transition:height .6s cubic-bezier(.4,0,.2,1);}
-    .chart-lbl{font-size:9px;color:rgba(255,255,255,0.3);font-weight:600;}
-    .chart-amt{font-size:9px;color:rgba(255,255,255,0.5);font-weight:700;}
-    .burn-line{position:absolute;left:0;right:0;border-top:1px dashed rgba(248,113,113,0.45);}
-    .burn-lbl{position:absolute;right:0;font-size:8px;color:rgba(248,113,113,0.5);font-weight:700;letter-spacing:1px;transform:translateY(-14px);}
-
-    /* Payments */
-    .pay-card{
-      background:rgba(18,18,117,0.2);
-      border:1px solid rgba(80,80,200,0.15);
-      border-radius:14px;
-      padding:20px 24px;
-    }
-    .pay-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.03);}
-    .pay-row:last-child{border-bottom:none;}
-    .pay-name{font-size:13px;font-weight:700;}
-    .pay-date{font-size:10px;color:rgba(255,255,255,0.28);font-weight:600;}
-    .pay-amt{font-size:14px;font-weight:900;color:#10b981;}
-
-    /* Revenue table */
-    .rev-wrap{
-      background:rgba(18,18,117,0.2);
-      border:1px solid rgba(80,80,200,0.15);
-      border-radius:14px;
-      overflow:hidden;
-    }
-
-    /* ═══════════════════════════════════════════════════
-       BRAIN TAB
-       ═══════════════════════════════════════════════════ */
-    .brain-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
-    .brain-q-list{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
-    .brain-q{
-      background:rgba(18,18,117,0.2);
-      border:1px solid rgba(80,80,200,0.15);
-      border-radius:12px;
-      padding:16px 20px;
-      transition:border-color .2s;
-    }
-    .brain-q:hover{border-color:rgba(80,80,200,0.3);}
-    .brain-q-text{font-size:13px;color:white;font-weight:600;margin-bottom:5px;line-height:1.5;}
-    .brain-q-meta{font-size:11px;color:rgba(255,255,255,0.3);font-weight:600;}
-    .teach-card{
-      background:rgba(18,18,117,0.2);
-      border:1px solid rgba(80,80,200,0.15);
-      border-radius:14px;
-      padding:26px 28px;
-    }
-    .teach-input{
-      width:100%;
-      background:rgba(255,255,255,0.04);
-      border:1px solid rgba(255,255,255,0.08);
-      border-radius:10px;
-      padding:13px 16px;
-      font-size:13px;color:white;
-      font-family:'Montserrat',sans-serif;
-      outline:none;margin-bottom:10px;
-      resize:vertical;
-      transition:border-color .2s;
-    }
-    .teach-input:focus{border-color:rgba(104,104,238,0.4);}
-    .teach-input::placeholder{color:rgba(255,255,255,0.18);}
-    .teach-btn{
-      background:#121275;
-      border:1px solid rgba(80,80,200,0.3);
-      border-radius:10px;
-      padding:12px 28px;
-      font-size:12px;font-weight:700;
-      color:white;cursor:pointer;
-      font-family:'Montserrat',sans-serif;
-      transition:all .2s ease;
-    }
-    .teach-btn:hover{background:#1a1a9a;border-color:rgba(80,80,200,0.5);}
-
-    /* ═══════════════════════════════════════════════════
-       UTILITIES
-       ═══════════════════════════════════════════════════ */
-    .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.08);border-top-color:#6868ee;border-radius:50%;animation:spin .7s linear infinite;}
-    @keyframes spin{to{transform:rotate(360deg);}}
-    .loading{display:flex;align-items:center;justify-content:center;gap:10px;padding:40px;color:rgba(255,255,255,0.25);font-size:12px;font-weight:600;}
-    .api-notice{
-      background:rgba(245,158,11,0.06);
-      border:1px solid rgba(245,158,11,0.12);
-      border-radius:10px;
-      padding:14px 18px;
-      font-size:12px;color:rgba(245,158,11,0.6);
-      font-weight:600;margin-bottom:16px;
-    }
-    .empty-state{color:rgba(255,255,255,0.22);font-size:12px;font-weight:600;padding:16px 0;}
+    .stale-tag { background: rgba(245,158,11,0.15); color: #f59e0b; font-size: 9px; font-weight: 700; letter-spacing: 2px; padding: 2px 7px; border-radius: 4px; margin-left: 6px; }
   </style>
 </head>
 <body>
 
-<!-- Auth gate handled by auth-check.js -->
+<!-- Shared nav injected by shared.js -->
 
-<!-- ═══════════════════════════════════════════════════
-     APP
-     ═══════════════════════════════════════════════════ -->
-<div id="app" style="display:block;">
-
-  <!-- TOP BAR -->
-  <div class="topbar">
-    <div class="topbar-left">
-      <img src="assets/logos/SERHANT-Orlando-White.svg" alt="SERHANT. Orlando" class="topbar-logo">
-      <div>
-        <div class="topbar-title">Leadership Dashboard</div>
-        <div class="topbar-sub" id="data-date">43 agents · Loading...</div>
-      </div>
-    </div>
-    <div class="topbar-right">
-      <a href="index.html" class="pill-btn">&#8592; Portal</a>
-      <button class="pill-btn" id="sign-out-btn">Sign Out</button>
+<!-- ══ PIPELINE STRIP ══ -->
+<div class="pipeline-strip">
+  <div class="pp cl">
+    <div class="pp-dot"></div>
+    <div>
+      <div class="pp-lbl">Closed YTD</div>
+      <div class="pp-val" id="pv-cl">--</div>
+      <div class="pp-sub" id="pu-cl">-- deals</div>
     </div>
   </div>
+  <div class="pp pe">
+    <div class="pp-dot"></div>
+    <div>
+      <div class="pp-lbl">Pending</div>
+      <div class="pp-val" id="pv-pe">--</div>
+      <div class="pp-sub" id="pu-pe">-- deals</div>
+    </div>
+  </div>
+  <div class="pp li">
+    <div class="pp-dot"></div>
+    <div>
+      <div class="pp-lbl">Active Listings</div>
+      <div class="pp-val" id="pv-li">--</div>
+      <div class="pp-sub" id="pu-li">-- listings</div>
+    </div>
+  </div>
+  <div class="pp to">
+    <div class="pp-dot"></div>
+    <div>
+      <div class="pp-lbl">Total Pipeline</div>
+      <div class="pp-val" id="pv-to">--</div>
+      <div class="pp-sub">closed + pending + listed</div>
+    </div>
+  </div>
+</div>
 
-  <!-- PIPELINE STRIP -->
-  <div class="pipeline-strip">
-    <div class="pp cl">
-      <div class="pp-dot"></div>
+<!-- ══ TAB BAR ══ -->
+<div class="tab-bar">
+  <button class="tab-btn on" data-tab="hub">Hub</button>
+  <button class="tab-btn" data-tab="sales">Sales</button>
+  <button class="tab-btn" data-tab="financials">Financials</button>
+  <button class="tab-btn" data-tab="brain">Brain</button>
+  <span id="data-date" style="font-size:10px;color:var(--color-text-faint);margin-left:auto;padding-right:var(--space-6);"></span>
+</div>
+
+<!-- ══════════════════════════════════
+     TAB 1 — HUB
+     ══════════════════════════════════ -->
+<div id="tab-hub" class="tab-content on">
+  <div class="l-wrap">
+    <div class="l-cols" style="align-items:start;">
+
+      <!-- Left: Pace + Announcements -->
       <div>
-        <div class="pp-lbl">Closed</div>
-        <div class="pp-val" id="pv-cl">--</div>
-        <div class="pp-sub" id="pu-cl">-- deals</div>
+        <!-- Office Pace -->
+        <div class="l-card" style="margin-bottom: var(--space-6);">
+          <div class="l-card-title">2026 Office Pace</div>
+          <div id="pace-content">
+            <div class="pace-row">
+              <div class="pace-lbl">Volume</div>
+              <div class="pace-track"><div class="pace-fill" style="width:0%;background:var(--color-gold);"></div><div class="pace-goal"></div></div>
+              <div class="pace-pct" style="color:var(--color-gold);">0%</div>
+              <div class="pace-info">Loading...</div>
+            </div>
+            <div class="pace-row">
+              <div class="pace-lbl">GCI</div>
+              <div class="pace-track"><div class="pace-fill" style="width:0%;background:#10b981;"></div><div class="pace-goal"></div></div>
+              <div class="pace-pct" style="color:#10b981;">0%</div>
+              <div class="pace-info">Loading...</div>
+            </div>
+          </div>
+          <div class="pace-status" id="pace-status">Loading data...</div>
+          <div class="stat-pills-row">
+            <div class="stat-pill-box"><div class="spb-lbl">Units Closed</div><div class="spb-val" id="sc-units">--</div></div>
+            <div class="stat-pill-box"><div class="spb-lbl">Avg Sale Price</div><div class="spb-val" id="sc-avg">--</div></div>
+            <div class="stat-pill-box"><div class="spb-lbl">Total GCI</div><div class="spb-val" id="sc-gci" style="color:#10b981;">--</div></div>
+          </div>
+        </div>
+
+        <!-- Announcements -->
+        <div class="l-card">
+          <div class="l-card-title">Announcements</div>
+          <div id="ann-list">
+            <div class="api-notice">Announcements load after Hub API connects.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Engagement -->
+      <div class="l-card" style="position:sticky;top:calc(var(--nav-h) + 138px);">
+        <div class="l-card-title">Agent Engagement</div>
+        <div id="eng-list">
+          <div class="api-notice">Engagement data loads after Hub API connects.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     TAB 2 — SALES
+     ══════════════════════════════════ -->
+<div id="tab-sales" class="tab-content">
+  <div class="l-wrap">
+    <!-- Pipeline summary cards -->
+    <div class="l-cols-4" style="margin-bottom:var(--space-6);">
+      <div class="l-card">
+        <div class="l-card-title">Closed YTD</div>
+        <div style="font-size:var(--text-xl);font-weight:800;color:#10b981;" id="sc-cl-val">--</div>
+        <div style="font-size:12px;color:var(--color-text-faint);" id="sc-cl-sub">-- deals</div>
+      </div>
+      <div class="l-card">
+        <div class="l-card-title">Pending</div>
+        <div style="font-size:var(--text-xl);font-weight:800;color:var(--color-gold);" id="sc-pe-val">--</div>
+        <div style="font-size:12px;color:var(--color-text-faint);" id="sc-pe-sub">-- deals</div>
+      </div>
+      <div class="l-card">
+        <div class="l-card-title">Active Listings</div>
+        <div style="font-size:var(--text-xl);font-weight:800;color:var(--color-accent-bright);" id="sc-li-val">--</div>
+        <div style="font-size:12px;color:var(--color-text-faint);" id="sc-li-sub">-- listings</div>
+      </div>
+      <div class="l-card">
+        <div class="l-card-title">Total Pipeline</div>
+        <div style="font-size:var(--text-xl);font-weight:800;color:white;" id="sc-to-val">--</div>
+        <div style="font-size:12px;color:var(--color-text-faint);">closed + pending + listed</div>
       </div>
     </div>
-    <div class="pp pe">
-      <div class="pp-dot"></div>
-      <div>
-        <div class="pp-lbl">Pending</div>
-        <div class="pp-val" id="pv-pe">--</div>
-        <div class="pp-sub" id="pu-pe">-- deals</div>
-      </div>
-    </div>
-    <div class="pp li">
-      <div class="pp-dot"></div>
-      <div>
-        <div class="pp-lbl">Listed</div>
-        <div class="pp-val" id="pv-li">--</div>
-        <div class="pp-sub" id="pu-li">-- listings</div>
-      </div>
-    </div>
-    <div class="pp to">
-      <div class="pp-dot"></div>
-      <div>
-        <div class="pp-lbl">Total Pipeline</div>
-        <div class="pp-val" id="pv-to">--</div>
-        <div class="pp-sub">closed + pending + listed</div>
+
+    <!-- Leaderboard -->
+    <div class="l-card">
+      <div class="l-card-title">Agent Leaderboard</div>
+      <div style="overflow-x:auto;">
+        <table class="l-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Agent</th>
+              <th>Closed $</th>
+              <th>Units</th>
+              <th>Pending $</th>
+              <th>Listings $</th>
+              <th>Listings Ct</th>
+              <th>Total Pipeline</th>
+            </tr>
+          </thead>
+          <tbody id="sales-tbody">
+            <tr><td colspan="8" style="text-align:center;color:var(--color-text-faint);padding:var(--space-8);">Loading...</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- TAB BAR -->
-  <div class="tabs">
-    <button class="tab on" data-tab="hub">Hub</button>
-    <button class="tab" data-tab="sales">Sales</button>
-    <button class="tab" data-tab="financials">Financials</button>
-    <button class="tab" data-tab="brain">Brain</button>
+<!-- ══════════════════════════════════
+     TAB 3 — FINANCIALS
+     ══════════════════════════════════ -->
+<div id="tab-financials" class="tab-content">
+  <div class="l-wrap">
+    <div class="api-notice" id="fin-api-notice">Financials load after Hub API connects.</div>
+
+    <!-- This Month + YTD -->
+    <div class="l-cols" style="margin-bottom:var(--space-6);">
+      <div class="l-card">
+        <div class="l-card-title">This Month</div>
+        <div class="l-cols-3">
+          <div class="fin-metric">
+            <div class="fin-lbl">Revenue</div>
+            <div class="fin-val money-green" id="fin-rev">--</div>
+            <div class="fin-sub" id="fin-rev-sub"></div>
+          </div>
+          <div class="fin-metric">
+            <div class="fin-lbl">Costs</div>
+            <div class="fin-val money-red" id="fin-cost">--</div>
+          </div>
+          <div class="fin-metric">
+            <div class="fin-lbl">Net</div>
+            <div class="fin-val" id="fin-net">--</div>
+          </div>
+        </div>
+      </div>
+      <div class="l-card">
+        <div class="l-card-title">Year to Date</div>
+        <div class="l-cols-3">
+          <div class="fin-metric">
+            <div class="fin-lbl">Revenue</div>
+            <div class="fin-val money-green" id="fin-ytd-rev">--</div>
+          </div>
+          <div class="fin-metric">
+            <div class="fin-lbl">Costs</div>
+            <div class="fin-val money-red" id="fin-ytd-cost">--</div>
+          </div>
+          <div class="fin-metric">
+            <div class="fin-lbl">Net</div>
+            <div class="fin-val" id="fin-ytd-net">--</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart + Payments side by side -->
+    <div class="l-cols" style="margin-bottom:var(--space-6);">
+      <div class="l-card">
+        <div class="l-card-title">Trailing 6 Months</div>
+        <div id="fin-chart" class="bar-chart"></div>
+      </div>
+      <div class="l-card">
+        <div class="l-card-title">Recent Payments</div>
+        <div id="fin-payments" style="font-size:13px;color:var(--color-text-faint);">Loading...</div>
+      </div>
+    </div>
+
+    <!-- Revenue by Agent -->
+    <div class="l-card">
+      <div class="l-card-title">Revenue by Agent · YTD</div>
+      <div style="overflow-x:auto;">
+        <table class="l-table">
+          <thead>
+            <tr><th>#</th><th>Agent</th><th>Deals</th><th>Total Revenue</th><th>Commission</th><th>Studios</th></tr>
+          </thead>
+          <tbody id="fin-agents">
+            <tr><td colspan="6" style="text-align:center;color:var(--color-text-faint);padding:var(--space-8);">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
+</div>
 
-  <!-- BODY -->
-  <div class="body">
-
-    <!-- ═══════════════════ TAB 1: HUB ═══════════════════ -->
-    <div id="tab-hub">
-      <div class="hub-grid">
-
-        <!-- LEFT COLUMN -->
-        <div class="hub-main">
-
-          <!-- 2026 OFFICE PACE -->
-          <div class="sec">
-            <div class="sec-title">2026 Office Pace</div>
-            <div class="pace-card" id="pace-content">
-              <div class="loading"><div class="spinner"></div>Calculating...</div>
-            </div>
-          </div>
-
-          <!-- ANNOUNCEMENTS -->
-          <div class="sec">
-            <div class="sec-title">Announcements</div>
-            <div class="ann-card" id="ann-list">
-              <div class="empty-state">No active announcements.</div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- RIGHT COLUMN -->
-        <div class="hub-side">
-
-          <!-- AGENT ENGAGEMENT -->
-          <div class="sec">
-            <div class="sec-title">Agent Engagement</div>
-            <div class="eng-card" id="eng-content">
-              <div class="api-notice">Engagement data loads after Hub API connects.</div>
-            </div>
-          </div>
-
-        </div>
+<!-- ══════════════════════════════════
+     TAB 4 — BRAIN
+     ══════════════════════════════════ -->
+<div id="tab-brain" class="tab-content">
+  <div class="l-wrap">
+    <div class="api-notice" id="brain-api-notice">Brain data loads after Hub API connects.</div>
+    <div id="brain-notice" style="display:none;"></div>
+    <!-- Usage stats -->
+    <div class="l-cols-3" style="margin-bottom:var(--space-6);">
+      <div class="l-card" style="text-align:center;">
+        <div class="l-card-title">Convos This Week</div>
+        <div style="font-size:var(--text-2xl);font-weight:800;color:white;" id="br-convos">--</div>
+      </div>
+      <div class="l-card" style="text-align:center;">
+        <div class="l-card-title">Unique Agents</div>
+        <div style="font-size:var(--text-2xl);font-weight:800;color:var(--color-accent-bright);" id="br-agents">--</div>
+      </div>
+      <div class="l-card" style="text-align:center;">
+        <div class="l-card-title">vs Last Week</div>
+        <div style="font-size:var(--text-2xl);font-weight:800;color:#10b981;" id="br-delta">--</div>
       </div>
     </div>
 
-    <!-- ═══════════════════ TAB 2: SALES ═══════════════════ -->
-    <div id="tab-sales" style="display:none;">
-
-      <!-- Summary Cards -->
-      <div class="sec">
-        <div class="summary-cards">
-          <div class="summary-card">
-            <div class="sc-lbl">Closed YTD</div>
-            <div class="sc-val" id="sc-cl-val" style="color:#10b981;">--</div>
-            <div class="sc-sub" id="sc-cl-sub">-- deals</div>
-          </div>
-          <div class="summary-card">
-            <div class="sc-lbl">Pending</div>
-            <div class="sc-val" id="sc-pe-val" style="color:#c9a84c;">--</div>
-            <div class="sc-sub" id="sc-pe-sub">-- deals</div>
-          </div>
-          <div class="summary-card">
-            <div class="sc-lbl">Active Listings</div>
-            <div class="sc-val" id="sc-li-val" style="color:#6868ee;">--</div>
-            <div class="sc-sub" id="sc-li-sub">-- listings</div>
-          </div>
-          <div class="summary-card">
-            <div class="sc-lbl">Total Pipeline</div>
-            <div class="sc-val" id="sc-to-val" style="color:white;">--</div>
-            <div class="sc-sub">all combined</div>
-          </div>
-        </div>
+    <div class="l-cols">
+      <!-- Recent questions -->
+      <div class="l-card">
+        <div class="l-card-title">Recent Questions</div>
+        <div id="brain-qs" style="color:var(--color-text-faint);font-size:13px;">Loading...</div>
       </div>
 
-      <!-- Agent Leaderboard -->
-      <div class="sec">
-        <div class="sec-title">Agent Leaderboard — Total Pipeline</div>
-        <div class="lb-wrap" id="lb-wrap">
-          <div class="loading"><div class="spinner"></div>Loading agents...</div>
-        </div>
+      <!-- Teach the Brain -->
+      <div class="l-card">
+        <div class="l-card-title">Teach The Brain</div>
+        <p style="font-size:12px;color:var(--color-text-faint);margin-bottom:var(--space-4);">Add Q&amp;As that agents keep asking. The Brain will use these answers automatically.</p>
+        <input type="text" class="teach-input" placeholder="Question agents keep asking..." id="brain-q-input">
+        <textarea class="teach-textarea" rows="4" placeholder="The correct answer..." id="brain-a-input"></textarea>
+        <button class="teach-btn" onclick="submitBrainTeach()">Teach The Brain</button>
       </div>
-
     </div>
+  </div>
+</div>
 
-    <!-- ═══════════════════ TAB 3: FINANCIALS ═══════════════════ -->
-    <div id="tab-financials" style="display:none;">
-      <div class="api-notice" id="fin-notice">Financials load after Hub API connects.</div>
-
-      <!-- This Month + YTD -->
-      <div class="sec">
-        <div class="fin-top-grid" id="fin-grid">
-          <div class="fin-block">
-            <div class="fin-block-title">This Month</div>
-            <div id="fin-month-content"><div class="loading"><div class="spinner"></div></div></div>
-          </div>
-          <div class="fin-block">
-            <div class="fin-block-title">Year to Date</div>
-            <div id="fin-ytd-content"><div class="loading"><div class="spinner"></div></div></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Trailing 6 Months -->
-      <div class="sec">
-        <div class="sec-title">Trailing 6 Months Revenue</div>
-        <div class="chart-card" id="fin-chart">
-          <div class="loading"><div class="spinner"></div></div>
-        </div>
-      </div>
-
-      <!-- Recent Payments -->
-      <div class="sec">
-        <div class="sec-title">Recent Payments</div>
-        <div class="pay-card" id="fin-payments">
-          <div class="loading"><div class="spinner"></div></div>
-        </div>
-      </div>
-
-      <!-- Revenue by Agent -->
-      <div class="sec">
-        <div class="sec-title">Revenue by Agent YTD</div>
-        <div class="rev-wrap" id="fin-agents">
-          <div class="loading"><div class="spinner"></div></div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- ═══════════════════ TAB 4: BRAIN ═══════════════════ -->
-    <div id="tab-brain" style="display:none;">
-      <div class="api-notice" id="brain-notice">Brain stats load after Hub API connects.</div>
-
-      <!-- Usage Stats -->
-      <div class="sec">
-        <div class="sec-title">Usage This Week</div>
-        <div class="brain-stats">
-          <div class="card"><div class="card-lbl">Conversations</div><div class="card-val" id="br-convos">--</div></div>
-          <div class="card"><div class="card-lbl">Unique Agents</div><div class="card-val" id="br-agents">--</div></div>
-          <div class="card"><div class="card-lbl">vs Last Week</div><div class="card-val green" id="br-delta">--</div></div>
-        </div>
-      </div>
-
-      <!-- Recent Questions -->
-      <div class="sec">
-        <div class="sec-title">Recent Questions</div>
-        <div class="brain-q-list" id="brain-qs">
-          <div class="empty-state">Questions load from Hub API.</div>
-        </div>
-      </div>
-
-      <!-- Teach The Brain -->
-      <div class="sec">
-        <div class="sec-title">Teach The Brain</div>
-        <div class="teach-card">
-          <input type="text" class="teach-input" id="teach-q" placeholder="Question the brain should answer...">
-          <textarea class="teach-input" id="teach-a" rows="3" placeholder="The correct answer..."></textarea>
-          <button class="teach-btn" id="teach-submit">Submit Knowledge</button>
-        </div>
-      </div>
-
-    </div>
-
-  </div><!-- /body -->
-</div><!-- /app -->
+<script src="shared.js"></script>
 
 <script>
 const SB_URL = 'https://lqothpzxhxvhvyikmphx.supabase.co';
