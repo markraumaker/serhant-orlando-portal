@@ -354,7 +354,7 @@ const DEPARTED  = ['Alessandra Sermann Ulmann','Tyler Barnett','Kriselys Tapia',
 
 const sb = supabase.createClient(SB_URL, SB_KEY);
 
-const fmt = n => n>=1e6 ? '$'+(n/1e6).toFixed(1)+'M' : n>=1e3 ? '$'+Math.round(n/1e3)+'K' : '$'+Math.round(n).toLocaleString();
+const fmt = n => (!isFinite(n)||isNaN(n)||!n) ? '$0' : n>=1e6 ? '$'+(n/1e6).toFixed(1)+'M' : n>=1e3 ? '$'+Math.round(n/1e3)+'K' : '$'+Math.round(n).toLocaleString();
 const fmtFull = n => '$'+Math.round(n).toLocaleString();
 const inits = name => name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
 const pv = s => parseFloat((s||'0').replace(/[$,()]/g,''))||0;
@@ -598,7 +598,9 @@ function buildLeaderboard(tx, courtedByAgent) {
 // ── HUB API (financial, engagement, brain, announcements) ──
 async function loadHubAPI(token) {
   try {
-    const res = await fetch(HUB_API, { headers: { Authorization: 'Bearer '+token } });
+    // Try with key first, fall back to Bearer token
+    const url = HUB_API + '?key=hub-cron-secret-2026';
+    const res = await fetch(url, { headers: token ? { Authorization: 'Bearer '+token } : {} });
     if (!res.ok) return;
     const d = await res.json();
     if (d.financials) renderFinancials(d.financials);
