@@ -859,7 +859,14 @@
           .eq('team', TEAM);
 
         if (error) throw error;
-        const allDeals = data || [];
+        // Filter to current year only (dates stored as MM/DD/YYYY)
+        const yr = String(new Date().getFullYear());
+        const allDeals = (data || []).filter(d => {
+          const cd = d.closing_date || '';
+          const y = cd.includes('/') ? cd.split('/')[2] : cd.slice(0,4);
+          const isPending = PENDING_STATUSES.includes(d.status);
+          return isPending || y === yr;
+        });
         renderHeroStats(allDeals);
         renderRankings(allDeals);
       } catch (err) {
