@@ -411,8 +411,10 @@
     let currentPeriod = 'ytd';
 
     async function fetchData() {
-      const closed = encodeURIComponent(CLOSED_STATUSES);
-      allTransactions = await sb('/tb_transactions?select=attributed_agent,volume,units,closing_date&status=in.' + closed);
+      // Match Hub: fetch ALL transactions with a closing date in the current year
+      // No status filter — Hub counts volume for all deals with a closing date
+      const yearStart = new Date().getFullYear() + '-01-01';
+      allTransactions = await sb('/tb_transactions?select=attributed_agent,volume,units,closing_date,status&closing_date=gte.' + yearStart + '&closing_date=not.is.null&order=closing_date.desc&limit=1000');
 
       // Active listings
       const snap = await sb('/courted_active_listings?select=snapshot_date&order=snapshot_date.desc&limit=1');
