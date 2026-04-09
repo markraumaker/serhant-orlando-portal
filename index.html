@@ -675,8 +675,10 @@
         // Active listings -- latest snapshot
         const snap = await sb('/courted_active_listings?select=snapshot_date&order=snapshot_date.desc&limit=1');
         if (snap && snap[0]) {
-          const rows = await sb('/courted_active_listings?select=active_count&snapshot_date=eq.' + snap[0].snapshot_date);
-          const total = rows.reduce ? rows.reduce((s,r) => s + (r.active_count||0), 0) : 0;
+          const rows = await sb('/courted_active_listings?select=agent_name,active_count&snapshot_date=eq.' + snap[0].snapshot_date);
+          // Deduplicate by agent_name — webhook bug causes triple inserts
+          const uniq = {}; rows.forEach(r => { if (!uniq[r.agent_name]) uniq[r.agent_name] = r.active_count; });
+          const total = Object.values(uniq).reduce((s,v) => s+v, 0);
           set('hero-listings', fmtN(total) + ' Active Listings');
           set('stat-listings', fmtN(total));
         }

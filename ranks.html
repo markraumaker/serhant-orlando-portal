@@ -432,7 +432,9 @@
       const snap = await sb('/courted_active_listings?select=snapshot_date&order=snapshot_date.desc&limit=1');
       if (snap && snap[0]) {
         const rows = await sb('/courted_active_listings?select=agent_name,active_count&snapshot_date=eq.' + snap[0].snapshot_date);
-        rows.forEach(r => { listingsMap[r.agent_name] = (listingsMap[r.agent_name] || 0) + r.active_count; });
+        // Deduplicate by agent_name — webhook bug causes triple inserts
+        const seenAgents = new Set();
+        rows.forEach(r => { if (!seenAgents.has(r.agent_name)) { seenAgents.add(r.agent_name); listingsMap[r.agent_name] = r.active_count; } });
       }
 
       const totalListings = Object.values(listingsMap).reduce((s, v) => s + v, 0);

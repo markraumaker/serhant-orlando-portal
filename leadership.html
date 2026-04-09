@@ -356,11 +356,15 @@ async function loadSupabaseData() {
   const peVol  = pending.reduce((s,t)=>s+pv(t.volume),0);
   const peUnits = pending.length;
 
+  // Courted: deduplicate by agent_name (webhook creates duplicates when RLS blocks deletes)
   let liVol=0, liUnits=0;
-  if (snap?.agents) {
-    const ag = typeof snap.agents==='string' ? JSON.parse(snap.agents) : snap.agents;
-    liVol   = ag.reduce((s,a)=>s+(a.listings||[]).reduce((ls,l)=>ls+(l.price||0),0),0);
-    liUnits = ag.reduce((s,a)=>s+(a.active_count||0),0);
+  const courtedRows = courtedRes.data||[];
+  if (courtedRows.length > 0) {
+    const latestSnap = courtedRows[0].snapshot_date;
+    const seen = new Set();
+    const unique = courtedRows.filter(r => r.snapshot_date===latestSnap && !seen.has(r.agent_name) && seen.add(r.agent_name));
+    liUnits = unique.reduce((s,r) => s+(r.active_count||0), 0);
+    liVol = unique.reduce((s,r) => (Array.isArray(r.listings)?r.listings:[]).reduce((ls,l) => ls+(l.price||0), s), 0);
   }
 
   // Pipeline strip
