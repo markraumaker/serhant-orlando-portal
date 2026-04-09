@@ -660,10 +660,14 @@
 
     async function loadStats() {
       try {
-        // Closed volume
-        const closed = encodeURIComponent('("Closed & Processed for Payment","Closed/Rented - Ready for processing","Rented & Processed for Payment")');
-        const txns = await sb('/tb_transactions?select=volume&status=in.' + closed);
-        const vol = txns.reduce ? txns.reduce((s,t) => s + parseFloat((t.volume||'0').replace(/[$,]/g,'')), 0) : 0;
+        // Closed volume — filter to current year client-side (dates stored as MM/DD/YYYY)
+        const closed = encodeURIComponent('("Closed & Processed for Payment","Rented & Processed for Payment","Referral - Processed for payment")');
+        const txns = await sb('/tb_transactions?select=volume,closing_date&status=in.' + closed);
+        const yr = new Date().getFullYear().toString();
+        const vol = txns.reduce ? txns.reduce((s,t) => {
+          const d = (t.closing_date||''); const y = d.includes('/') ? d.split('/')[2] : d.slice(0,4);
+          return y === yr ? s + parseFloat((t.volume||'0').replace(/[$,]/g,'')) : s;
+        }, 0) : 0;
         const volStr = fmtM(vol);
         set('hero-volume', volStr + ' Closed YTD');
         set('stat-volume', volStr);
