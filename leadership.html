@@ -482,7 +482,7 @@ async function loadSupabaseData() {
     const seen = new Set();
     const unique = courtedRows.filter(r => r.snapshot_date===latestSnap && !seen.has(r.agent_name) && seen.add(r.agent_name));
     liUnits = unique.reduce((s,r) => s+(r.active_count||0), 0);
-    liVol = unique.reduce((s,r) => (Array.isArray(r.listings)?r.listings:[]).reduce((ls,l) => ls+(l.price||0), s), 0);
+    liVol = unique.reduce((s,r) => (Array.isArray(r.listings)?r.listings:[]).reduce((ls,l) => ls+parseFloat(l.price||0), s), 0);
     // Build per-agent courted data for leaderboard
     unique.forEach(r => {
       const listings = Array.isArray(r.listings) ? r.listings : [];
