@@ -703,11 +703,62 @@ document.getElementById('teach-submit').addEventListener('click', async () => {
   }
 });
 
-// ── Open access — load data directly ──
-loadSupabaseData();
-sb.auth.getSession().then(({data:{session}}) => {
-  loadHubAPI(session ? session.access_token : null); // key auth — no session required
-});
+// ── Load all data from Hub APIs ──
+const HUB = 'https://app.serhantorlandohub.com';
+const K = '?key=hub-cron-secret-2026';
+
+async function loadAll() {
+  const [pipeline, leadership] = await Promise.all([
+    fetch(HUB + '/api/pipeline' + K + '&period=ytd').then(r=>r.json()).catch(()=>null),
+    fetch(HUB + '/api/leadership-data' + K).then(r=>r.json()).catch(()=>null),
+  ]);
+
+  if (pipeline?.summary) {
+    const s = pipeline.summary;
+    const clVol = s.closed.volume + (s.referrals?.volume||0);
+    const clUnits = s.closed.count + (s.referrals?.count||0);
+    const peVol = s.pending.volume + (s.on_hold?.volume||0);
+    const peUnits = s.pending.count + (s.on_hold?.count||0);
+    const liVol = s.active_listings.volume;
+    const liUnits = s.active_listings.count;
+    // Pipeline strip
+    qs('pv-cl',fmt(clVol)); qs('pu-cl',clUnits+' deals');
+    qs('pv-pe',fmt(peVol)); qs('pu-pe',peUnits+' deals');
+    qs('pv-li',fmt(liVol)); qs('pu-li',liUnits+' listings');
+    qs('pv-to',fmt(clVol+peVol+liVol));
+    // Sales tab cards
+    qs('sc-cl-val',fmt(clVol)); qs('sc-cl-sub',clUnits+' deals');
+    qs('sc-pe-val',fmt(peVol)); qs('sc-pe-sub',peUnits+' deals');
+    qs('sc-li-val',fmt(liVol)); qs('sc-li-sub',liUnits+' listings');
+    qs('sc-to-val',fmt(clVol+peVol+liVol));
+    // GCI from leadership-data if available, else 0
+    const gci = leadership?.financials?.ytd ? (leadership.financials.ytd.revenue||0) + (leadership.financials.ytd.studios_revenue||0) : 0;
+    buildPace(clVol, gci, clUnits);
+    // Sales leaderboard from pipeline by_agent
+    if (pipeline.by_agent?.length) buildLeaderboardFromPipeline(pipeline.by_agent);
+    document.getElementById('data-date').textContent = 'TB data as of ' + new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  }
+
+  if (leadership) {
+    if (leadership.financials) renderFinancials(leadership.financials);
+    if (leadership.engagement) renderEngagement(leadership.engagement);
+    if (leadership.brain)      renderBrain(leadership.brain);
+    if (leadership.announcements) renderAnnouncements(leadership.announcements);
+    document.querySelectorAll('.api-notice').forEach(el=>el.remove());
+  }
+}
+
+function buildLeaderboardFromPipeline(byAgent) {
+  if (!byAgent.length) { document.getElementById('lb-wrap').innerHTML = '<div class="loading">No data</div>'; return; }
+  let html = '<table><thead><tr><th style="width:36px;">#</th><th>Agent</th><th class="right">Closed $</th><th class="right">Ct</th><th class="right">Pending $</th><th class="right">Listings $</th><th class="right">Listings Ct</th><th class="right" style="color:white;">Total Pipeline</th></tr></thead><tbody>';
+  byAgent.slice(0,50).forEach((a,i) => {
+    html += `<tr><td class="rank-cell">${i+1}</td><td><div class="agent-cell"><div class="av">${inits(a.agent_name)}</div><div class="nm">${a.agent_name}</div></div></td><td class="right cl-val">${a.closed?.volume>0?fmt(a.closed.volume):'&mdash;'}</td><td class="right ct-dim">${a.closed?.count||'&mdash;'}</td><td class="right pe-val">${a.pending?.volume>0?fmt(a.pending.volume):'&mdash;'}</td><td class="right li-val">${a.active_listings?.volume>0?fmt(a.active_listings.volume):'&mdash;'}</td><td class="right ct-dim">${a.active_listings?.count||'&mdash;'}</td><td class="right tot-val">${fmt(a.total_pipeline)}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('lb-wrap').innerHTML = html;
+}
+
+loadAll();
 </script>
 </body>
 </html>
