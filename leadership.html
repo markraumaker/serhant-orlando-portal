@@ -165,7 +165,10 @@
         <div class="top-bar-sub" id="data-date">Loading...</div>
       </div>
     </div>
-    <button class="sign-out" id="sign-out-btn">Sign Out</button>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <a href="index.html" style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-decoration:none;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 14px;transition:all .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">&#8592; Portal</a>
+      <button class="sign-out" id="sign-out-btn">Sign Out</button>
+    </div>
   </div>
 
   <!-- PIPELINE STRIP -->
@@ -307,15 +310,9 @@ async function checkSession() {
   const { data: { session } } = await sb.auth.getSession();
   if (session && ALLOWED.includes(session.user.email)) showApp(session);
 }
-document.getElementById('ms-btn').addEventListener('click', async () => {
-  const btn = document.getElementById('ms-btn');
-  btn.textContent = 'Redirecting...'; btn.disabled = true;
-  await sb.auth.signInWithOAuth({
-    provider: 'azure',
-    options: { redirectTo: window.location.href }
-  });
-});
-document.getElementById('sign-out-btn').addEventListener('click', async () => { await sb.auth.signOut(); location.reload(); });
+// Legacy MS SSO button removed — auth handled by auth-check.js
+const _soBtn = document.getElementById('sign-out-btn');
+if (_soBtn) _soBtn.addEventListener('click', async () => { await sb.auth.signOut(); location.reload(); });
 
 function showApp(session) { loadSupabaseData(); loadHubAPI(session.access_token); }
 
