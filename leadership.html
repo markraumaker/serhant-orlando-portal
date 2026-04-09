@@ -328,12 +328,23 @@ document.querySelectorAll('.tab').forEach(btn => {
 
 // SUPABASE DATA
 async function loadSupabaseData() {
+  // Fetch all transactions, filter to current year client-side (dates stored as MM/DD/YYYY)
   const [tbRes, courtedRes] = await Promise.all([
-    sb.from('tb_transactions').select('*'),
-    sb.from('courted_active_listings').select('*').order('snapshot_date',{ascending:false}).limit(1)
+    sb.from('tb_transactions').select('*').limit(2000),
+    sb.from('courted_active_listings').select('agent_name,active_count,listings,snapshot_date').order('snapshot_date',{ascending:false}).limit(200)
   ]);
 
-  const tx = (tbRes.data||[]).filter(t => !DEPARTED.some(d=>(t.attributed_agent||'').includes(d)));
+  const yr = String(new Date().getFullYear());
+  const allTx = (tbRes.data||[]).filter(t => {
+    const d = t.closing_date || t.created_date || '';
+    const y = d.includes('/') ? d.split('/')[2] : d.slice(0,4);
+    // Include if closing year matches OR if it's a pending deal (no closing date yet)
+    const isClosed = CLOSED_S.has(t.status);
+    const isPending = PENDING_S.has(t.status);
+    if (isPending) return true; // always include pending
+    return y === yr; // closed deals: current year only
+  });
+  const tx = allTx.filter(t => !DEPARTED.some(d=>(t.attributed_agent||'').includes(d)));
   const snap = courtedRes.data?.[0];
 
   const closed  = tx.filter(t => CLOSED_S.has(t.status));
@@ -520,6 +531,15 @@ function renderAnnouncements(anns) {
 }
 
 // Open access -- load data directly
+  loadSupabaseData();
+  // Try Hub API with anon token if available
+  sb.auth.getSession().then(({data:{session}}) => {
+    if (session) loadHubAPI(session.access_token);
+  });
+</script>
+</body>
+</html>
+ data directly
   loadSupabaseData();
   // Try Hub API with anon token if available
   sb.auth.getSession().then(({data:{session}}) => {
