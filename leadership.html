@@ -11,10 +11,13 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    html,body{font-family:'Montserrat',sans-serif;background:#080820;color:white;min-height:100vh;}
+    html,body{font-family:'Montserrat',sans-serif;background:#06061a;color:white;min-height:100vh;}
+    ::-webkit-scrollbar{width:6px;}
+    ::-webkit-scrollbar-track{background:transparent;}
+    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px;}
 
     /* AUTH */
-    #auth-gate{position:fixed;inset:0;z-index:9999;background:#080820;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+    #auth-gate{position:fixed;inset:0;z-index:9999;background:#06061a;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
     #auth-gate img{height:32px;margin-bottom:16px;}
     #auth-gate h2{font-size:20px;font-weight:900;}
     #auth-gate p{font-size:13px;color:rgba(255,255,255,0.4);}
@@ -26,78 +29,55 @@
     .auth-btn:hover{background:#1a1a9a;}
     .auth-err{font-size:11px;color:#f87171;text-align:center;display:none;}
 
-    /* SHELL */
+    /* HEADER */
     #app{display:none;}
-    .top-bar{background:linear-gradient(135deg,#06061a 0%,#0f0f60 100%);border-bottom:1px solid rgba(255,255,255,0.07);padding:18px 48px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-    .top-bar-left{display:flex;align-items:center;gap:20px;}
-    .top-bar-left img{height:26px;}
-    .top-bar-title{font-size:18px;font-weight:900;}
-    .top-bar-sub{font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px;font-weight:600;}
-    .sign-out{font-size:11px;font-weight:700;color:rgba(255,255,255,0.35);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 14px;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;}
-    .sign-out:hover{color:white;background:rgba(255,255,255,0.1);}
+    .header{background:linear-gradient(135deg,#06061a 0%,#0a0a40 100%);border-bottom:1px solid rgba(255,255,255,0.07);padding:16px 48px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+    .header-left{display:flex;align-items:center;gap:20px;}
+    .header-left img{height:24px;}
+    .header-title{font-size:16px;font-weight:900;letter-spacing:0.02em;}
+    .header-sub{font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;font-weight:600;}
+    .header-right{display:flex;align-items:center;gap:10px;}
+    .header-btn{font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 14px;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+    .header-btn:hover{color:white;background:rgba(255,255,255,0.1);}
 
     /* PIPELINE STRIP */
-    .pipeline-strip{display:flex;gap:12px;padding:20px 48px;background:#06061a;border-bottom:1px solid rgba(255,255,255,0.05);}
-    .pp{display:flex;align-items:center;gap:10px;padding:12px 20px;border-radius:10px;flex:1;}
-    .pp.cl{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);}
-    .pp.pe{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);}
-    .pp.li{background:rgba(104,104,238,0.1);border:1px solid rgba(104,104,238,0.2);}
-    .pp.to{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);}
+    .pipeline-strip{display:flex;gap:10px;padding:14px 48px;background:#06061a;border-bottom:1px solid rgba(255,255,255,0.05);position:sticky;top:57px;z-index:99;}
+    .pp{display:flex;align-items:center;gap:10px;padding:10px 18px;border-radius:10px;flex:1;}
+    .pp.cl{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.18);}
+    .pp.pe{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.18);}
+    .pp.li{background:rgba(104,104,238,0.08);border:1px solid rgba(104,104,238,0.18);}
+    .pp.to{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);}
     .pp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-    .cl .pp-dot{background:#10b981;}.pe .pp-dot{background:#f59e0b;}.li .pp-dot{background:#6868ee;}.to .pp-dot{background:rgba(255,255,255,0.3);}
-    .pp-lbl{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.35);}
-    .pp-val{font-size:20px;font-weight:900;}
-    .pp-sub{font-size:10px;color:rgba(255,255,255,0.3);font-weight:600;}
+    .cl .pp-dot{background:#10b981;}.pe .pp-dot{background:#f59e0b;}.li .pp-dot{background:#6868ee;}.to .pp-dot{background:rgba(255,255,255,0.35);}
+    .pp-lbl{font-size:8px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);}
+    .pp-val{font-size:18px;font-weight:900;}
+    .cl .pp-val{color:#10b981;}.pe .pp-val{color:#f59e0b;}.li .pp-val{color:#6868ee;}
+    .pp-sub{font-size:9px;color:rgba(255,255,255,0.25);font-weight:600;}
 
     /* TABS */
     .tabs{display:flex;padding:0 48px;background:#06061a;border-bottom:1px solid rgba(255,255,255,0.07);}
-    .tab{padding:14px 24px;font-size:12px;font-weight:700;color:rgba(255,255,255,0.35);cursor:pointer;border:none;background:none;font-family:'Montserrat',sans-serif;border-bottom:3px solid transparent;transition:all .2s;letter-spacing:.04em;}
-    .tab:hover{color:rgba(255,255,255,0.65);}
-    .tab.on{color:white;border-bottom-color:#c9a84c;}
+    .tab{padding:14px 28px;font-size:12px;font-weight:700;color:rgba(255,255,255,0.4);cursor:pointer;border:none;background:none;font-family:'Montserrat',sans-serif;border-radius:8px 8px 0 0;transition:all .2s;letter-spacing:.04em;margin-right:4px;}
+    .tab:hover{color:rgba(255,255,255,0.7);}
+    .tab.on{color:white;background:#121275;}
 
     /* BODY */
-    .body{padding:36px 48px;}
+    .body{padding:32px 48px 60px;}
     .sec-title{font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;}
-    .sec{margin-bottom:32px;}
+    .sec{margin-bottom:28px;}
 
     /* CARDS */
-    .cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+    .cards-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+    .cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
     .cards-2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
-    .card{background:rgba(18,18,117,0.3);border:1px solid rgba(80,80,200,0.18);border-radius:14px;padding:20px 24px;}
+    .card{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:14px;padding:20px 24px;}
     .card-lbl{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px;}
-    .card-val{font-size:26px;font-weight:900;}
-    .card-val.green{color:#10b981;}.card-val.amber{color:#f59e0b;}.card-val.red{color:#f87171;}.card-val.gold{color:#c9a84c;}.card-val.purple{color:#6868ee;}
+    .card-val{font-size:24px;font-weight:900;}
+    .card-val.green{color:#10b981;}.card-val.amber{color:#f59e0b;}.card-val.red{color:#f87171;}.card-val.gold{color:#c9a84c;}.card-val.blue{color:#6868ee;}
     .card-sub{font-size:11px;color:rgba(255,255,255,0.3);margin-top:6px;font-weight:600;}
 
-    /* LEADERBOARD */
-    .lb-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-    @media(max-width:1100px){.lb-grid{grid-template-columns:1fr;}}
-    .agent-row{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:12px;padding:16px 20px;transition:border-color .2s;}
-    .agent-row:hover{border-color:rgba(104,104,238,0.35);}
-    .agent-top{display:flex;align-items:center;margin-bottom:10px;}
-    .agent-num{font-size:10px;font-weight:900;color:rgba(255,255,255,0.2);width:26px;}
-    .agent-av{width:34px;height:34px;border-radius:50%;background:rgba(104,104,238,0.25);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
-    .agent-nm{font-size:14px;font-weight:800;flex:1;margin-left:10px;}
-    .agent-pipe{font-size:17px;font-weight:900;}
-    .agent-bk{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;font-weight:600;}
-    .agent-bk span{color:rgba(255,255,255,0.35);}
-    .cl-val{color:#10b981;}.pe-val{color:#f59e0b;}.li-val{color:#6868ee;}
-    .stale-tag{background:rgba(245,158,11,0.15);color:#f59e0b;font-size:9px;font-weight:700;letter-spacing:2px;padding:2px 7px;border-radius:4px;margin-left:6px;}
-
-    /* GCI TABLE */
-    .gci-wrap{background:rgba(18,18,117,0.3);border:1px solid rgba(80,80,200,0.18);border-radius:14px;overflow:hidden;}
-    table{width:100%;border-collapse:collapse;}
-    th{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.25);padding:0 16px 12px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.07);}
-    th:last-child{text-align:right;}
-    td{padding:13px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px;color:rgba(255,255,255,0.7);font-weight:600;}
-    td:last-child{text-align:right;font-weight:800;color:#c9a84c;}
-    tr:last-child td{border-bottom:none;}
-    tr.total-row td{border-top:1px solid rgba(255,255,255,0.12);color:white;font-weight:900;}
-    tr.total-row td:last-child{color:#c9a84c;font-size:15px;}
-
     /* PACE */
-    .pace-card{background:rgba(18,18,117,0.3);border:1px solid rgba(80,80,200,0.18);border-radius:14px;padding:24px 28px;}
-    .pace-row{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+    .pace-card{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:14px;padding:24px 28px;}
+    .pace-row{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
     .pace-row:last-of-type{margin-bottom:0;}
     .pace-lbl{font-size:12px;font-weight:700;color:white;width:70px;flex-shrink:0;}
     .pace-track{flex:1;background:rgba(255,255,255,0.07);border-radius:5px;height:7px;position:relative;}
@@ -105,50 +85,104 @@
     .pace-goal{position:absolute;top:-5px;bottom:-5px;width:2px;background:rgba(255,255,255,0.25);}
     .pace-pct{font-size:12px;font-weight:800;width:48px;text-align:right;flex-shrink:0;}
     .pace-info{font-size:11px;color:rgba(255,255,255,0.35);width:220px;text-align:right;flex-shrink:0;}
+    .pace-stats{display:flex;gap:12px;margin-top:16px;}
+    .pace-pill{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:12px 18px;flex:1;text-align:center;}
+    .pace-pill-lbl{font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:4px;}
+    .pace-pill-val{font-size:18px;font-weight:900;}
+
+    /* ANNOUNCEMENTS */
+    .ann-item{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:12px;padding:16px 20px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:10px;}
+    .ann-type{display:inline-block;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-bottom:6px;}
+    .ann-type-event{background:rgba(104,104,238,0.15);color:#6868ee;}
+    .ann-type-update{background:rgba(245,158,11,0.15);color:#f59e0b;}
+    .ann-title{font-size:14px;font-weight:800;}
+    .ann-meta{font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px;font-weight:600;}
+
+    /* ENGAGEMENT */
+    .eng-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .eng-section{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:14px;padding:20px 24px;}
+    .eng-header{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+    .eng-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+    .eng-title{font-size:13px;font-weight:800;}
+    .eng-list{display:flex;flex-direction:column;gap:10px;}
+    .eng-row{display:flex;align-items:center;gap:12px;}
+    .eng-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
+    .eng-name{font-size:13px;font-weight:700;}
+    .eng-meta{font-size:11px;color:rgba(255,255,255,0.4);font-weight:600;}
+
+    /* SALES SUMMARY */
+    .summary-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
+    .summary-card{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:14px;padding:18px 22px;}
+    .summary-card .sc-lbl{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px;}
+    .summary-card .sc-val{font-size:22px;font-weight:900;}
+    .summary-card .sc-sub{font-size:10px;color:rgba(255,255,255,0.3);margin-top:4px;font-weight:600;}
+
+    /* LEADERBOARD TABLE */
+    .lb-wrap{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:14px;overflow:hidden;}
+    table{width:100%;border-collapse:collapse;}
+    th{font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.25);padding:14px 16px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.07);white-space:nowrap;}
+    th.right,td.right{text-align:right;}
+    td{padding:13px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px;color:rgba(255,255,255,0.7);font-weight:600;}
+    tr:last-child td{border-bottom:none;}
+    tr:hover td{background:rgba(255,255,255,0.02);}
+    .rank-cell{font-size:11px;font-weight:800;color:rgba(255,255,255,0.2);width:40px;}
+    .agent-cell{display:flex;align-items:center;gap:10px;}
+    .agent-cell .av{width:30px;height:30px;border-radius:50%;background:rgba(104,104,238,0.2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;}
+    .agent-cell .nm{font-size:13px;font-weight:700;color:white;}
+    .cl-val{color:#10b981;}.pe-val{color:#f59e0b;}.li-val{color:#6868ee;}
+    .tot-val{font-weight:900;color:white;}
+    .ct-dim{color:rgba(255,255,255,0.25);font-size:11px;}
+
+    /* FINANCIALS */
+    .fin-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .fin-block{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:14px;padding:22px 26px;}
+    .fin-block-title{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:16px;}
+    .fin-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;}
+    .fin-row:last-child{margin-bottom:0;}
+    .fin-label{font-size:13px;font-weight:600;color:rgba(255,255,255,0.5);}
+    .fin-value{font-size:20px;font-weight:900;}
+    .fin-breakdown{font-size:10px;color:rgba(255,255,255,0.3);font-weight:600;margin-top:2px;}
 
     /* CHART */
-    .chart-bars{display:flex;align-items:flex-end;gap:8px;height:120px;padding:0 4px;position:relative;}
+    .chart-card{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:14px;padding:24px 28px;}
+    .chart-bars{display:flex;align-items:flex-end;gap:10px;height:140px;padding:0 4px;position:relative;}
     .chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
     .chart-bar{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:height .5s ease;}
     .chart-lbl{font-size:9px;color:rgba(255,255,255,0.35);font-weight:600;}
     .chart-amt{font-size:9px;color:rgba(255,255,255,0.55);font-weight:700;}
-    .burn-line{position:absolute;left:0;right:0;border-top:1px dashed rgba(248,113,113,0.6);}
+    .burn-line{position:absolute;left:0;right:0;border-top:1px dashed rgba(248,113,113,0.5);}
+    .burn-lbl{position:absolute;right:0;font-size:8px;color:rgba(248,113,113,0.5);font-weight:700;letter-spacing:1px;transform:translateY(-14px);}
 
-    /* ENGAGEMENT */
-    .eng-section{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:14px;padding:20px 24px;margin-bottom:14px;}
-    .eng-header{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
-    .eng-title{font-size:13px;font-weight:800;}
-    .eng-list{display:flex;flex-direction:column;gap:12px;}
-    .eng-row{display:flex;align-items:center;gap:12px;}
-    .eng-av{width:36px;height:36px;border-radius:50%;background:rgba(104,104,238,0.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;}
-    .eng-name{font-size:13px;font-weight:700;}
-    .eng-meta{font-size:11px;color:rgba(255,255,255,0.4);font-weight:600;}
-    .ghost .eng-meta{color:#f87171;}
-    .dot-green{display:inline-block;width:6px;height:6px;border-radius:50%;background:#10b981;margin-right:4px;}
+    /* PAYMENTS */
+    .pay-card{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:14px;padding:20px 24px;}
+    .pay-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+    .pay-row:last-child{border-bottom:none;}
+    .pay-name{font-size:13px;font-weight:700;}
+    .pay-date{font-size:10px;color:rgba(255,255,255,0.3);font-weight:600;}
+    .pay-amt{font-size:14px;font-weight:900;color:#10b981;}
+
+    /* REVENUE TABLE */
+    .rev-wrap{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:14px;overflow:hidden;}
 
     /* BRAIN */
-    .brain-q-list{display:flex;flex-direction:column;gap:10px;}
+    .brain-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+    .brain-q-list{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
     .brain-q{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:10px;padding:14px 18px;}
     .brain-q-text{font-size:13px;color:white;font-weight:600;margin-bottom:4px;}
     .brain-q-meta{font-size:11px;color:rgba(255,255,255,0.35);font-weight:600;}
+    .teach-card{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:14px;padding:24px 28px;}
+    .teach-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 16px;font-size:13px;color:white;font-family:'Montserrat',sans-serif;outline:none;margin-bottom:10px;resize:vertical;}
+    .teach-input:focus{border-color:rgba(80,80,200,0.4);}
+    .teach-input::placeholder{color:rgba(255,255,255,0.2);}
+    .teach-btn{background:#121275;border:1px solid rgba(80,80,200,0.3);border-radius:10px;padding:11px 24px;font-size:12px;font-weight:700;color:white;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;}
+    .teach-btn:hover{background:#1a1a9a;border-color:rgba(80,80,200,0.5);}
 
-    /* ANNOUNCEMENTS */
-    .ann-item{background:rgba(18,18,117,0.25);border:1px solid rgba(80,80,200,0.15);border-radius:12px;padding:16px 20px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:10px;}
-    .ann-type{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#f59e0b;margin-bottom:5px;}
-    .ann-title{font-size:14px;font-weight:800;}
-    .ann-meta{font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px;}
-
-    /* PAYMENTS */
-    .pay-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
-    .pay-row:last-child{border-bottom:none;}
-    .pay-name{font-size:13px;font-weight:700;}
-    .pay-date{font-size:11px;color:rgba(255,255,255,0.35);font-weight:600;}
-    .pay-amt{font-size:14px;font-weight:900;color:#10b981;}
-
+    /* UTILS */
     .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.1);border-top-color:#6868ee;border-radius:50%;animation:spin .7s linear infinite;}
     @keyframes spin{to{transform:rotate(360deg);}}
     .loading{display:flex;align-items:center;justify-content:center;gap:10px;padding:40px;color:rgba(255,255,255,0.3);font-size:12px;font-weight:600;}
-    .api-notice{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:14px 18px;font-size:12px;color:rgba(245,158,11,0.8);font-weight:600;margin-bottom:20px;}
+    .api-notice{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.15);border-radius:10px;padding:14px 18px;font-size:12px;color:rgba(245,158,11,0.7);font-weight:600;margin-bottom:16px;}
+    .empty-state{color:rgba(255,255,255,0.25);font-size:12px;font-weight:600;padding:16px 0;}
   </style>
 </head>
 <body>
@@ -157,25 +191,27 @@
 
 <!-- APP -->
 <div id="app" style="display:block;">
-  <div class="top-bar">
-    <div class="top-bar-left">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
       <img src="assets/logos/SERHANT-Orlando-White.svg" alt="SERHANT. Orlando">
       <div>
-        <div class="top-bar-title">Leadership Dashboard</div>
-        <div class="top-bar-sub" id="data-date">Loading...</div>
+        <div class="header-title">Leadership Dashboard</div>
+        <div class="header-sub" id="data-date">43 agents · Loading...</div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <a href="index.html" style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-decoration:none;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 14px;transition:all .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">&#8592; Portal</a>
-      <button class="sign-out" id="sign-out-btn">Sign Out</button>
+    <div class="header-right">
+      <a href="index.html" class="header-btn">&#8592; Portal</a>
+      <button class="header-btn" id="sign-out-btn">Sign Out</button>
     </div>
   </div>
 
   <!-- PIPELINE STRIP -->
   <div class="pipeline-strip">
-    <div class="pp cl"><div class="pp-dot"></div><div><div class="pp-lbl">Closed YTD</div><div class="pp-val" id="pv-cl">--</div><div class="pp-sub" id="pu-cl">-- deals</div></div></div>
+    <div class="pp cl"><div class="pp-dot"></div><div><div class="pp-lbl">Closed</div><div class="pp-val" id="pv-cl">--</div><div class="pp-sub" id="pu-cl">-- deals</div></div></div>
     <div class="pp pe"><div class="pp-dot"></div><div><div class="pp-lbl">Pending</div><div class="pp-val" id="pv-pe">--</div><div class="pp-sub" id="pu-pe">-- deals</div></div></div>
-    <div class="pp li"><div class="pp-dot"></div><div><div class="pp-lbl">Active Listings</div><div class="pp-val" id="pv-li">--</div><div class="pp-sub" id="pu-li">-- listings</div></div></div>
+    <div class="pp li"><div class="pp-dot"></div><div><div class="pp-lbl">Listed</div><div class="pp-val" id="pv-li">--</div><div class="pp-sub" id="pu-li">-- listings</div></div></div>
     <div class="pp to"><div class="pp-dot"></div><div><div class="pp-lbl">Total Pipeline</div><div class="pp-val" id="pv-to">--</div><div class="pp-sub">closed + pending + listed</div></div></div>
   </div>
 
@@ -184,95 +220,123 @@
     <button class="tab on" data-tab="hub">Hub</button>
     <button class="tab" data-tab="sales">Sales</button>
     <button class="tab" data-tab="financials">Financials</button>
-    <button class="tab" data-tab="gci">GCI</button>
     <button class="tab" data-tab="brain">Brain</button>
   </div>
 
   <div class="body">
 
-    <!-- HUB TAB -->
+    <!-- ═══════════════════ TAB 1: HUB ═══════════════════ -->
     <div id="tab-hub">
+
+      <!-- 2026 Office Pace -->
       <div class="sec">
         <div class="sec-title">2026 Office Pace</div>
         <div class="pace-card" id="pace-content"><div class="loading"><div class="spinner"></div>Calculating...</div></div>
       </div>
-      <div class="sec">
-        <div class="sec-title">Office Stats</div>
-        <div class="cards-3">
-          <div class="card"><div class="card-lbl">Closed Volume YTD</div><div class="card-val gold" id="s-vol">--</div></div>
-          <div class="card"><div class="card-lbl">Units Closed</div><div class="card-val" id="s-units">--</div><div class="card-sub">transactions YTD</div></div>
-          <div class="card"><div class="card-lbl">Avg Sale Price</div><div class="card-val" id="s-avg">--</div></div>
-          <div class="card"><div class="card-lbl">Total GCI YTD</div><div class="card-val green" id="s-gci">--</div></div>
-          <div class="card"><div class="card-lbl">Pending Value</div><div class="card-val amber" id="s-pen">--</div></div>
-          <div class="card"><div class="card-lbl">Active Listings Value</div><div class="card-val purple" id="s-lst">--</div></div>
-        </div>
-      </div>
+
+      <!-- Announcements -->
       <div class="sec">
         <div class="sec-title">Announcements</div>
-        <div id="ann-list"><div class="api-notice">Announcements load after Claude Code wires the /api/leadership-data endpoint.</div></div>
+        <div id="ann-list"><div class="api-notice">Announcements load after Hub API connects.</div></div>
       </div>
+
+      <!-- Agent Engagement -->
       <div class="sec">
         <div class="sec-title">Agent Engagement</div>
-        <div id="eng-content"><div class="api-notice">Engagement data loads after Claude Code wires the /api/leadership-data endpoint.</div></div>
+        <div id="eng-content"><div class="api-notice">Engagement data loads after Hub API connects.</div></div>
       </div>
+
     </div>
 
-    <!-- SALES TAB -->
+    <!-- ═══════════════════ TAB 2: SALES ═══════════════════ -->
     <div id="tab-sales" style="display:none;">
+
+      <!-- Summary Cards -->
+      <div class="sec">
+        <div class="summary-cards">
+          <div class="summary-card"><div class="sc-lbl">Closed YTD</div><div class="sc-val" id="sc-cl-val" style="color:#10b981;">--</div><div class="sc-sub" id="sc-cl-sub">-- deals</div></div>
+          <div class="summary-card"><div class="sc-lbl">Pending</div><div class="sc-val" id="sc-pe-val" style="color:#f59e0b;">--</div><div class="sc-sub" id="sc-pe-sub">-- deals</div></div>
+          <div class="summary-card"><div class="sc-lbl">Active Listings</div><div class="sc-val" id="sc-li-val" style="color:#6868ee;">--</div><div class="sc-sub" id="sc-li-sub">-- listings</div></div>
+          <div class="summary-card"><div class="sc-lbl">Total Pipeline</div><div class="sc-val" id="sc-to-val" style="color:white;">--</div><div class="sc-sub">all combined</div></div>
+        </div>
+      </div>
+
+      <!-- Agent Leaderboard -->
       <div class="sec">
         <div class="sec-title">Agent Leaderboard — Total Pipeline</div>
-        <div class="lb-grid" id="lb-grid"><div class="loading"><div class="spinner"></div>Loading agents...</div></div>
+        <div class="lb-wrap" id="lb-wrap"><div class="loading"><div class="spinner"></div>Loading agents...</div></div>
       </div>
+
     </div>
 
-    <!-- FINANCIALS TAB -->
+    <!-- ═══════════════════ TAB 3: FINANCIALS ═══════════════════ -->
     <div id="tab-financials" style="display:none;">
-      <div class="api-notice" id="fin-notice">Financials (Bill.com + Square) load after Claude Code wires the /api/leadership-data endpoint. Sales data below is live from TB.</div>
+      <div class="api-notice" id="fin-notice">Financials load after Hub API connects.</div>
+
+      <!-- This Month + YTD -->
       <div class="sec">
-        <div class="sec-title">This Month</div>
-        <div class="cards-3" id="fin-month"><div class="loading"><div class="spinner"></div></div></div>
+        <div class="fin-grid" id="fin-grid">
+          <div class="fin-block">
+            <div class="fin-block-title">This Month</div>
+            <div id="fin-month-content"><div class="loading"><div class="spinner"></div></div></div>
+          </div>
+          <div class="fin-block">
+            <div class="fin-block-title">Year to Date</div>
+            <div id="fin-ytd-content"><div class="loading"><div class="spinner"></div></div></div>
+          </div>
+        </div>
       </div>
+
+      <!-- Trailing 6 Months -->
       <div class="sec">
-        <div class="sec-title">Year to Date</div>
-        <div class="cards-3" id="fin-ytd"><div class="loading"><div class="spinner"></div></div></div>
+        <div class="sec-title">Trailing 6 Months Revenue</div>
+        <div class="chart-card" id="fin-chart"><div class="loading"><div class="spinner"></div></div></div>
       </div>
-      <div class="sec">
-        <div class="sec-title">Trailing 6 Months</div>
-        <div class="card" id="fin-chart"><div class="loading"><div class="spinner"></div></div></div>
-      </div>
+
+      <!-- Recent Payments -->
       <div class="sec">
         <div class="sec-title">Recent Payments</div>
-        <div class="card" id="fin-payments"><div class="loading"><div class="spinner"></div></div></div>
+        <div class="pay-card" id="fin-payments"><div class="loading"><div class="spinner"></div></div></div>
       </div>
+
+      <!-- Revenue by Agent -->
       <div class="sec">
         <div class="sec-title">Revenue by Agent YTD</div>
-        <div class="gci-wrap" id="fin-agents"><div class="loading"><div class="spinner"></div></div></div>
+        <div class="rev-wrap" id="fin-agents"><div class="loading"><div class="spinner"></div></div></div>
       </div>
+
     </div>
 
-    <!-- GCI TAB -->
-    <div id="tab-gci" style="display:none;">
-      <div class="sec">
-        <div class="sec-title">GCI by Agent — YTD Closed</div>
-        <div class="gci-wrap"><table><thead><tr><th>Agent</th><th>Deals</th><th>Volume</th><th>GCI</th></tr></thead><tbody id="gci-tbody"><tr><td colspan="4"><div class="loading"><div class="spinner"></div></div></td></tr></tbody></table></div>
-      </div>
-    </div>
-
-    <!-- BRAIN TAB -->
+    <!-- ═══════════════════ TAB 4: BRAIN ═══════════════════ -->
     <div id="tab-brain" style="display:none;">
-      <div class="api-notice">Brain stats load after Claude Code wires the /api/leadership-data endpoint.</div>
+      <div class="api-notice" id="brain-notice">Brain stats load after Hub API connects.</div>
+
+      <!-- Usage Stats -->
       <div class="sec">
         <div class="sec-title">Usage This Week</div>
-        <div class="cards-3">
+        <div class="brain-stats">
           <div class="card"><div class="card-lbl">Conversations</div><div class="card-val" id="br-convos">--</div></div>
           <div class="card"><div class="card-lbl">Unique Agents</div><div class="card-val" id="br-agents">--</div></div>
           <div class="card"><div class="card-lbl">vs Last Week</div><div class="card-val green" id="br-delta">--</div></div>
         </div>
       </div>
+
+      <!-- Recent Questions -->
       <div class="sec">
         <div class="sec-title">Recent Questions</div>
-        <div class="brain-q-list" id="brain-qs"><div class="api-notice">Questions load from Hub API.</div></div>
+        <div class="brain-q-list" id="brain-qs"><div class="empty-state">Questions load from Hub API.</div></div>
       </div>
+
+      <!-- Teach The Brain -->
+      <div class="sec">
+        <div class="sec-title">Teach The Brain</div>
+        <div class="teach-card">
+          <input type="text" class="teach-input" id="teach-q" placeholder="Question the brain should answer...">
+          <textarea class="teach-input" id="teach-a" rows="3" placeholder="The correct answer..."></textarea>
+          <button class="teach-btn" id="teach-submit">Submit Knowledge</button>
+        </div>
+      </div>
+
     </div>
 
   </div><!-- /body -->
@@ -295,9 +359,53 @@ const fmtFull = n => '$'+Math.round(n).toLocaleString();
 const inits = name => name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
 const pv = s => parseFloat((s||'0').replace(/[$,()]/g,''))||0;
 
-// AUTH
+// ── Agent name normalization ──
+const NAME_GROUPS = {
+  'Paul Petroski': 'Vinny Cordaro',
+  'Vincent Cordaro': 'Vinny Cordaro',
+  'Silvia Kinkela': 'The Kinkelas',
+  'Chris Kinkela': 'The Kinkelas',
+  'Sophia Rogers': 'The Rogers',
+  'Jeff Rogers': 'The Rogers',
+  'Benjamin Attwood': 'The Attwoods',
+  'Zoe Attwood': 'The Attwoods',
+  'Shawn Layton': 'The Home Boys',
+  'James Hendrickson': 'The Home Boys',
+};
+const STRIP_WHEN_PAIRED = new Set(['Mark Raumaker','Gavin Hatch','Vincent Cordaro','Ashley McCoy','Chad Going','Julimar Barreiro']);
+const STRIP_ALWAYS = new Set(['Paul Petroski','Madison Albrecht']);
+
+function normalizeAgent(raw) {
+  if (!raw) return 'Unknown';
+  let name = raw.trim();
+  // Keep "Madison Albrecht S.MPLE" as its own agent
+  if (name === 'Madison Albrecht S.MPLE') return name;
+  // Strip always (admins)
+  if (STRIP_ALWAYS.has(name)) return null;
+  // Check for dual agents (contains ' / ' or ' & ')
+  const sep = name.includes(' / ') ? ' / ' : name.includes(' & ') ? ' & ' : null;
+  if (sep) {
+    const parts = name.split(sep).map(s=>s.trim());
+    let result = [];
+    // If Gavin Hatch is first, keep second agent (don't strip Gavin when first)
+    const gavinFirst = parts[0] === 'Gavin Hatch';
+    for (const p of parts) {
+      if (STRIP_ALWAYS.has(p)) continue;
+      if (!gavinFirst && STRIP_WHEN_PAIRED.has(p)) continue;
+      if (gavinFirst && p !== 'Gavin Hatch' && STRIP_WHEN_PAIRED.has(p)) continue;
+      if (gavinFirst && p === 'Gavin Hatch') continue; // strip Gavin when he's first
+      result.push(p);
+    }
+    if (result.length === 0) return null;
+    name = result[0];
+  }
+  // Apply group mappings
+  if (NAME_GROUPS[name]) return NAME_GROUPS[name];
+  return name;
+}
+
+// ── AUTH ──
 async function checkSession() {
-  // Handle OAuth redirect with token in URL
   const hash = window.location.hash;
   if (hash.includes('access_token')) {
     const { data: { session }, error } = await sb.auth.getSession();
@@ -310,25 +418,37 @@ async function checkSession() {
   const { data: { session } } = await sb.auth.getSession();
   if (session && ALLOWED.includes(session.user.email)) showApp(session);
 }
-// Legacy MS SSO button removed — auth handled by auth-check.js
+
 const _soBtn = document.getElementById('sign-out-btn');
 if (_soBtn) _soBtn.addEventListener('click', async () => { await sb.auth.signOut(); location.reload(); });
 
 function showApp(session) { loadSupabaseData(); loadHubAPI(session.access_token); }
 
-// TABS
+// ── TABS ──
 document.querySelectorAll('.tab').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
     btn.classList.add('on');
-    ['hub','sales','financials','gci','brain'].forEach(t =>
+    ['hub','sales','financials','brain'].forEach(t =>
       document.getElementById('tab-'+t).style.display = t===btn.dataset.tab ? 'block' : 'none');
   });
 });
 
-// SUPABASE DATA
+// ── Pipeline strip + Sales summary update ──
+function updatePipelineStrip(clVol, clUnits, peVol, peUnits, liVol, liUnits) {
+  qs('pv-cl',fmt(clVol)); qs('pu-cl',clUnits+' deals');
+  qs('pv-pe',fmt(peVol)); qs('pu-pe',peUnits+' deals');
+  qs('pv-li',fmt(liVol)); qs('pu-li',liUnits+' listings');
+  qs('pv-to',fmt(clVol+peVol+liVol));
+  // Sales tab summary cards
+  qs('sc-cl-val',fmt(clVol)); qs('sc-cl-sub',clUnits+' deals');
+  qs('sc-pe-val',fmt(peVol)); qs('sc-pe-sub',peUnits+' deals');
+  qs('sc-li-val',fmt(liVol)); qs('sc-li-sub',liUnits+' listings');
+  qs('sc-to-val',fmt(clVol+peVol+liVol));
+}
+
+// ── SUPABASE DATA ──
 async function loadSupabaseData() {
-  // Fetch all transactions, filter to current year client-side (dates stored as MM/DD/YYYY)
   const [tbRes, courtedRes] = await Promise.all([
     sb.from('tb_transactions').select('*').limit(2000),
     sb.from('courted_active_listings').select('agent_name,active_count,listings,snapshot_date').order('snapshot_date',{ascending:false}).limit(200)
@@ -338,14 +458,11 @@ async function loadSupabaseData() {
   const allTx = (tbRes.data||[]).filter(t => {
     const d = t.closing_date || t.created_date || '';
     const y = d.includes('/') ? d.split('/')[2] : d.slice(0,4);
-    // Include if closing year matches OR if it's a pending deal (no closing date yet)
-    const isClosed = CLOSED_S.has(t.status);
     const isPending = PENDING_S.has(t.status);
-    if (isPending) return true; // always include pending
-    return y === yr; // closed deals: current year only
+    if (isPending) return true;
+    return y === yr;
   });
   const tx = allTx.filter(t => !DEPARTED.some(d=>(t.attributed_agent||'').includes(d)));
-  const snap = courtedRes.data?.[0];
 
   const closed  = tx.filter(t => CLOSED_S.has(t.status));
   const pending = tx.filter(t => PENDING_S.has(t.status));
@@ -356,36 +473,37 @@ async function loadSupabaseData() {
   const peVol  = pending.reduce((s,t)=>s+pv(t.volume),0);
   const peUnits = pending.length;
 
-  // Courted: deduplicate by agent_name (webhook creates duplicates when RLS blocks deletes)
+  // Courted: deduplicate by agent_name
   let liVol=0, liUnits=0;
   const courtedRows = courtedRes.data||[];
+  const courtedByAgent = {};
   if (courtedRows.length > 0) {
     const latestSnap = courtedRows[0].snapshot_date;
     const seen = new Set();
     const unique = courtedRows.filter(r => r.snapshot_date===latestSnap && !seen.has(r.agent_name) && seen.add(r.agent_name));
     liUnits = unique.reduce((s,r) => s+(r.active_count||0), 0);
     liVol = unique.reduce((s,r) => (Array.isArray(r.listings)?r.listings:[]).reduce((ls,l) => ls+(l.price||0), s), 0);
+    // Build per-agent courted data for leaderboard
+    unique.forEach(r => {
+      const listings = Array.isArray(r.listings) ? r.listings : [];
+      courtedByAgent[r.agent_name] = {
+        vol: listings.reduce((s,l)=>s+(l.price||0),0),
+        ct: r.active_count||0
+      };
+    });
   }
 
-  // Pipeline strip
-  qs('pv-cl',fmt(clVol)); qs('pu-cl',clUnits+' deals');
-  qs('pv-pe',fmt(peVol)); qs('pu-pe',peUnits+' deals');
-  qs('pv-li',fmt(liVol)); qs('pu-li',liUnits+' listings');
-  qs('pv-to',fmt(clVol+peVol+liVol));
-  document.getElementById('data-date').textContent = 'TB data as of '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  // Update data date
+  document.getElementById('data-date').textContent = '43 agents · TB data as of '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
 
-  // Stats
-  qs('s-vol',fmt(clVol)); qs('s-units',clUnits); qs('s-avg',clUnits>0?fmt(clVol/clUnits):'--');
-  qs('s-gci',fmtFull(clGCI)); qs('s-pen',fmt(peVol)); qs('s-lst',fmt(liVol));
+  // Pipeline strip + sales cards
+  updatePipelineStrip(clVol, clUnits, peVol, peUnits, liVol, liUnits);
 
   // Pace
-  buildPace(clVol,clGCI,clUnits);
+  buildPace(clVol, clGCI, clUnits);
 
   // Sales leaderboard
-  buildLeaderboard(tx, snap);
-
-  // GCI table
-  buildGCI(closed);
+  buildLeaderboard(tx, courtedByAgent);
 }
 
 function qs(id,val) { const el=document.getElementById(id); if(el) el.textContent=val; }
@@ -395,6 +513,7 @@ function buildPace(clVol,clGCI,clUnits) {
   const vp = Math.min(clVol/GOALS.vol*100,100);
   const gp = Math.min(clGCI/GOALS.gci*100,100);
   const gPct = Math.min(yp*100,100);
+  const avgPrice = clUnits>0 ? fmt(clVol/clUnits) : '--';
   document.getElementById('pace-content').innerHTML = `
     <div class="pace-row">
       <div class="pace-lbl">Volume</div>
@@ -408,92 +527,114 @@ function buildPace(clVol,clGCI,clUnits) {
       <div class="pace-pct" style="color:#10b981;">${gp.toFixed(1)}%</div>
       <div class="pace-info">${fmt(clGCI)} / ${fmt(GOALS.gci)} &nbsp; Proj: ${fmt(yp>0?clGCI/yp:0)}</div>
     </div>
-    <div style="margin-top:14px;font-size:10px;color:rgba(255,255,255,0.25);font-weight:600;">${(yp*100).toFixed(0)}% of 2026 elapsed &nbsp;·&nbsp; ${clUnits} units closed &nbsp;·&nbsp; White line = on-pace marker</div>`;
+    <div style="margin-top:10px;font-size:10px;color:rgba(255,255,255,0.25);font-weight:600;">${(yp*100).toFixed(0)}% of year elapsed · ${clUnits} units closed · White line = on-pace marker</div>
+    <div class="pace-stats">
+      <div class="pace-pill"><div class="pace-pill-lbl">Units Closed</div><div class="pace-pill-val">${clUnits}</div></div>
+      <div class="pace-pill"><div class="pace-pill-lbl">Avg Sale Price</div><div class="pace-pill-val" style="color:#c9a84c;">${avgPrice}</div></div>
+      <div class="pace-pill"><div class="pace-pill-lbl">Total GCI</div><div class="pace-pill-val" style="color:#10b981;">${fmt(clGCI)}</div></div>
+    </div>`;
 }
 
-function buildLeaderboard(tx, snap) {
+function buildLeaderboard(tx, courtedByAgent) {
+  // Group transactions by normalized agent name
   const agents = {};
   tx.forEach(t => {
-    const a = t.attributed_agent||'Unknown';
-    if (!agents[a]) agents[a]={cl:0,pe:0,li:0,clu:0,peu:0};
-    if (CLOSED_S.has(t.status))  { agents[a].cl+=pv(t.volume); agents[a].clu+=parseInt(t.units||'1'); }
-    if (PENDING_S.has(t.status)) { agents[a].pe+=pv(t.volume); agents[a].peu+=1; }
+    const raw = t.attributed_agent||'Unknown';
+    const norm = normalizeAgent(raw);
+    if (!norm) return; // stripped agent
+    if (!agents[norm]) agents[norm]={cl:0,pe:0,li:0,clu:0,peu:0,liu:0};
+    if (CLOSED_S.has(t.status))  { agents[norm].cl+=pv(t.volume); agents[norm].clu+=parseInt(t.units||'1'); }
+    if (PENDING_S.has(t.status)) { agents[norm].pe+=pv(t.volume); agents[norm].peu+=1; }
   });
-  if (snap?.agents) {
-    const ag = typeof snap.agents==='string'?JSON.parse(snap.agents):snap.agents;
-    ag.forEach(ca => {
-      const n=ca.agent_name;
-      if (!agents[n]) agents[n]={cl:0,pe:0,li:0,clu:0,peu:0};
-      agents[n].li=(ca.listings||[]).reduce((s,l)=>s+(l.price||0),0);
-    });
+
+  // Merge courted listings
+  Object.entries(courtedByAgent).forEach(([rawName, data]) => {
+    const norm = normalizeAgent(rawName) || rawName;
+    if (!agents[norm]) agents[norm]={cl:0,pe:0,li:0,clu:0,peu:0,liu:0};
+    agents[norm].li += data.vol;
+    agents[norm].liu += data.ct;
+  });
+
+  const sorted = Object.entries(agents)
+    .map(([n,s])=>({n,...s,tot:s.cl+s.pe+s.li}))
+    .sort((a,b)=>b.tot-a.tot);
+
+  if (sorted.length === 0) {
+    document.getElementById('lb-wrap').innerHTML = '<div class="loading">No data available</div>';
+    return;
   }
-  const sorted = Object.entries(agents).map(([n,s])=>({n,...s,tot:s.cl+s.pe+s.li})).sort((a,b)=>b.tot-a.tot);
-  document.getElementById('lb-grid').innerHTML = sorted.map((a,i)=>`
-    <div class="agent-row">
-      <div class="agent-top">
-        <div class="agent-num">#${i+1}</div>
-        <div class="agent-av">${inits(a.n)}</div>
-        <div class="agent-nm">${a.n}</div>
-        <div class="agent-pipe">${fmt(a.tot)}</div>
-      </div>
-      <div class="agent-bk">
-        <span><span class="cl-val">${fmt(a.cl)}</span> closed (${a.clu})</span>
-        ${a.pe>0?`<span><span class="pe-val">${fmt(a.pe)}</span> pending (${a.peu})</span>`:''}
-        ${a.li>0?`<span><span class="li-val">${fmt(a.li)}</span> listed</span>`:''}
-      </div>
-    </div>`).join('');
-}
 
-function buildGCI(closed) {
-  const ag = {};
-  closed.forEach(t => {
-    const a=t.attributed_agent||'Unknown';
-    if (!ag[a]) ag[a]={gci:0,vol:0,units:0};
-    ag[a].gci+=pv(t.gci||'0'); ag[a].vol+=pv(t.volume); ag[a].units+=parseInt(t.units||'1');
+  let html = `<table>
+    <thead><tr>
+      <th style="width:40px;">Rank</th>
+      <th>Agent</th>
+      <th class="right">Closed $</th>
+      <th class="right">Ct</th>
+      <th class="right">Pending $</th>
+      <th class="right">Ct</th>
+      <th class="right">Listings $</th>
+      <th class="right">Ct</th>
+      <th class="right">Total Pipeline</th>
+    </tr></thead><tbody>`;
+
+  sorted.forEach((a,i) => {
+    html += `<tr>
+      <td class="rank-cell">${i+1}</td>
+      <td><div class="agent-cell"><div class="av">${inits(a.n)}</div><div class="nm">${a.n}</div></div></td>
+      <td class="right cl-val">${a.cl>0?fmt(a.cl):'—'}</td>
+      <td class="right ct-dim">${a.clu||'—'}</td>
+      <td class="right pe-val">${a.pe>0?fmt(a.pe):'—'}</td>
+      <td class="right ct-dim">${a.peu||'—'}</td>
+      <td class="right li-val">${a.li>0?fmt(a.li):'—'}</td>
+      <td class="right ct-dim">${a.liu||'—'}</td>
+      <td class="right tot-val">${fmt(a.tot)}</td>
+    </tr>`;
   });
-  const sorted = Object.entries(ag).sort((a,b)=>b[1].gci-a[1].gci);
-  const totG = sorted.reduce((s,[,d])=>s+d.gci,0);
-  const totV = sorted.reduce((s,[,d])=>s+d.vol,0);
-  document.getElementById('gci-tbody').innerHTML = sorted.map(([n,s])=>`
-    <tr><td>${n}</td><td style="color:rgba(255,255,255,0.4);font-size:11px;">${s.units} deal${s.units!==1?'s':''}</td><td>${fmt(s.vol)}</td><td>${fmtFull(s.gci)}</td></tr>
-  `).join('') + `<tr class="total-row"><td>OFFICE TOTAL</td><td></td><td>${fmt(totV)}</td><td>${fmtFull(totG)}</td></tr>`;
+
+  html += '</tbody></table>';
+  document.getElementById('lb-wrap').innerHTML = html;
 }
 
-// HUB API (financial, engagement, brain)
+// ── HUB API (financial, engagement, brain, announcements) ──
 async function loadHubAPI(token) {
   try {
     const res = await fetch(HUB_API, { headers: { Authorization: 'Bearer '+token } });
-    if (!res.ok) return; // endpoint not yet live
+    if (!res.ok) return;
     const d = await res.json();
     if (d.financials) renderFinancials(d.financials);
     if (d.engagement) renderEngagement(d.engagement);
     if (d.brain)      renderBrain(d.brain);
     if (d.announcements) renderAnnouncements(d.announcements);
-    // Remove api-notice banners
     document.querySelectorAll('.api-notice').forEach(el=>el.remove());
   } catch(e) { /* endpoint not live yet */ }
 }
 
 function renderFinancials(f) {
   const m = f.this_month, y = f.ytd;
-  document.getElementById('fin-month').innerHTML = `
-    <div class="card"><div class="card-lbl">Revenue</div><div class="card-val green">${fmtFull(m.revenue+m.studios_revenue)}</div><div class="card-sub">Commission: ${fmtFull(m.revenue)} · Studios: ${fmtFull(m.studios_revenue)}</div></div>
-    <div class="card"><div class="card-lbl">Costs</div><div class="card-val red">${fmtFull(m.costs)}</div></div>
-    <div class="card"><div class="card-lbl">Net</div><div class="card-val ${m.net>=0?'green':'red'}">${fmtFull(m.net)}</div></div>`;
-  document.getElementById('fin-ytd').innerHTML = `
-    <div class="card"><div class="card-lbl">Total Revenue YTD</div><div class="card-val green">${fmtFull(y.revenue+y.studios_revenue)}</div><div class="card-sub">Commission: ${fmtFull(y.revenue)} · Studios: ${fmtFull(y.studios_revenue)}</div></div>
-    <div class="card"><div class="card-lbl">Costs YTD</div><div class="card-val red">${fmtFull(y.costs)}</div></div>
-    <div class="card"><div class="card-lbl">Net YTD</div><div class="card-val ${y.net>=0?'green':'red'}">${fmtFull(y.net)}</div></div>`;
+  if (m) {
+    const totalRevM = (m.revenue||0)+(m.studios_revenue||0);
+    document.getElementById('fin-month-content').innerHTML = `
+      <div class="fin-row"><div><div class="fin-label">Revenue</div><div class="fin-breakdown">Commission: ${fmtFull(m.revenue||0)} · Studios: ${fmtFull(m.studios_revenue||0)}</div></div><div class="fin-value" style="color:#10b981;">${fmtFull(totalRevM)}</div></div>
+      <div class="fin-row"><div class="fin-label">Costs</div><div class="fin-value" style="color:#f87171;">${fmtFull(m.costs||0)}</div></div>
+      <div class="fin-row"><div class="fin-label">Net</div><div class="fin-value" style="color:white;">${fmtFull(m.net||0)}</div></div>`;
+  }
+  if (y) {
+    const totalRevY = (y.revenue||0)+(y.studios_revenue||0);
+    document.getElementById('fin-ytd-content').innerHTML = `
+      <div class="fin-row"><div><div class="fin-label">Revenue</div><div class="fin-breakdown">Commission: ${fmtFull(y.revenue||0)} · Studios: ${fmtFull(y.studios_revenue||0)}</div></div><div class="fin-value" style="color:#10b981;">${fmtFull(totalRevY)}</div></div>
+      <div class="fin-row"><div class="fin-label">Costs</div><div class="fin-value" style="color:#f87171;">${fmtFull(y.costs||0)}</div></div>
+      <div class="fin-row"><div class="fin-label">Net</div><div class="fin-value" style="color:white;">${fmtFull(y.net||0)}</div></div>`;
+  }
   if (f.trailing_6_months?.length) {
     const maxRev = Math.max(...f.trailing_6_months.map(m=>m.revenue));
-    const burnH  = f.this_month.costs / maxRev * 100;
+    const burnH  = maxRev>0 ? (f.this_month?.costs||0) / maxRev * 100 : 0;
     document.getElementById('fin-chart').innerHTML = `
       <div class="chart-bars">
-        <div class="burn-line" style="bottom:${burnH}%;"></div>
+        <div class="burn-line" style="bottom:${burnH}%;"><span class="burn-lbl">BURN</span></div>
         ${f.trailing_6_months.map(m=>`
           <div class="chart-bar-wrap">
             <div class="chart-amt">${fmt(m.revenue)}</div>
-            <div class="chart-bar" style="height:${Math.max(m.revenue/maxRev*100,4)}%;background:${m.revenue>=f.this_month.costs?'#10b981':'#f59e0b'};"></div>
+            <div class="chart-bar" style="height:${Math.max(maxRev>0?m.revenue/maxRev*100:4,4)}%;background:${m.revenue>=(f.this_month?.costs||0)?'#10b981':'#f59e0b'};"></div>
             <div class="chart-lbl">${m.month}</div>
           </div>`).join('')}
       </div>`;
@@ -503,52 +644,98 @@ function renderFinancials(f) {
       <div class="pay-row"><div><div class="pay-name">${p.agent_name}</div><div class="pay-date">${new Date(p.date).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div></div><div class="pay-amt">${fmtFull(p.amount)}</div></div>`).join('');
   }
   if (f.revenue_by_agent?.length) {
-    document.getElementById('fin-agents').innerHTML = `<table><thead><tr><th>Agent</th><th>Commission</th><th>Studios</th><th>Total</th></tr></thead><tbody>
-      ${f.revenue_by_agent.map(a=>`<tr><td>${a.agent_name}</td><td>${fmtFull(a.commission_revenue)}</td><td>${fmtFull(a.studios_revenue)}</td><td>${fmtFull(a.total_revenue)}</td></tr>`).join('')}
-    </tbody></table>`;
+    let rhtml = `<table><thead><tr><th style="width:40px;">Rank</th><th>Agent</th><th class="right">Deals</th><th class="right">Total Revenue</th><th class="right">Commission</th><th class="right">Studios</th></tr></thead><tbody>`;
+    f.revenue_by_agent.forEach((a,i) => {
+      rhtml += `<tr><td class="rank-cell">${i+1}</td><td style="color:white;font-weight:700;">${a.agent_name}</td><td class="right ct-dim">${a.deals||'—'}</td><td class="right" style="color:#c9a84c;font-weight:800;">${fmtFull(a.total_revenue)}</td><td class="right">${fmtFull(a.commission_revenue)}</td><td class="right">${fmtFull(a.studios_revenue)}</td></tr>`;
+    });
+    rhtml += '</tbody></table>';
+    document.getElementById('fin-agents').innerHTML = rhtml;
   }
 }
 
 function renderEngagement(e) {
-  document.getElementById('eng-content').innerHTML = `
-    <div class="eng-section">
-      <div class="eng-header"><div class="dot-green"></div><div class="eng-title">Crushing It</div></div>
-      <div class="eng-list">${e.crushing_it.map(a=>`<div class="eng-row"><div class="eng-av">${inits(a.agent_name)}</div><div><div class="eng-name">${a.agent_name}</div><div class="eng-meta">${a.metric}</div></div></div>`).join('')}</div>
-    </div>
-    <div class="eng-section ghost">
-      <div class="eng-header"><div class="eng-title" style="color:#f87171;">Haven't Engaged</div></div>
-      <div class="eng-list">${e.not_engaged.map(a=>`<div class="eng-row ghost"><div class="eng-av" style="background:rgba(248,113,113,0.15);">${inits(a.agent_name)}</div><div><div class="eng-name">${a.agent_name}</div><div class="eng-meta">${a.status}</div></div></div>`).join('')}</div>
-    </div>`;
+  let html = '<div class="eng-grid">';
+  // Crushing It
+  html += '<div class="eng-section"><div class="eng-header"><div class="eng-dot" style="background:#10b981;"></div><div class="eng-title" style="color:#10b981;">Crushing It</div></div><div class="eng-list">';
+  if (e.crushing_it?.length) {
+    e.crushing_it.forEach(a => {
+      html += `<div class="eng-row"><div class="eng-av" style="background:rgba(16,185,129,0.15);color:#10b981;">${inits(a.agent_name)}</div><div><div class="eng-name">${a.agent_name}</div><div class="eng-meta">${a.metric}</div></div></div>`;
+    });
+  } else {
+    html += '<div class="empty-state">No data</div>';
+  }
+  html += '</div></div>';
+  // Haven't Engaged
+  html += '<div class="eng-section"><div class="eng-header"><div class="eng-dot" style="background:#f59e0b;"></div><div class="eng-title" style="color:#f59e0b;">Haven\'t Engaged</div></div><div class="eng-list">';
+  if (e.not_engaged?.length) {
+    e.not_engaged.forEach(a => {
+      html += `<div class="eng-row"><div class="eng-av" style="background:rgba(245,158,11,0.15);color:#f59e0b;">${inits(a.agent_name)}</div><div><div class="eng-name">${a.agent_name}</div><div class="eng-meta" style="color:#f59e0b;">${a.status}</div></div></div>`;
+    });
+  } else {
+    html += '<div class="empty-state">No data</div>';
+  }
+  html += '</div></div></div>';
+  document.getElementById('eng-content').innerHTML = html;
 }
 
 function renderBrain(b) {
-  qs('br-convos',b.conversations_this_week); qs('br-agents',b.unique_agents_this_week);
-  document.getElementById('br-delta').textContent = (b.vs_last_week_pct>0?'+':'')+b.vs_last_week_pct+'%';
-  document.getElementById('brain-qs').innerHTML = b.recent_questions.map(q=>`
-    <div class="brain-q"><div class="brain-q-text">${q.question}</div><div class="brain-q-meta">${q.agent_name} · ${new Date(q.asked_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div></div>`).join('');
+  qs('br-convos',b.conversations_this_week);
+  qs('br-agents',b.unique_agents_this_week);
+  const d = b.vs_last_week_pct;
+  document.getElementById('br-delta').textContent = (d>0?'+':'')+d+'%';
+  document.getElementById('br-delta').style.color = d>=0?'#10b981':'#f87171';
+  if (b.recent_questions?.length) {
+    document.getElementById('brain-qs').innerHTML = b.recent_questions.map(q=>`
+      <div class="brain-q"><div class="brain-q-text">${q.question}</div><div class="brain-q-meta">${q.agent_name} · ${new Date(q.asked_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div></div>`).join('');
+  }
+  // Remove brain notice
+  const bn = document.getElementById('brain-notice');
+  if (bn) bn.remove();
 }
 
 function renderAnnouncements(anns) {
-  document.getElementById('ann-list').innerHTML = anns.length ? anns.map(a=>`
-    <div class="ann-item"><div><div class="ann-type">${a.type.toUpperCase()}</div><div class="ann-title">${a.title}</div><div class="ann-meta">${a.created_by} · Expires ${new Date(a.expires_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div></div></div>`).join('')
-    : '<div style="color:rgba(255,255,255,0.3);font-size:13px;padding:8px 0;">No active announcements.</div>';
+  if (!anns.length) {
+    document.getElementById('ann-list').innerHTML = '<div class="empty-state">No active announcements.</div>';
+    return;
+  }
+  document.getElementById('ann-list').innerHTML = anns.map(a => {
+    const typeClass = (a.type||'').toLowerCase()==='event' ? 'ann-type-event' : 'ann-type-update';
+    return `<div class="ann-item"><div><div class="ann-type ${typeClass}">${(a.type||'UPDATE').toUpperCase()}</div><div class="ann-title">${a.title}</div><div class="ann-meta">${a.created_by||''} · Expires ${new Date(a.expires_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div></div></div>`;
+  }).join('');
 }
 
-// Open access -- load data directly
-  loadSupabaseData();
-  // Try Hub API with anon token if available
-  sb.auth.getSession().then(({data:{session}}) => {
-    if (session) loadHubAPI(session.access_token);
-  });
-</script>
-</body>
-</html>
- data directly
-  loadSupabaseData();
-  // Try Hub API with anon token if available
-  sb.auth.getSession().then(({data:{session}}) => {
-    if (session) loadHubAPI(session.access_token);
-  });
+// ── Teach submit ──
+document.getElementById('teach-submit').addEventListener('click', async () => {
+  const q = document.getElementById('teach-q').value.trim();
+  const a = document.getElementById('teach-a').value.trim();
+  if (!q || !a) return;
+  const btn = document.getElementById('teach-submit');
+  btn.textContent = 'Submitting...';
+  btn.disabled = true;
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+      await fetch('https://app.serhantorlandohub.com/api/brain-teach', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer '+session.access_token },
+        body: JSON.stringify({ question: q, answer: a })
+      });
+    }
+    document.getElementById('teach-q').value = '';
+    document.getElementById('teach-a').value = '';
+    btn.textContent = 'Submitted!';
+    setTimeout(() => { btn.textContent = 'Submit Knowledge'; btn.disabled = false; }, 2000);
+  } catch(e) {
+    btn.textContent = 'Error — retry';
+    btn.disabled = false;
+  }
+});
+
+// ── Open access — load data directly ──
+loadSupabaseData();
+sb.auth.getSession().then(({data:{session}}) => {
+  if (session) loadHubAPI(session.access_token);
+});
 </script>
 </body>
 </html>
