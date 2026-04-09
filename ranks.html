@@ -411,10 +411,10 @@
     let currentPeriod = 'ytd';
 
     async function fetchData() {
-      // Match Hub: fetch ALL transactions with a closing date in the current year
-      // No status filter — Hub counts volume for all deals with a closing date
-      const yearStart = new Date().getFullYear() + '-01-01';
-      allTransactions = await sb('/tb_transactions?select=attributed_agent,volume,units,closing_date,status&closing_date=gte.' + yearStart + '&closing_date=not.is.null&order=closing_date.desc&limit=1000');
+      // Fetch all closed transactions — dates stored as MM/DD/YYYY so filter client-side
+      // Closed statuses per Hub: Closed & Processed, Rented & Processed, Referral
+      const closed = encodeURIComponent('("Closed & Processed for Payment","Rented & Processed for Payment","Referral - Processed for payment")');
+      allTransactions = await sb('/tb_transactions?select=attributed_agent,volume,units,closing_date,status&status=in.' + closed + '&limit=1000');
 
       // Active listings
       const snap = await sb('/courted_active_listings?select=snapshot_date&order=snapshot_date.desc&limit=1');
