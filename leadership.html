@@ -12,474 +12,298 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="auth-check.js"></script>
   <style>
-    /* ── LEADERSHIP-SPECIFIC OVERRIDES ── */
-
-    /* Pipeline Strip */
+    /* ── PIPELINE STRIP ── */
     .pipeline-strip {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--space-4);
-      padding: var(--space-6) var(--space-8);
-      background: rgba(10,10,80,0.6);
-      border-bottom: 1px solid var(--color-border);
-      position: sticky;
-      top: var(--nav-h);
-      z-index: 90;
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: var(--space-4); padding: var(--space-5) var(--space-8);
+      background: rgba(8,8,72,0.92); border-bottom: 1px solid var(--color-border);
+      position: sticky; top: var(--nav-h); z-index: 90;
       backdrop-filter: blur(20px);
     }
-    .pp {
-      display: flex; align-items: center; gap: var(--space-4);
-      background: linear-gradient(135deg, rgba(26,26,140,0.4) 0%, rgba(18,18,117,0.25) 100%);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      padding: var(--space-4) var(--space-5);
-    }
-    .pp-dot {
-      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
-    }
-    .pp.cl .pp-dot { background: #10b981; box-shadow: 0 0 8px rgba(16,185,129,0.5); }
-    .pp.pe .pp-dot { background: var(--color-gold); box-shadow: 0 0 8px rgba(201,168,76,0.5); }
-    .pp.li .pp-dot { background: var(--color-accent-bright); box-shadow: 0 0 8px rgba(104,104,238,0.5); }
-    .pp.to .pp-dot { background: white; opacity: 0.5; }
-    .pp-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-text-faint); }
-    .pp-val { font-size: var(--text-lg); font-weight: 800; color: white; line-height: 1.1; }
-    .pp.cl .pp-val { color: #10b981; }
-    .pp.pe .pp-val { color: var(--color-gold); }
-    .pp.li .pp-val { color: var(--color-accent-bright); }
-    .pp-sub { font-size: 10px; color: var(--color-text-faint); }
+    .pp { display:flex; align-items:center; gap:var(--space-4); background:linear-gradient(135deg,rgba(26,26,140,0.4),rgba(18,18,117,0.25)); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:var(--space-4) var(--space-5); }
+    .pp-dot { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+    .pp.cl .pp-dot { background:#10b981;box-shadow:0 0 8px rgba(16,185,129,0.5); }
+    .pp.pe .pp-dot { background:var(--color-gold);box-shadow:0 0 8px rgba(201,168,76,0.4); }
+    .pp.li .pp-dot { background:var(--color-accent-bright);box-shadow:0 0 8px rgba(104,104,238,0.4); }
+    .pp.to .pp-dot { background:rgba(255,255,255,0.4); }
+    .pp-lbl { font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--color-text-faint); }
+    .pp-val { font-size:var(--text-lg);font-weight:800;color:white;line-height:1.1; }
+    .pp.cl .pp-val { color:#10b981; }
+    .pp.pe .pp-val { color:var(--color-gold); }
+    .pp.li .pp-val { color:var(--color-accent-bright); }
+    .pp-sub { font-size:10px;color:var(--color-text-faint); }
 
-    /* Tab Bar */
-    .tab-bar {
-      display: flex; gap: 0;
-      padding: 0 var(--space-8);
-      background: rgba(10,10,72,0.7);
-      border-bottom: 1px solid var(--color-border);
-      position: sticky;
-      top: calc(var(--nav-h) + 78px);
-      z-index: 89;
-      backdrop-filter: blur(20px);
-    }
-    .tab-btn {
-      padding: var(--space-4) var(--space-6);
-      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--color-text-faint);
-      border: none; background: none; cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: color var(--transition), border-color var(--transition);
-      font-family: var(--font-body);
-    }
-    .tab-btn:hover { color: white; }
-    .tab-btn.on { color: white; border-bottom-color: var(--color-accent-bright); }
+    /* ── TAB BAR ── */
+    .tab-bar { display:flex; align-items:center; padding:0 var(--space-8); background:rgba(10,10,72,0.85); border-bottom:1px solid var(--color-border); position:sticky; top:calc(var(--nav-h) + 74px); z-index:89; backdrop-filter:blur(20px); }
+    /* JS uses .tab class */
+    .tab { padding:var(--space-4) var(--space-6);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-text-faint);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:color var(--transition),border-color var(--transition);font-family:var(--font-body); }
+    .tab:hover { color:white; }
+    .tab.on { color:white;border-bottom-color:var(--color-accent-bright); }
+    .tab-date { font-size:10px;color:var(--color-text-faint);margin-left:auto;padding-right:var(--space-4); }
 
-    /* Tab Content */
-    .tab-content { display: none; }
-    .tab-content.on { display: block; }
+    /* ── CONTENT ── */
+    .l-wrap { max-width:1280px;margin:0 auto;padding:var(--space-8); }
+    .l-card { background:linear-gradient(160deg,rgba(26,26,140,0.45),rgba(18,18,117,0.28));border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-6) var(--space-7);position:relative;overflow:hidden; }
+    .l-card::before { content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(100,100,255,0.6) 30%,rgba(160,130,255,0.8) 50%,rgba(100,100,255,0.6) 70%,transparent); }
+    .l-card-title { font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--color-accent-bright);margin-bottom:var(--space-5); }
+    .l-cols { display:grid;grid-template-columns:1fr 1fr;gap:var(--space-6);align-items:start; }
+    .l-cols-3 { display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-6); }
+    .l-cols-4 { display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-6); }
+    .l-gap { margin-bottom:var(--space-6); }
 
-    /* Content container */
-    .l-wrap { max-width: 1280px; margin: 0 auto; padding: var(--space-8) var(--space-8); }
+    /* ── PACE BARS ── */
+    .pace-row { display:flex;align-items:center;gap:var(--space-5);margin-bottom:var(--space-4); }
+    .pace-lbl { font-size:11px;font-weight:700;color:var(--color-text-muted);width:52px;flex-shrink:0; }
+    .pace-track { flex:1;height:6px;background:rgba(255,255,255,0.08);border-radius:4px;position:relative; }
+    .pace-fill { height:100%;border-radius:4px;transition:width 0.8s cubic-bezier(0.16,1,0.3,1); }
+    .pace-goal { position:absolute;top:-5px;bottom:-5px;width:1px;background:rgba(255,255,255,0.3); }
+    .pace-pct { font-size:12px;font-weight:800;width:44px;text-align:right;flex-shrink:0; }
+    .pace-info { font-size:11px;color:var(--color-text-faint);width:220px;flex-shrink:0;text-align:right; }
+    .pace-note { font-size:10px;color:var(--color-text-faint);margin-top:var(--space-3); }
 
-    /* Dashboard card */
-    .l-card {
-      background: linear-gradient(160deg, rgba(26,26,140,0.45) 0%, rgba(18,18,117,0.28) 100%);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      padding: var(--space-6) var(--space-8);
-      position: relative; overflow: hidden;
-    }
-    .l-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent 0%, rgba(100,100,255,0.6) 30%, rgba(160,130,255,0.8) 50%, rgba(100,100,255,0.6) 70%, transparent 100%);
-    }
-    .l-card-title {
-      font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
-      text-transform: uppercase; color: var(--color-accent-bright);
-      margin-bottom: var(--space-5);
-    }
+    /* ── STAT PILLS ── */
+    .stat-pills-row { display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);margin-top:var(--space-6); }
+    .stat-pill-box { background:rgba(18,18,117,0.2);border:1px solid rgba(80,80,200,0.15);border-radius:var(--radius-md);padding:var(--space-4) var(--space-5);text-align:center; }
+    .spb-lbl { font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--color-text-faint);margin-bottom:4px; }
+    .spb-val { font-size:var(--text-lg);font-weight:800;color:white; }
 
-    /* 2-column layout */
-    .l-cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
-    .l-cols-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
-    .l-cols-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
+    /* ── ANNOUNCEMENTS (JS-generated) ── */
+    .ann-item { display:flex;align-items:flex-start;justify-content:space-between;gap:var(--space-4);padding:var(--space-4) var(--space-5);border-radius:var(--radius-md);background:rgba(18,18,117,0.18);border:1px solid rgba(80,80,200,0.12);margin-bottom:var(--space-3); }
+    .ann-type { font-size:9px;font-weight:800;letter-spacing:0.08em;padding:3px 8px;border-radius:4px;flex-shrink:0; }
+    .ann-type-event { background:rgba(16,185,129,0.15);color:#10b981; }
+    .ann-type-update { background:rgba(104,104,238,0.15);color:var(--color-accent-bright); }
+    .ann-title { font-size:13px;font-weight:700;color:white;margin:4px 0 2px; }
+    .ann-meta { font-size:11px;color:var(--color-text-faint); }
 
-    /* Pace bars */
-    .pace-row { display: flex; align-items: center; gap: var(--space-6); margin-bottom: var(--space-5); }
-    .pace-lbl { font-size: 11px; font-weight: 700; color: var(--color-text-muted); width: 52px; flex-shrink: 0; }
-    .pace-track { flex: 1; height: 6px; background: rgba(255,255,255,0.08); border-radius: 4px; position: relative; }
-    .pace-fill { height: 100%; border-radius: 4px; transition: width 0.8s cubic-bezier(0.16,1,0.3,1); }
-    .pace-goal { position: absolute; top: -5px; bottom: -5px; width: 1px; background: rgba(255,255,255,0.3); }
-    .pace-pct { font-size: 12px; font-weight: 800; width: 44px; text-align: right; flex-shrink: 0; }
-    .pace-info { font-size: 11px; color: var(--color-text-faint); width: 230px; flex-shrink: 0; text-align: right; }
-    .pace-status { font-size: 10px; color: var(--color-text-faint); margin-top: var(--space-3); }
+    /* ── ENGAGEMENT (JS-generated) ── */
+    .eng-grid { display:flex;flex-direction:column;gap:var(--space-5); }
+    .eng-section { }
+    .eng-header { display:flex;align-items:center;gap:var(--space-2);font-size:9px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:var(--space-4);padding-bottom:var(--space-2);border-bottom:1px solid rgba(255,255,255,0.06); }
+    .eng-dot { width:7px;height:7px;border-radius:50%;flex-shrink:0; }
+    .eng-title { }
+    .eng-list { display:flex;flex-direction:column;gap:var(--space-3); }
+    .eng-row { display:flex;align-items:center;gap:var(--space-3); }
+    .eng-av { width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0; }
+    .eng-name { font-size:13px;font-weight:700;color:white; }
+    .eng-meta { font-size:11px;color:var(--color-text-faint); }
 
-    /* Stat pills row */
-    .stat-pills-row { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--space-4); margin-top: var(--space-6); }
-    .stat-pill-box {
-      background: rgba(18,18,117,0.2); border: 1px solid rgba(80,80,200,0.18);
-      border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); text-align: center;
-    }
-    .spb-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-text-faint); margin-bottom: 4px; }
-    .spb-val { font-size: var(--text-lg); font-weight: 800; color: white; }
+    /* ── FINANCIALS (JS-generated) ── */
+    .fin-row { display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) 0;border-bottom:1px solid rgba(255,255,255,0.05); }
+    .fin-row:last-child { border-bottom:none; }
+    .fin-label { font-size:12px;font-weight:700;color:var(--color-text-muted); }
+    .fin-breakdown { font-size:10px;color:var(--color-text-faint);margin-top:2px; }
+    .fin-value { font-size:15px;font-weight:800; }
 
-    /* Announcement items */
-    .ann-item {
-      display: flex; align-items: flex-start; justify-content: space-between;
-      gap: var(--space-4);
-      padding: var(--space-4) var(--space-5);
-      border-radius: var(--radius-md);
-      background: rgba(18,18,117,0.18);
-      border: 1px solid rgba(80,80,200,0.14);
-      margin-bottom: var(--space-3);
-    }
-    .ann-type {
-      font-size: 9px; font-weight: 800; letter-spacing: 0.1em;
-      padding: 3px 8px; border-radius: 4px; flex-shrink: 0;
-    }
-    .ann-type.event { background: rgba(16,185,129,0.15); color: #10b981; }
-    .ann-type.update { background: rgba(104,104,238,0.15); color: var(--color-accent-bright); }
-    .ann-title { font-size: 13px; font-weight: 700; color: white; }
-    .ann-meta { font-size: 11px; color: var(--color-text-faint); margin-top: 2px; }
+    /* ── BAR CHART (JS-generated) ── */
+    .chart-bars { display:flex;align-items:flex-end;gap:var(--space-3);height:100px;position:relative;padding-bottom:var(--space-5); }
+    .chart-bar-wrap { flex:1;display:flex;flex-direction:column;align-items:center;gap:var(--space-1);height:100%; }
+    .chart-amt { font-size:9px;color:var(--color-text-faint);font-weight:600;text-align:center; }
+    .chart-bar { width:100%;border-radius:3px 3px 0 0;min-height:3px;transition:height 0.6s; }
+    .chart-lbl { font-size:9px;font-weight:700;color:var(--color-text-faint);letter-spacing:0.06em;position:absolute;bottom:0; }
+    .burn-line { position:absolute;left:0;right:0;border-top:1px dashed rgba(255,255,255,0.2);display:flex;align-items:center; }
+    .burn-lbl { font-size:8px;color:rgba(255,255,255,0.3);font-weight:700;letter-spacing:0.08em;margin-left:4px; }
 
-    /* Engagement */
-    .eng-header { font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: var(--space-4); padding-bottom: var(--space-2); border-bottom: 1px solid rgba(255,255,255,0.06); }
-    .eng-header.green { color: #10b981; }
-    .eng-header.amber { color: var(--color-gold); }
-    .eng-row { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3); }
-    .eng-av { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; }
-    .eng-name { font-size: 13px; font-weight: 700; color: white; }
-    .eng-meta { font-size: 11px; color: var(--color-text-faint); }
+    /* ── PAYMENTS (JS-generated) ── */
+    .pay-row { display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) 0;border-bottom:1px solid rgba(255,255,255,0.05); }
+    .pay-row:last-child { border-bottom:none; }
+    .pay-name { font-size:13px;font-weight:700;color:white; }
+    .pay-date { font-size:11px;color:var(--color-text-faint); }
+    .pay-amt { font-size:14px;font-weight:800;color:#10b981; }
 
-    /* Tables */
-    .l-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .l-table th { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-faint); padding: var(--space-3) var(--space-4); text-align: left; border-bottom: 1px solid rgba(80,80,200,0.18); }
-    .l-table td { padding: var(--space-3) var(--space-4); border-bottom: 1px solid rgba(80,80,200,0.08); color: var(--color-text); vertical-align: middle; }
-    .l-table tr:hover td { background: rgba(18,18,117,0.2); }
-    .rank-num { font-size: 11px; font-weight: 800; color: var(--color-text-faint); }
-    .agent-av { width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; margin-right: var(--space-2); flex-shrink: 0; }
-    .agent-name { font-weight: 700; color: white; }
-    .money-val { font-weight: 700; color: white; }
-    .money-green { color: #10b981; font-weight: 800; }
-    .money-amber { color: var(--color-gold); }
-    .money-red { color: #f87171; }
-    .money-blue { color: var(--color-accent-bright); }
+    /* ── TABLES (JS-generated) ── */
+    table { width:100%;border-collapse:collapse;font-size:13px; }
+    th { font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-text-faint);padding:var(--space-3) var(--space-4);text-align:left;border-bottom:1px solid rgba(80,80,200,0.18); }
+    td { padding:var(--space-3) var(--space-4);border-bottom:1px solid rgba(80,80,200,0.07);color:var(--color-text);vertical-align:middle; }
+    tr:hover td { background:rgba(18,18,117,0.15); }
+    .rank-cell { font-size:11px;font-weight:800;color:var(--color-text-faint);text-align:center;width:36px; }
+    .agent-cell { display:flex;align-items:center;gap:var(--space-3); }
+    .av { width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;background:rgba(104,104,238,0.2);color:var(--color-accent-bright); }
+    .nm { font-weight:700;color:white; }
+    .right { text-align:right; }
+    .cl-val { color:#10b981;font-weight:700; }
+    .pe-val { color:var(--color-gold);font-weight:700; }
+    .li-val { color:var(--color-accent-bright);font-weight:700; }
+    .tot-val { color:white;font-weight:800; }
+    .ct-dim { color:var(--color-text-faint); }
+    .empty-state { color:var(--color-text-faint);font-size:13px;padding:var(--space-6) 0;text-align:center; }
+    .loading { color:var(--color-text-faint);font-size:13px;padding:var(--space-8);text-align:center; }
 
-    /* Fin cards */
-    .fin-metric { text-align: center; padding: var(--space-4) 0; }
-    .fin-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-text-faint); margin-bottom: var(--space-1); }
-    .fin-val { font-size: var(--text-xl); font-weight: 800; }
-    .fin-sub { font-size: 10px; color: var(--color-text-faint); margin-top: 2px; }
+    /* ── BRAIN ── */
+    .brain-q { background:rgba(18,18,117,0.18);border:1px solid rgba(80,80,200,0.12);border-radius:var(--radius-md);padding:var(--space-4);margin-bottom:var(--space-3); }
+    .brain-q-text { font-size:13px;font-weight:600;color:white;margin-bottom:4px; }
+    .brain-q-meta { font-size:11px;color:var(--color-text-faint); }
+    .teach-input,.teach-textarea { width:100%;background:rgba(10,10,60,0.6);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-4);font-size:13px;color:white;font-family:var(--font-body);resize:vertical;margin-bottom:var(--space-3);box-sizing:border-box; }
+    .teach-input::placeholder,.teach-textarea::placeholder { color:var(--color-text-faint); }
+    .teach-submit-btn { width:100%;background:var(--color-surface);border:1px solid var(--color-accent-bright);border-radius:var(--radius-md);padding:var(--space-4);font-size:13px;font-weight:800;color:white;cursor:pointer;font-family:var(--font-body);letter-spacing:0.05em;transition:background var(--transition); }
+    .teach-submit-btn:hover { background:var(--color-surface-2); }
 
-    /* Bar chart */
-    .bar-chart { display: flex; align-items: flex-end; gap: var(--space-4); height: 120px; position: relative; padding-bottom: var(--space-5); }
-    .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-2); }
-    .bar-fill { width: 100%; background: linear-gradient(to top, var(--color-accent) 0%, var(--color-accent-bright) 100%); border-radius: 4px 4px 0 0; min-height: 4px; }
-    .bar-lbl { font-size: 9px; font-weight: 700; color: var(--color-text-faint); letter-spacing: 0.08em; }
-    .burn-line { position: absolute; left: 0; right: 0; border-top: 1px dashed rgba(255,255,255,0.2); }
-
-    /* Brain */
-    .brain-q { background: rgba(18,18,117,0.18); border: 1px solid rgba(80,80,200,0.14); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-3); }
-    .brain-q-text { font-size: 13px; font-weight: 600; color: white; margin-bottom: 4px; }
-    .brain-q-meta { font-size: 11px; color: var(--color-text-faint); }
-
-    /* Teach Brain */
-    .teach-input, .teach-textarea {
-      width: 100%; background: rgba(10,10,60,0.6); border: 1px solid var(--color-border);
-      border-radius: var(--radius-md); padding: var(--space-4); font-size: 13px;
-      color: white; font-family: var(--font-body); resize: vertical;
-      margin-bottom: var(--space-3);
-    }
-    .teach-input::placeholder, .teach-textarea::placeholder { color: var(--color-text-faint); }
-    .teach-btn {
-      width: 100%; background: var(--color-surface); border: 1px solid var(--color-accent-bright);
-      border-radius: var(--radius-md); padding: var(--space-4); font-size: 13px; font-weight: 800;
-      color: white; cursor: pointer; font-family: var(--font-body); letter-spacing: 0.05em;
-      transition: background var(--transition);
-    }
-    .teach-btn:hover { background: var(--color-surface-2); }
-
-    /* Section label */
-    .l-section-label { font-size: 9px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-accent-bright); margin-bottom: var(--space-4); display: block; }
-
-    /* Notice */
-    .api-notice { background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2); border-radius: var(--radius-md); padding: var(--space-3) var(--space-5); font-size: 12px; color: var(--color-gold); font-weight: 600; margin-bottom: var(--space-5); }
-
-    .stale-tag { background: rgba(245,158,11,0.15); color: #f59e0b; font-size: 9px; font-weight: 700; letter-spacing: 2px; padding: 2px 7px; border-radius: 4px; margin-left: 6px; }
+    /* ── API NOTICE ── */
+    .api-notice { background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:var(--radius-md);padding:var(--space-3) var(--space-5);font-size:12px;color:var(--color-gold);font-weight:600;margin-bottom:var(--space-4); }
   </style>
 </head>
 <body>
-
-<!-- Shared nav injected by shared.js -->
 
 <!-- ══ PIPELINE STRIP ══ -->
 <div class="pipeline-strip">
   <div class="pp cl">
     <div class="pp-dot"></div>
-    <div>
-      <div class="pp-lbl">Closed YTD</div>
-      <div class="pp-val" id="pv-cl">--</div>
-      <div class="pp-sub" id="pu-cl">-- deals</div>
-    </div>
+    <div><div class="pp-lbl">Closed YTD</div><div class="pp-val" id="pv-cl">--</div><div class="pp-sub" id="pu-cl">-- deals</div></div>
   </div>
   <div class="pp pe">
     <div class="pp-dot"></div>
-    <div>
-      <div class="pp-lbl">Pending</div>
-      <div class="pp-val" id="pv-pe">--</div>
-      <div class="pp-sub" id="pu-pe">-- deals</div>
-    </div>
+    <div><div class="pp-lbl">Pending</div><div class="pp-val" id="pv-pe">--</div><div class="pp-sub" id="pu-pe">-- deals</div></div>
   </div>
   <div class="pp li">
     <div class="pp-dot"></div>
-    <div>
-      <div class="pp-lbl">Active Listings</div>
-      <div class="pp-val" id="pv-li">--</div>
-      <div class="pp-sub" id="pu-li">-- listings</div>
-    </div>
+    <div><div class="pp-lbl">Active Listings</div><div class="pp-val" id="pv-li">--</div><div class="pp-sub" id="pu-li">-- listings</div></div>
   </div>
   <div class="pp to">
     <div class="pp-dot"></div>
-    <div>
-      <div class="pp-lbl">Total Pipeline</div>
-      <div class="pp-val" id="pv-to">--</div>
-      <div class="pp-sub">closed + pending + listed</div>
-    </div>
+    <div><div class="pp-lbl">Total Pipeline</div><div class="pp-val" id="pv-to">--</div><div class="pp-sub">closed + pending + listed</div></div>
   </div>
 </div>
 
-<!-- ══ TAB BAR ══ -->
+<!-- ══ TAB BAR — JS uses class="tab" ══ -->
 <div class="tab-bar">
-  <button class="tab-btn on" data-tab="hub">Hub</button>
-  <button class="tab-btn" data-tab="sales">Sales</button>
-  <button class="tab-btn" data-tab="financials">Financials</button>
-  <button class="tab-btn" data-tab="brain">Brain</button>
-  <span id="data-date" style="font-size:10px;color:var(--color-text-faint);margin-left:auto;padding-right:var(--space-6);"></span>
+  <button class="tab on" data-tab="hub">Hub</button>
+  <button class="tab" data-tab="sales">Sales</button>
+  <button class="tab" data-tab="financials">Financials</button>
+  <button class="tab" data-tab="brain">Brain</button>
+  <span class="tab-date" id="data-date"></span>
 </div>
 
-<!-- ══════════════════════════════════
-     TAB 1 — HUB
-     ══════════════════════════════════ -->
-<div id="tab-hub" class="tab-content on">
+<!-- ══ TAB 1: HUB ══ -->
+<div id="tab-hub">
   <div class="l-wrap">
-    <div class="l-cols" style="align-items:start;">
-
-      <!-- Left: Pace + Announcements -->
+    <div class="l-cols">
+      <!-- LEFT: Pace + Announcements -->
       <div>
-        <!-- Office Pace -->
-        <div class="l-card" style="margin-bottom: var(--space-6);">
+        <!-- Pace -->
+        <div class="l-card l-gap">
           <div class="l-card-title">2026 Office Pace</div>
           <div id="pace-content">
             <div class="pace-row">
               <div class="pace-lbl">Volume</div>
               <div class="pace-track"><div class="pace-fill" style="width:0%;background:var(--color-gold);"></div><div class="pace-goal"></div></div>
-              <div class="pace-pct" style="color:var(--color-gold);">0%</div>
+              <div class="pace-pct" style="color:var(--color-gold);">—</div>
               <div class="pace-info">Loading...</div>
             </div>
             <div class="pace-row">
               <div class="pace-lbl">GCI</div>
               <div class="pace-track"><div class="pace-fill" style="width:0%;background:#10b981;"></div><div class="pace-goal"></div></div>
-              <div class="pace-pct" style="color:#10b981;">0%</div>
+              <div class="pace-pct" style="color:#10b981;">—</div>
               <div class="pace-info">Loading...</div>
             </div>
+            <div class="pace-note">Loading data...</div>
           </div>
-          <div class="pace-status" id="pace-status">Loading data...</div>
           <div class="stat-pills-row">
             <div class="stat-pill-box"><div class="spb-lbl">Units Closed</div><div class="spb-val" id="sc-units">--</div></div>
             <div class="stat-pill-box"><div class="spb-lbl">Avg Sale Price</div><div class="spb-val" id="sc-avg">--</div></div>
             <div class="stat-pill-box"><div class="spb-lbl">Total GCI</div><div class="spb-val" id="sc-gci" style="color:#10b981;">--</div></div>
           </div>
         </div>
-
-        <!-- Announcements -->
+        <!-- Announcements — JS writes to ann-list directly -->
         <div class="l-card">
           <div class="l-card-title">Announcements</div>
-          <div id="ann-list">
-            <div class="api-notice">Announcements load after Hub API connects.</div>
-          </div>
+          <div id="ann-list"><div class="api-notice">Announcements load after Hub API connects.</div></div>
         </div>
       </div>
-
-      <!-- Right: Engagement -->
-      <div class="l-card" style="position:sticky;top:calc(var(--nav-h) + 138px);">
+      <!-- RIGHT: Engagement — JS writes to eng-content -->
+      <div class="l-card">
         <div class="l-card-title">Agent Engagement</div>
-        <div id="eng-list">
-          <div class="api-notice">Engagement data loads after Hub API connects.</div>
-        </div>
+        <div id="eng-content"><div class="api-notice">Engagement data loads after Hub API connects.</div></div>
       </div>
-
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════
-     TAB 2 — SALES
-     ══════════════════════════════════ -->
-<div id="tab-sales" class="tab-content">
+<!-- ══ TAB 2: SALES ══ -->
+<div id="tab-sales" style="display:none;">
   <div class="l-wrap">
-    <!-- Pipeline summary cards -->
-    <div class="l-cols-4" style="margin-bottom:var(--space-6);">
-      <div class="l-card">
-        <div class="l-card-title">Closed YTD</div>
-        <div style="font-size:var(--text-xl);font-weight:800;color:#10b981;" id="sc-cl-val">--</div>
-        <div style="font-size:12px;color:var(--color-text-faint);" id="sc-cl-sub">-- deals</div>
-      </div>
-      <div class="l-card">
-        <div class="l-card-title">Pending</div>
-        <div style="font-size:var(--text-xl);font-weight:800;color:var(--color-gold);" id="sc-pe-val">--</div>
-        <div style="font-size:12px;color:var(--color-text-faint);" id="sc-pe-sub">-- deals</div>
-      </div>
-      <div class="l-card">
-        <div class="l-card-title">Active Listings</div>
-        <div style="font-size:var(--text-xl);font-weight:800;color:var(--color-accent-bright);" id="sc-li-val">--</div>
-        <div style="font-size:12px;color:var(--color-text-faint);" id="sc-li-sub">-- listings</div>
-      </div>
-      <div class="l-card">
-        <div class="l-card-title">Total Pipeline</div>
-        <div style="font-size:var(--text-xl);font-weight:800;color:white;" id="sc-to-val">--</div>
-        <div style="font-size:12px;color:var(--color-text-faint);">closed + pending + listed</div>
-      </div>
+    <!-- Pipeline cards -->
+    <div class="l-cols-4 l-gap">
+      <div class="l-card"><div class="l-card-title">Closed YTD</div><div style="font-size:var(--text-xl);font-weight:800;color:#10b981;" id="sc-cl-val">--</div><div style="font-size:12px;color:var(--color-text-faint);" id="sc-cl-sub">-- deals</div></div>
+      <div class="l-card"><div class="l-card-title">Pending</div><div style="font-size:var(--text-xl);font-weight:800;color:var(--color-gold);" id="sc-pe-val">--</div><div style="font-size:12px;color:var(--color-text-faint);" id="sc-pe-sub">-- deals</div></div>
+      <div class="l-card"><div class="l-card-title">Active Listings</div><div style="font-size:var(--text-xl);font-weight:800;color:var(--color-accent-bright);" id="sc-li-val">--</div><div style="font-size:12px;color:var(--color-text-faint);" id="sc-li-sub">-- listings</div></div>
+      <div class="l-card"><div class="l-card-title">Total Pipeline</div><div style="font-size:var(--text-xl);font-weight:800;color:white;" id="sc-to-val">--</div><div style="font-size:12px;color:var(--color-text-faint);">closed + pending + listed</div></div>
     </div>
-
-    <!-- Leaderboard -->
+    <!-- Leaderboard — JS writes to lb-wrap -->
     <div class="l-card">
       <div class="l-card-title">Agent Leaderboard</div>
       <div style="overflow-x:auto;">
-        <table class="l-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Agent</th>
-              <th>Closed $</th>
-              <th>Units</th>
-              <th>Pending $</th>
-              <th>Listings $</th>
-              <th>Listings Ct</th>
-              <th>Total Pipeline</th>
-            </tr>
-          </thead>
-          <tbody id="sales-tbody">
-            <tr><td colspan="8" style="text-align:center;color:var(--color-text-faint);padding:var(--space-8);">Loading...</td></tr>
-          </tbody>
-        </table>
+        <div id="lb-wrap"><div class="loading">Loading leaderboard...</div></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════
-     TAB 3 — FINANCIALS
-     ══════════════════════════════════ -->
-<div id="tab-financials" class="tab-content">
+<!-- ══ TAB 3: FINANCIALS ══ -->
+<div id="tab-financials" style="display:none;">
   <div class="l-wrap">
-    <div class="api-notice" id="fin-api-notice">Financials load after Hub API connects.</div>
-
-    <!-- This Month + YTD -->
-    <div class="l-cols" style="margin-bottom:var(--space-6);">
+    <div class="api-notice" id="fin-notice">Financials load after Hub API connects.</div>
+    <div class="l-cols l-gap">
+      <!-- This Month — JS writes to fin-month-content -->
       <div class="l-card">
         <div class="l-card-title">This Month</div>
-        <div class="l-cols-3">
-          <div class="fin-metric">
-            <div class="fin-lbl">Revenue</div>
-            <div class="fin-val money-green" id="fin-rev">--</div>
-            <div class="fin-sub" id="fin-rev-sub"></div>
-          </div>
-          <div class="fin-metric">
-            <div class="fin-lbl">Costs</div>
-            <div class="fin-val money-red" id="fin-cost">--</div>
-          </div>
-          <div class="fin-metric">
-            <div class="fin-lbl">Net</div>
-            <div class="fin-val" id="fin-net">--</div>
-          </div>
-        </div>
+        <div id="fin-month-content"><div class="empty-state">Loading...</div></div>
       </div>
+      <!-- YTD — JS writes to fin-ytd-content -->
       <div class="l-card">
         <div class="l-card-title">Year to Date</div>
-        <div class="l-cols-3">
-          <div class="fin-metric">
-            <div class="fin-lbl">Revenue</div>
-            <div class="fin-val money-green" id="fin-ytd-rev">--</div>
-          </div>
-          <div class="fin-metric">
-            <div class="fin-lbl">Costs</div>
-            <div class="fin-val money-red" id="fin-ytd-cost">--</div>
-          </div>
-          <div class="fin-metric">
-            <div class="fin-lbl">Net</div>
-            <div class="fin-val" id="fin-ytd-net">--</div>
-          </div>
-        </div>
+        <div id="fin-ytd-content"><div class="empty-state">Loading...</div></div>
       </div>
     </div>
-
-    <!-- Chart + Payments side by side -->
-    <div class="l-cols" style="margin-bottom:var(--space-6);">
+    <div class="l-cols l-gap">
+      <!-- Chart — JS writes to fin-chart -->
       <div class="l-card">
         <div class="l-card-title">Trailing 6 Months</div>
-        <div id="fin-chart" class="bar-chart"></div>
+        <div id="fin-chart" style="min-height:120px;"><div class="empty-state">Loading...</div></div>
       </div>
+      <!-- Payments — JS writes to fin-payments -->
       <div class="l-card">
         <div class="l-card-title">Recent Payments</div>
-        <div id="fin-payments" style="font-size:13px;color:var(--color-text-faint);">Loading...</div>
+        <div id="fin-payments"><div class="empty-state">Loading...</div></div>
       </div>
     </div>
-
-    <!-- Revenue by Agent -->
+    <!-- Revenue by Agent — JS writes to fin-agents -->
     <div class="l-card">
       <div class="l-card-title">Revenue by Agent · YTD</div>
       <div style="overflow-x:auto;">
-        <table class="l-table">
-          <thead>
-            <tr><th>#</th><th>Agent</th><th>Deals</th><th>Total Revenue</th><th>Commission</th><th>Studios</th></tr>
-          </thead>
-          <tbody id="fin-agents">
-            <tr><td colspan="6" style="text-align:center;color:var(--color-text-faint);padding:var(--space-8);">Loading...</td></tr>
-          </tbody>
-        </table>
+        <div id="fin-agents"><div class="loading">Loading...</div></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════
-     TAB 4 — BRAIN
-     ══════════════════════════════════ -->
-<div id="tab-brain" class="tab-content">
+<!-- ══ TAB 4: BRAIN ══ -->
+<div id="tab-brain" style="display:none;">
   <div class="l-wrap">
-    <div class="api-notice" id="brain-api-notice">Brain data loads after Hub API connects.</div>
-    <div id="brain-notice" style="display:none;"></div>
-    <!-- Usage stats -->
-    <div class="l-cols-3" style="margin-bottom:var(--space-6);">
-      <div class="l-card" style="text-align:center;">
-        <div class="l-card-title">Convos This Week</div>
-        <div style="font-size:var(--text-2xl);font-weight:800;color:white;" id="br-convos">--</div>
-      </div>
-      <div class="l-card" style="text-align:center;">
-        <div class="l-card-title">Unique Agents</div>
-        <div style="font-size:var(--text-2xl);font-weight:800;color:var(--color-accent-bright);" id="br-agents">--</div>
-      </div>
-      <div class="l-card" style="text-align:center;">
-        <div class="l-card-title">vs Last Week</div>
-        <div style="font-size:var(--text-2xl);font-weight:800;color:#10b981;" id="br-delta">--</div>
-      </div>
+    <div class="api-notice" id="brain-notice">Brain data loads after Hub API connects.</div>
+    <div class="l-cols-3 l-gap">
+      <div class="l-card" style="text-align:center;"><div class="l-card-title">Convos This Week</div><div style="font-size:var(--text-2xl);font-weight:800;color:white;" id="br-convos">--</div></div>
+      <div class="l-card" style="text-align:center;"><div class="l-card-title">Unique Agents</div><div style="font-size:var(--text-2xl);font-weight:800;color:var(--color-accent-bright);" id="br-agents">--</div></div>
+      <div class="l-card" style="text-align:center;"><div class="l-card-title">vs Last Week</div><div style="font-size:var(--text-2xl);font-weight:800;color:#10b981;" id="br-delta">--</div></div>
     </div>
-
     <div class="l-cols">
-      <!-- Recent questions -->
+      <!-- Recent Questions — JS writes to brain-qs -->
       <div class="l-card">
         <div class="l-card-title">Recent Questions</div>
-        <div id="brain-qs" style="color:var(--color-text-faint);font-size:13px;">Loading...</div>
+        <div id="brain-qs"><div class="empty-state">Loading...</div></div>
       </div>
-
-      <!-- Teach the Brain -->
+      <!-- Teach — JS uses teach-q, teach-a, teach-submit -->
       <div class="l-card">
         <div class="l-card-title">Teach The Brain</div>
         <p style="font-size:12px;color:var(--color-text-faint);margin-bottom:var(--space-4);">Add Q&amp;As that agents keep asking. The Brain will use these answers automatically.</p>
-        <input type="text" class="teach-input" placeholder="Question agents keep asking..." id="brain-q-input">
-        <textarea class="teach-textarea" rows="4" placeholder="The correct answer..." id="brain-a-input"></textarea>
-        <button class="teach-btn" onclick="submitBrainTeach()">Teach The Brain</button>
+        <input id="teach-q" type="text" class="teach-input" placeholder="Question agents keep asking...">
+        <textarea id="teach-a" class="teach-textarea" rows="4" placeholder="The correct answer..."></textarea>
+        <button id="teach-submit" class="teach-submit-btn">Submit Knowledge</button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Hidden: aerr for old auth fallback -->
+<div id="aerr" style="display:none;"></div>
 
 <script src="shared.js"></script>
 
