@@ -192,21 +192,55 @@
       appendMessage('user', message);
       const loadingEl = appendLoading();
 
+      // Build messages array in AI SDK format
+      const messages = [
+        ...conversationHistory.map(m => ({ role: m.role, content: m.content })),
+        { role: 'user', content: message }
+      ];
+
       try {
         const res = await fetch(BRAIN_API, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message, history: conversationHistory })
+          body: JSON.stringify({ messages })
         });
 
-        loadingEl.remove();
-
         if (!res.ok) throw new Error('API error ' + res.status);
-        const data = await res.json();
-        const reply = data.response || data.message || 'No response received.';
-        appendMessage('assistant', reply);
-        conversationHistory.push({ role: 'user', content: message });
-        conversationHistory.push({ role: 'assistant', content: reply });
+
+        // Read the AI SDK streaming response
+        loadingEl.remove();
+        const bubbleDiv = appendMessage('assistant', '');
+        const bubble = bubbleDiv.querySelector('.msg-bubble');
+        const container = document.getElementById('chatMessages');
+
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let fullText = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop();
+          for (const line of lines) {
+            // AI SDK v6 text delta format: 0:"text"
+            if (line.startsWith('0:')) {
+              try {
+                const chunk = JSON.parse(line.slice(2));
+                fullText += chunk;
+                bubble.innerHTML = fullText.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+                container.scrollTop = container.scrollHeight;
+              } catch(e) {}
+            }
+          }
+        }
+
+        if (fullText) {
+          conversationHistory.push({ role: 'user', content: message });
+          conversationHistory.push({ role: 'assistant', content: fullText });
+        }
 
       } catch (err) {
         loadingEl.remove();
