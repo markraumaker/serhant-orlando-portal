@@ -406,24 +406,35 @@
       return true;
     }
 
-    let allTransactions = [];
+    const HUB_API = 'https://app.serhantorlandohub.com/api/rankings';
+    const HUB_KEY = 'hub-cron-secret-2026';
+    let hubData = {};
     let listingsMap = {};
     let currentPeriod = 'ytd';
 
-    async function fetchData() {
-      // Fetch all closed transactions — dates stored as MM/DD/YYYY so filter client-side
-      // Closed statuses per Hub: Closed & Processed, Rented & Processed, Referral
-      const closed = encodeURIComponent('("Closed & Processed for Payment","Rented & Processed for Payment","Referral - Processed for payment")');
-      allTransactions = await sb('/tb_transactions?select=attributed_agent,volume,units,closing_date,status&status=in.' + closed + '&limit=1000');
+    function periodToHubParams(period) {
+      const y = new Date().getFullYear();
+      if (period === 'q1') return `period=custom&start=${y}-01-01&end=${y}-03-31`;
+      if (period === 'month') return 'period=this_month';
+      return 'period=ytd';
+    }
 
-      // Active listings
+    async function fetchData() {
+      // Pull rankings directly from Hub API — same backend as the app
+      const [ytdRes, q1Res, monthRes] = await Promise.all([
+        fetch(`${HUB_API}?period=ytd&key=${HUB_KEY}`).then(r => r.json()).catch(() => ({})),
+        fetch(`${HUB_API}?${periodToHubParams('q1')}&key=${HUB_KEY}`).then(r => r.json()).catch(() => ({})),
+        fetch(`${HUB_API}?${periodToHubParams('month')}&key=${HUB_KEY}`).then(r => r.json()).catch(() => ({})),
+      ]);
+      hubData = { ytd: ytdRes, q1: q1Res, month: monthRes };
+
+      // Active listings from Supabase (not in Hub rankings API)
       const snap = await sb('/courted_active_listings?select=snapshot_date&order=snapshot_date.desc&limit=1');
       if (snap && snap[0]) {
         const rows = await sb('/courted_active_listings?select=agent_name,active_count&snapshot_date=eq.' + snap[0].snapshot_date);
         rows.forEach(r => { listingsMap[r.agent_name] = (listingsMap[r.agent_name] || 0) + r.active_count; });
       }
 
-      // Hero listings total
       const totalListings = Object.values(listingsMap).reduce((s, v) => s + v, 0);
       set('hero-listings', fmtN(totalListings));
 
@@ -431,29 +442,18 @@
     }
 
     function renderRankings() {
-      // Filter and aggregate
-      const txns = allTransactions.filter(t => isInPeriod(t.closing_date, currentPeriod));
-      const agents = {};
-      txns.forEach(t => {
-        const name = t.attributed_agent || 'Unknown';
-        if (DEPARTED.some(d => name.includes(d))) return; // skip departed
-        const vol = parseFloat((t.volume || '0').replace(/[$,]/g, ''));
-        const units = parseInt(t.units || '1');
-        if (!agents[name]) agents[name] = { vol: 0, sales: 0 };
-        agents[name].vol += vol;
-        agents[name].sales += units;
-      });
+      const data = hubData[currentPeriod] || {};
+      const rawRankings = (data.rankings || []).filter(r => (r.total_volume || 0) > 0);
 
-      const ranked = Object.entries(agents)
-        .sort((a, b) => b[1].vol - a[1].vol)
-        .filter(([_, d]) => d.vol > 0)
-        .slice(0, 15);
+      // Convert Hub API format to portal render format
+      const ranked = rawRankings.slice(0, 15).map(r => [r.agent_name, { vol: r.total_volume, sales: r.deal_count }]);
 
       const topVol = ranked[0] ? ranked[0][1].vol : 1;
 
-      // Hero stats
+      // Hero stats — use Hub office totals
+      const totals = data.office_totals || {};
       const totalVol = ranked.reduce((s, [_, d]) => s + d.vol, 0);
-      const totalSales = ranked.reduce((s, [_, d]) => s + d.sales, 0);
+      const totalSales = totals.total_deals || ranked.reduce((s, [_, d]) => s + d.sales, 0);
       set('hero-vol', fmtM(totalVol));
       set('hero-sales', fmtN(totalSales));
       set('total-vol', fmtM(totalVol));
