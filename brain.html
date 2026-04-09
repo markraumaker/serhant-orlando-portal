@@ -259,6 +259,7 @@
       div.innerHTML = '<div class="msg-bubble">' + escaped + '</div>';
       container.appendChild(div);
       container.scrollTop = container.scrollHeight;
+      return div;
     }
 
     function appendLoading() {
