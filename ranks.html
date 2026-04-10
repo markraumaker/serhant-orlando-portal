@@ -433,13 +433,11 @@
       // Pull rankings + pipeline from Hub API — same backend as the app
       // /api/pipeline returns all agents with proper attribution, sorted by total pipeline
       // We re-sort by closed.volume for the Volume leaderboard
-      const [ytdPipe, q1Pipe, monthPipe, pipeRes] = await Promise.all([
+      const [ytdPipe, q1Pipe, monthPipe] = await Promise.all([
         fetch(`https://app.serhantorlandohub.com/api/pipeline?period=ytd&key=${HUB_KEY}`).then(r=>r.json()).catch(()=>null),
-        fetch(`https://app.serhantorlandohub.com/api/pipeline?period=q1_2026&key=${HUB_KEY}`).then(r=>r.json()).catch(()=>null),
+        fetch(`https://app.serhantorlandohub.com/api/pipeline?period=q1&key=${HUB_KEY}`).then(r=>r.json()).catch(()=>null),
         fetch(`https://app.serhantorlandohub.com/api/pipeline?period=current_month&key=${HUB_KEY}`).then(r=>r.json()).catch(()=>null),
-        null, // placeholder for pipeRes (use ytdPipe)
       ]);
-      pipeRes; // unused
       const mapPipe = (p) => {
         const agents = (p?.by_agent||[])
           .filter(a => (a.closed?.volume||0) > 0 && VALID_AGENTS.has(a.agent_name))
@@ -447,9 +445,9 @@
         return { rankings: agents.map(a => ({ agent_name: a.agent_name, total_volume: a.closed?.volume||0, deal_count: a.closed?.count||0 })) };
       };
       hubData = { ytd: mapPipe(ytdPipe), q1: mapPipe(q1Pipe), month: mapPipe(monthPipe) };
-      // Use pipeline for accurate office totals
-      if (pipeRes?.summary) {
-        const s = pipeRes.summary;
+      // Use ytdPipe for accurate office totals
+      if (ytdPipe?.summary) {
+        const s = ytdPipe.summary;
         const clV = s.closed.volume + (s.referrals?.volume||0);
         const clU = s.closed.count + (s.referrals?.count||0);
         set('hero-vol', fmtM(clV));

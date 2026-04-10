@@ -165,7 +165,7 @@
         <div class="top-bar-sub" id="data-date">Loading...</div>
       </div>
     </div>
-    <button class="sign-out" id="sign-out-btn">Sign Out</button>
+    <a href="index.html" style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.45);background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 14px;text-decoration:none;letter-spacing:.05em;transition:all .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.45)'">&#8592; Portal</a>
   </div>
 
   <!-- PIPELINE STRIP -->
@@ -597,18 +597,13 @@ async function loadAll() {
     qs('pv-pe',fmt(peV)); qs('pu-pe',peU+' deals');
     qs('pv-li',fmt(liV)); qs('pu-li',liU+' listings');
     qs('pv-to',fmt(clV+peV+liV));
-    // Sales tab cards
-    qs('sc-cl-val',fmt(clV)); qs('sc-cl-sub',clU+' deals');
-    qs('sc-pe-val',fmt(peV)); qs('sc-pe-sub',peU+' deals');
-    qs('sc-li-val',fmt(liV)); qs('sc-li-sub',liU+' listings');
-    qs('sc-to-val',fmt(clV+peV+liV));
-    // Office stats
-    qs('stat-closed-vol',fmt(clV)); qs('stat-closed-units',clU);
-    qs('stat-avg',clU>0?fmt(clV/clU):'--');
-    qs('stat-pending',fmt(peV)); qs('stat-listings',fmt(liV));
+    // Office stats (IDs match the HTML)
+    qs('s-vol',fmt(clV)); qs('s-units',clU);
+    qs('s-avg',clU>0?fmt(clV/clU):'--');
+    qs('s-pen',fmt(peV)); qs('s-lst',fmt(liV));
     // GCI from leadership-data
     const gci = ld?.financials?.ytd ? (ld.financials.ytd.revenue||0)+(ld.financials.ytd.studios_revenue||0) : 0;
-    qs('stat-gci',fmtFull(gci));
+    qs('s-gci',fmtFull(gci));
     buildPace(clV, gci, clU);
     // Leaderboard
     if (pipe.by_agent?.length) buildLeaderboardFromHub(pipe.by_agent);
