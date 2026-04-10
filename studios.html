@@ -14,353 +14,70 @@
   <link rel="stylesheet" href="style.css">
   <style>
     /* =========================================================
-       STUDIOS PAGE - SERHANT. BLUE PALETTE
+       STUDIOS PAGE
        ========================================================= */
 
     /* ---------- HERO ---------- */
     .studios-hero {
       background: linear-gradient(135deg, #0a0a55 0%, #121275 50%, #1a1a88 100%);
-      position: relative;
-      overflow: hidden;
-      padding: 120px 0 80px;
-      text-align: center;
+      position: relative; overflow: hidden;
+      padding: 120px 0 80px; text-align: center;
     }
     .studios-hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
+      content: ''; position: absolute; inset: 0; pointer-events: none;
       background:
         radial-gradient(ellipse 60% 50% at 50% 0%, rgba(104,104,238,0.15) 0%, transparent 60%),
         radial-gradient(ellipse 40% 40% at 20% 80%, rgba(60,60,200,0.15) 0%, transparent 55%),
         radial-gradient(ellipse 40% 40% at 80% 80%, rgba(60,60,200,0.12) 0%, transparent 55%);
-      pointer-events: none;
     }
     .studios-hero-inner {
-      position: relative;
-      z-index: 1;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 var(--space-6);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      position: relative; z-index: 1; max-width: 900px; margin: 0 auto;
+      padding: 0 var(--space-6); display: flex; flex-direction: column; align-items: center;
     }
     .studios-eyebrow {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: #6868ee;
-      margin-bottom: 16px;
-      font-variant: all-small-caps;
+      font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+      color: #6868ee; margin-bottom: 16px; font-variant: all-small-caps;
     }
     .studios-hero h1 {
-      font-size: clamp(40px, 5vw, 64px);
-      font-weight: 800;
-      color: white;
-      letter-spacing: -0.02em;
-      line-height: 1.05;
-      margin-bottom: 20px;
+      font-size: clamp(40px, 5vw, 64px); font-weight: 800; color: white;
+      letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 20px;
     }
     .studios-hero-sub {
-      font-size: 18px;
-      color: rgba(255,255,255,0.6);
-      line-height: 1.7;
-      margin-bottom: 48px;
-      max-width: 600px;
-      text-align: center;
+      font-size: 18px; color: rgba(255,255,255,0.6); line-height: 1.7;
+      margin-bottom: 48px; max-width: 600px; text-align: center;
     }
 
     /* ---------- PHONE MOCKUPS ---------- */
-    .studios-phones {
-      position: relative;
-      width: 460px;
-      height: 440px;
-      margin: 0 auto 48px;
-      flex-shrink: 0;
-    }
-    .studios-phone-wrap {
-      position: absolute;
-    }
-    .studios-phone-wrap.sp-back {
-      right: 20px;
-      top: 20px;
-      transform: rotate(3deg);
-      opacity: 0.75;
-      z-index: 1;
-    }
+    .studios-phones { position: relative; width: 460px; height: 440px; margin: 0 auto 48px; flex-shrink: 0; }
+    .studios-phone-wrap { position: absolute; }
+    .studios-phone-wrap.sp-back { right: 20px; top: 20px; transform: rotate(3deg); opacity: 0.75; z-index: 1; }
     .studios-phone-wrap.sp-front {
-      left: 20px;
-      top: 0;
-      transform: rotate(-3deg);
-      z-index: 2;
+      left: 20px; top: 0; transform: rotate(-3deg); z-index: 2;
       filter: drop-shadow(0 20px 40px rgba(0,0,30,0.5));
     }
     .studios-phone-mockup {
-      width: 200px;
-      height: 400px;
-      background: #0a0a55;
-      border-radius: 30px;
-      border: 2px solid rgba(255,255,255,0.12);
-      box-shadow:
-        0 0 40px rgba(104,104,238,0.2),
-        0 20px 60px rgba(0,0,30,0.5),
-        inset 0 0 0 1px rgba(255,255,255,0.04);
-      position: relative;
-      overflow: hidden;
+      width: 200px; height: 400px; background: #0a0a55; border-radius: 30px;
+      border: 2px solid rgba(255,255,255,0.12); position: relative; overflow: hidden;
+      box-shadow: 0 0 40px rgba(104,104,238,0.2), 0 20px 60px rgba(0,0,30,0.5), inset 0 0 0 1px rgba(255,255,255,0.04);
     }
-    /* Notch */
-    .studios-phone-mockup::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 72px;
-      height: 22px;
-      background: #0a0a55;
-      border-radius: 0 0 14px 14px;
-      z-index: 10;
-      border: 2px solid rgba(255,255,255,0.08);
-      border-top: none;
-    }
-    /* Status time */
-    .studios-phone-mockup::after {
-      content: '9:41';
-      position: absolute;
-      top: 5px;
-      left: 14px;
-      font-size: 9px;
-      color: rgba(255,255,255,0.45);
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 600;
-      z-index: 11;
-    }
-    .sp-screen {
-      padding: 30px 12px 12px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    /* Phone 1 content: Recording UI */
-    .sp-rec-header {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 4px;
-    }
-    .sp-rec-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #ff3b3b;
-      animation: sp-pulse 1.5s ease-in-out infinite;
-    }
-    @keyframes sp-pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-    .sp-rec-label {
-      font-size: 8px;
-      font-weight: 700;
-      color: #ff3b3b;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
-    .sp-rec-address {
-      font-size: 10px;
-      font-weight: 700;
-      color: white;
-      margin-top: 8px;
-    }
-    .sp-rec-sub {
-      font-size: 7px;
-      color: rgba(255,255,255,0.4);
-      letter-spacing: 0.5px;
-    }
-    .sp-rec-viewfinder {
-      flex: 1;
-      background: linear-gradient(135deg, rgba(104,104,238,0.08) 0%, rgba(18,18,117,0.15) 100%);
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.06);
-      margin: 8px 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .sp-rec-viewfinder::before {
-      content: '';
-      position: absolute;
-      inset: 6px;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 6px;
-    }
-    .sp-rec-viewfinder-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 2px solid rgba(255,255,255,0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .sp-rec-viewfinder-icon svg {
-      width: 12px;
-      height: 12px;
-      opacity: 0.3;
-    }
-    .sp-rec-timer {
-      font-size: 20px;
-      font-weight: 800;
-      color: white;
-      text-align: center;
-      letter-spacing: 2px;
-      font-variant-numeric: tabular-nums;
-    }
-    .sp-rec-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #3030b0, #6868ee);
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 20px rgba(104,104,238,0.4);
-      flex-shrink: 0;
-    }
-    .sp-rec-btn-inner {
-      width: 16px;
-      height: 16px;
-      background: white;
-      border-radius: 3px;
-    }
-
-    /* Phone 2 content: Calendar */
-    .sp-cal-header {
-      font-size: 9px;
-      font-weight: 800;
-      color: rgba(255,255,255,0.5);
-      letter-spacing: 1.5px;
-      text-align: center;
-      text-transform: uppercase;
-    }
-    .sp-cal-month {
-      font-size: 12px;
-      font-weight: 800;
-      color: white;
-      text-align: center;
-      margin: 4px 0 6px;
-    }
-    .sp-cal-days {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 2px;
-      margin-bottom: 8px;
-    }
-    .sp-cal-day-label {
-      font-size: 6px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.3);
-      text-align: center;
-      letter-spacing: 0.5px;
-    }
-    .sp-cal-day {
-      font-size: 7px;
-      color: rgba(255,255,255,0.4);
-      text-align: center;
-      padding: 3px 0;
-      border-radius: 4px;
-    }
-    .sp-cal-day.booked {
-      background: linear-gradient(135deg, rgba(48,48,176,0.6), rgba(104,104,238,0.4));
-      color: white;
-      font-weight: 700;
-    }
-    .sp-cal-day.today {
-      border: 1px solid #6868ee;
-      color: #6868ee;
-      font-weight: 700;
-    }
-    .sp-cal-sessions {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      flex: 1;
-    }
-    .sp-cal-session {
-      background: rgba(104,104,238,0.15);
-      border-left: 3px solid #6868ee;
-      border-radius: 0 6px 6px 0;
-      padding: 6px 8px;
-    }
-    .sp-cal-session-time {
-      font-size: 7px;
-      font-weight: 700;
-      color: #6868ee;
-    }
-    .sp-cal-session-name {
-      font-size: 7px;
-      color: rgba(255,255,255,0.5);
-    }
-    .sp-cal-session.alt {
-      background: rgba(104,104,238,0.08);
-      border-left-color: rgba(104,104,238,0.4);
-    }
-
-    /* Instagram phone variant -- hide the fake "9:41" time, let screenshot breathe */
-    .studios-phone-mockup.sp-phone-ig::after {
-      display: none;
-    }
-    /* Full-bleed Instagram screenshot inside phone frame */
+    .studios-phone-mockup.sp-phone-ig::after { display: none; }
     .sp-ig-screen {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top center;
-      border-radius: 28px;
-      display: block;
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: top center; border-radius: 28px; display: block;
     }
-
     @media (max-width: 520px) {
-      .studios-phones {
-        width: 100%;
-        max-width: 320px;
-        height: 380px;
-      }
-      .studios-phone-wrap.sp-back {
-        right: 0;
-        top: 15px;
-      }
-      .studios-phone-wrap.sp-front {
-        left: 0;
-      }
-      .studios-phone-mockup {
-        width: 170px;
-        height: 340px;
-      }
+      .studios-phones { width: 100%; max-width: 320px; height: 380px; }
+      .studios-phone-wrap.sp-back { right: 0; top: 15px; }
+      .studios-phone-wrap.sp-front { left: 0; }
+      .studios-phone-mockup { width: 170px; height: 340px; }
     }
 
-    /* ---------- CTA BUTTON (blue gradient, no orange) ---------- */
+    /* ---------- CTA ---------- */
     .studios-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: linear-gradient(135deg, #3030b0, #5050cc);
-      color: white;
-      font-weight: 700;
-      font-size: 14px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      text-decoration: none;
-      padding: 16px 32px;
-      border-radius: 8px;
+      display: inline-flex; align-items: center; gap: 10px; cursor: pointer;
+      background: linear-gradient(135deg, #3030b0, #5050cc); color: white;
+      font-weight: 700; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase;
+      text-decoration: none; padding: 16px 32px; border-radius: 8px; border: none;
       box-shadow: 0 0 30px rgba(104,104,238,0.3), 0 4px 20px rgba(48,48,176,0.25);
       transition: box-shadow 0.2s ease, transform 0.2s ease;
     }
@@ -371,226 +88,266 @@
 
     /* ---------- HOW TO BOOK ---------- */
     .how-section { background: var(--color-bg); }
-    .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 24px;
-      margin-top: 40px;
-    }
-    @media (max-width: 800px) {
-      .steps-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 480px) {
-      .steps-grid { grid-template-columns: 1fr; }
-    }
+    .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 40px; }
+    @media (max-width: 800px) { .steps-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .steps-grid { grid-template-columns: 1fr; } }
     .step-card {
-      background: rgba(18,18,117,0.4);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(80,80,200,0.25);
-      border-radius: 16px;
-      padding: 32px 24px;
-      text-align: center;
+      background: rgba(18,18,117,0.4); backdrop-filter: blur(20px);
+      border: 1px solid rgba(80,80,200,0.25); border-radius: 16px;
+      padding: 32px 24px; text-align: center;
     }
     .step-num {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: #6868ee;
-      color: white;
-      font-size: 20px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 16px;
-      box-shadow: 0 0 20px rgba(104,104,238,0.35);
+      width: 48px; height: 48px; border-radius: 50%; background: #6868ee;
+      color: white; font-size: 20px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; box-shadow: 0 0 20px rgba(104,104,238,0.35);
     }
     .step-title { font-size: 15px; font-weight: 700; color: white; margin-bottom: 8px; }
     .step-desc { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6; }
 
-    /* ---------- INSTAGRAM SECTION ---------- */
-    .ig-section {
-      background: var(--color-surface);
-      position: relative;
-      overflow: hidden;
-    }
+    /* ---------- INSTAGRAM ---------- */
+    .ig-section { background: var(--color-surface); position: relative; overflow: hidden; }
     .ig-section::before {
-      content: '';
-      position: absolute;
-      inset: 0;
+      content: ''; position: absolute; inset: 0; pointer-events: none;
       background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(48,48,176,0.08) 0%, transparent 65%);
-      pointer-events: none;
     }
     .ig-section .section-inner { position: relative; z-index: 1; text-align: center; }
-    .ig-handle {
-      font-size: clamp(28px, 4vw, 44px);
-      font-weight: 800;
-      color: white;
-      margin-bottom: 8px;
-    }
-    .ig-subtitle {
-      font-size: 16px;
-      color: rgba(255,255,255,0.5);
-      margin-bottom: 32px;
-    }
-
-    /* Stat pills */
-    .ig-stats {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin-bottom: 40px;
-      flex-wrap: wrap;
-    }
+    .ig-handle { font-size: clamp(28px, 4vw, 44px); font-weight: 800; color: white; margin-bottom: 8px; }
+    .ig-subtitle { font-size: 16px; color: rgba(255,255,255,0.5); margin-bottom: 32px; }
+    .ig-stats { display: flex; justify-content: center; gap: 16px; margin-bottom: 40px; flex-wrap: wrap; }
     .ig-stat {
-      background: rgba(18,18,117,0.5);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(104,104,238,0.25);
-      border-radius: 40px;
-      padding: 12px 24px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      background: rgba(18,18,117,0.5); backdrop-filter: blur(16px);
+      border: 1px solid rgba(104,104,238,0.25); border-radius: 40px; padding: 12px 24px;
+      display: flex; align-items: center; gap: 8px;
     }
-    .ig-stat-val {
-      font-size: 16px;
-      font-weight: 800;
-      color: white;
-    }
-    .ig-stat-label {
-      font-size: 12px;
-      color: rgba(255,255,255,0.45);
-      font-weight: 600;
-    }
-
-
-    /* Behold feed container */
+    .ig-stat-val { font-size: 16px; font-weight: 800; color: white; }
+    .ig-stat-label { font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 600; }
     .ig-feed-container { width: 100%; max-width: 900px; margin: 0 auto; }
-    .ig-feed-placeholder {
-      background: rgba(18,18,117,0.3);
-      backdrop-filter: blur(20px);
-      border: 1px dashed rgba(80,80,200,0.3);
-      border-radius: 16px;
-      padding: 60px 40px;
-      text-align: center;
-    }
-    .ig-placeholder-inner { display: flex; flex-direction: column; align-items: center; gap: 12px; color: rgba(255,255,255,0.3); }
-    .ig-placeholder-inner svg { opacity: 0.4; }
-    .ig-placeholder-inner p { font-size: 13px; letter-spacing: 0.05em; margin: 0; }
-    .ig-follow-btn {
-      display: inline-flex;
-      align-items: center;
-      background: rgba(80,80,200,0.2);
-      border: 1px solid rgba(80,80,200,0.4);
-      color: rgba(255,255,255,0.7);
-      padding: 8px 20px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 600;
-      text-decoration: none;
-      letter-spacing: 0.05em;
-      transition: all 0.2s;
-    }
-    .ig-follow-btn:hover { background: rgba(100,100,220,0.3); color: white; }
 
     /* ---------- PACKAGES ---------- */
     .packages-section { background: var(--color-bg); }
     .package-category { margin-bottom: 48px; }
     .package-cat-label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      color: #6868ee;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(104,104,238,0.2);
-      text-align: center;
+      font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+      color: #6868ee; margin-bottom: 20px; padding-bottom: 10px;
+      border-bottom: 1px solid rgba(104,104,238,0.2); text-align: center;
     }
-    .packages-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 16px;
-    }
+    .packages-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
     .package-card {
-      background: rgba(10,10,85,0.6);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(80,80,200,0.2);
-      border-radius: 14px;
-      padding: 24px;
-      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      background: rgba(10,10,85,0.6); backdrop-filter: blur(20px);
+      border: 2px solid rgba(80,80,200,0.2); border-radius: 14px; padding: 24px;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      cursor: pointer; position: relative;
     }
     .package-card:hover {
-      border-color: rgba(104,104,238,0.4);
-      transform: translateY(-3px);
+      border-color: rgba(104,104,238,0.5); transform: translateY(-3px);
       box-shadow: 0 8px 30px rgba(104,104,238,0.1);
     }
-    .package-card.complimentary {
-      border-color: rgba(201,168,76,0.3);
-      background: rgba(201,168,76,0.06);
+    .package-card.selected {
+      border-color: #6868ee;
+      box-shadow: 0 0 30px rgba(104,104,238,0.25), inset 0 0 0 1px rgba(104,104,238,0.3);
+      transform: translateY(-3px);
     }
-    .package-card.complimentary:hover {
-      border-color: rgba(201,168,76,0.6);
-      box-shadow: 0 8px 30px rgba(201,168,76,0.15);
+    .package-card.selected::after {
+      content: '';
+      position: absolute; top: 12px; right: 12px;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: #6868ee;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
+      background-size: 16px; background-position: center; background-repeat: no-repeat;
     }
+    .package-card.complimentary { border-color: rgba(201,168,76,0.3); background: rgba(201,168,76,0.06); }
+    .package-card.complimentary:hover { border-color: rgba(201,168,76,0.6); box-shadow: 0 8px 30px rgba(201,168,76,0.15); }
+    .package-card.complimentary.selected { border-color: #c9a84c; box-shadow: 0 0 30px rgba(201,168,76,0.25); }
+    .package-card.complimentary.selected::after { background-color: #c9a84c; }
     .package-name { font-size: 14px; font-weight: 700; color: white; margin-bottom: 6px; }
-    .package-price {
-      font-size: 22px;
-      font-weight: 800;
-      color: #6868ee;
-      margin-bottom: 4px;
-    }
+    .package-price { font-size: 22px; font-weight: 800; color: #6868ee; margin-bottom: 4px; }
     .package-price.free { color: #c9a84c; }
     .package-duration { font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 12px; letter-spacing: 0.05em; }
     .package-desc { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.6; }
     .package-badge {
-      display: inline-block;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      padding: 3px 8px;
-      border-radius: 4px;
-      margin-bottom: 10px;
-      background: rgba(201,168,76,0.15);
-      color: #c9a84c;
-      border: 1px solid rgba(201,168,76,0.3);
+      display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 1px;
+      padding: 3px 8px; border-radius: 4px; margin-bottom: 10px;
+      background: rgba(201,168,76,0.15); color: #c9a84c; border: 1px solid rgba(201,168,76,0.3);
     }
+
+    /* ---------- BOOKING FORM ---------- */
+    .booking-section {
+      background: var(--color-surface); position: relative; overflow: hidden;
+      max-height: 0; opacity: 0; transition: max-height 0.5s ease, opacity 0.4s ease, padding 0.4s ease;
+      padding: 0 0;
+    }
+    .booking-section.open {
+      max-height: 2400px; opacity: 1; padding: 80px 0;
+    }
+    .booking-section::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse 50% 40% at 50% 0%, rgba(104,104,238,0.08) 0%, transparent 60%);
+    }
+    .booking-inner {
+      max-width: 1000px; margin: 0 auto; padding: 0 var(--space-6);
+      display: grid; grid-template-columns: 1fr 340px; gap: 48px;
+      position: relative; z-index: 1;
+    }
+    @media (max-width: 800px) {
+      .booking-inner { grid-template-columns: 1fr; gap: 32px; }
+    }
+
+    .booking-header {
+      font-size: 11px; font-weight: 700; letter-spacing: 2.5px;
+      text-transform: uppercase; color: #6868ee; margin-bottom: 28px;
+    }
+    .booking-selected-name {
+      font-size: 24px; font-weight: 800; color: white; margin-bottom: 32px;
+    }
+
+    /* Form fields */
+    .form-group { margin-bottom: 24px; }
+    .form-label {
+      display: block; font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 8px;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; background: rgba(10,10,85,0.6); border: 1px solid rgba(80,80,200,0.25);
+      border-radius: 10px; padding: 14px 16px; color: white; font-family: inherit;
+      font-size: 14px; transition: border-color 0.2s; outline: none; box-sizing: border-box;
+    }
+    .form-input::placeholder, .form-textarea::placeholder { color: rgba(255,255,255,0.25); }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #6868ee; }
+    .form-select { appearance: none; cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center; background-size: 16px;
+    }
+    .form-select option { background: #0a0a55; color: white; }
+    .form-textarea { resize: vertical; min-height: 80px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+    .form-hint { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 4px; }
+
+    /* Extra reels stepper */
+    .stepper {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .stepper-btn {
+      width: 36px; height: 36px; border-radius: 8px; border: 1px solid rgba(80,80,200,0.3);
+      background: rgba(10,10,85,0.6); color: white; font-size: 18px; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .stepper-btn:hover { border-color: #6868ee; background: rgba(104,104,238,0.15); }
+    .stepper-val {
+      font-size: 18px; font-weight: 800; color: white; min-width: 24px; text-align: center;
+    }
+
+    /* Date and time picker row */
+    .datetime-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .datetime-row { grid-template-columns: 1fr; } }
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.6) sepia(1) hue-rotate(200deg);
+    }
+
+    /* ---------- PRICE SUMMARY SIDEBAR ---------- */
+    .price-summary {
+      background: rgba(10,10,85,0.7); backdrop-filter: blur(20px);
+      border: 1px solid rgba(80,80,200,0.25); border-radius: 16px;
+      padding: 32px 28px; height: fit-content; position: sticky; top: 100px;
+    }
+    .price-summary-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 24px;
+    }
+    .price-line {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid rgba(80,80,200,0.12);
+    }
+    .price-line:last-of-type { border-bottom: none; }
+    .price-line-label { font-size: 13px; color: rgba(255,255,255,0.6); }
+    .price-line-label.pkg-label { color: white; font-weight: 600; }
+    .price-line-value { font-size: 14px; font-weight: 700; color: white; }
+    .price-line-value.discount { color: #4caf50; }
+    .price-line-value.travel { color: #ff9800; }
+    .price-divider { height: 1px; background: rgba(104,104,238,0.25); margin: 16px 0; }
+    .price-total {
+      display: flex; justify-content: space-between; align-items: center; padding: 8px 0;
+    }
+    .price-total-label {
+      font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+    .price-total-value { font-size: 28px; font-weight: 800; color: white; }
+
+    .book-btn {
+      width: 100%; margin-top: 24px; padding: 16px; border: none; border-radius: 10px;
+      background: linear-gradient(135deg, #3030b0, #5050cc); color: white;
+      font-family: inherit; font-size: 14px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; cursor: pointer;
+      box-shadow: 0 0 30px rgba(104,104,238,0.25);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .book-btn:hover {
+      box-shadow: 0 0 50px rgba(104,104,238,0.4); transform: translateY(-2px);
+    }
+    .book-btn:disabled {
+      opacity: 0.4; cursor: not-allowed; transform: none;
+      box-shadow: none;
+    }
+    .price-note {
+      font-size: 11px; color: rgba(255,255,255,0.3); text-align: center; margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    /* ---------- CONFIRMATION MODAL ---------- */
+    .booking-modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,0,20,0.85); backdrop-filter: blur(8px);
+      align-items: center; justify-content: center; padding: 24px;
+    }
+    .booking-modal-overlay.active { display: flex; }
+    .booking-modal {
+      background: linear-gradient(135deg, #0e0e60 0%, #121275 100%);
+      border: 1px solid rgba(104,104,238,0.3); border-radius: 20px;
+      padding: 48px 40px; max-width: 480px; width: 100%; text-align: center;
+      box-shadow: 0 30px 80px rgba(0,0,30,0.6);
+    }
+    .modal-check {
+      width: 64px; height: 64px; border-radius: 50%; background: rgba(104,104,238,0.15);
+      border: 2px solid #6868ee; margin: 0 auto 24px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-check svg { width: 32px; height: 32px; color: #6868ee; }
+    .booking-modal h3 { font-size: 24px; font-weight: 800; color: white; margin-bottom: 12px; }
+    .booking-modal p { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.7; margin-bottom: 8px; }
+    .modal-detail { font-size: 13px; color: rgba(255,255,255,0.4); }
+    .modal-close-btn {
+      margin-top: 28px; padding: 14px 32px; border: 1px solid rgba(104,104,238,0.3);
+      border-radius: 8px; background: transparent; color: white; font-family: inherit;
+      font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    }
+    .modal-close-btn:hover { border-color: #6868ee; background: rgba(104,104,238,0.1); }
 
     /* ---------- BOTTOM CTA ---------- */
     .studios-bottom-cta {
       background: linear-gradient(135deg, #0a0a55 0%, #121275 100%);
-      text-align: center;
-      padding: 80px var(--space-6);
-      position: relative;
-      overflow: hidden;
+      text-align: center; padding: 80px var(--space-6); position: relative; overflow: hidden;
     }
     .studios-bottom-cta::before {
-      content: '';
-      position: absolute;
-      inset: 0;
+      content: ''; position: absolute; inset: 0; pointer-events: none;
       background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(104,104,238,0.1) 0%, transparent 65%);
-      pointer-events: none;
     }
     .studios-bottom-cta h2 {
-      font-size: clamp(28px, 4vw, 48px);
-      font-weight: 800;
-      color: white;
-      margin-bottom: 16px;
-      position: relative;
+      font-size: clamp(28px, 4vw, 48px); font-weight: 800; color: white;
+      margin-bottom: 16px; position: relative;
     }
     .studios-bottom-cta p {
-      color: rgba(255,255,255,0.55);
-      font-size: 16px;
-      margin-bottom: 32px;
-      position: relative;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+      color: rgba(255,255,255,0.55); font-size: 16px; margin-bottom: 32px;
+      position: relative; max-width: 600px; margin-left: auto; margin-right: auto;
     }
-
-    /* ---------- CENTERED SECTION OVERRIDES ---------- */
     .studios-centered .section-header { text-align: center; }
     .studios-centered .section-inner { max-width: 900px; margin: 0 auto; }
+
+    /* Google Places autocomplete dropdown fix */
+    .pac-container { z-index: 10000 !important; }
   </style>
   <script src="auth-check.js"></script>
 </head>
@@ -623,34 +380,23 @@
       <h1>Content That Sells.</h1>
       <p class="studios-hero-sub">Professional production for listings, social, and your personal brand. Booked in minutes. Delivered fast.</p>
 
-      <!-- Phone Mockups -->
       <div class="studios-phones">
-        <!-- Phone Back: Real @serhantorlando Instagram post -->
         <div class="studios-phone-wrap sp-back">
           <div class="studios-phone-mockup sp-phone-ig">
-            <img
-              src="assets/ig-post-screenshot.jpg"
-              alt="SERHANT. Signature listing on Instagram"
-              class="sp-ig-screen"
-            >
+            <img src="assets/ig-post-screenshot.jpg" alt="SERHANT. Signature listing" class="sp-ig-screen">
           </div>
         </div>
-        <!-- Phone Front: Real @serhantorlando Instagram -->
         <div class="studios-phone-wrap sp-front">
           <div class="studios-phone-mockup sp-phone-ig">
-            <img
-              src="assets/ig-screenshot.jpg"
-              alt="@serhantorlando on Instagram"
-              class="sp-ig-screen"
-            >
+            <img src="assets/ig-screenshot.jpg" alt="@serhantorlando" class="sp-ig-screen">
           </div>
         </div>
       </div>
 
-      <a href="https://serhant-studios-orlando.aryeo.com/portal" target="_blank" rel="noopener" class="studios-cta">
+      <button class="studios-cta" onclick="document.getElementById('packages').scrollIntoView({behavior:'smooth'})">
         Book Your Session
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </a>
+      </button>
     </div>
   </section>
 
@@ -670,13 +416,13 @@
         </div>
         <div class="step-card fade-in fade-in-delay-1">
           <div class="step-num">2</div>
-          <div class="step-title">Select a Date and Time</div>
-          <div class="step-desc">See real-time producer availability and book your session instantly.</div>
+          <div class="step-title">Enter the Details</div>
+          <div class="step-desc">Property address, access info, and any notes for your producer.</div>
         </div>
         <div class="step-card fade-in fade-in-delay-2">
           <div class="step-num">3</div>
-          <div class="step-title">Bring Your Story</div>
-          <div class="step-desc">Bring your ideas and what story you want to tell. Our producers will help shape it into content that converts.</div>
+          <div class="step-title">Select Date and Time</div>
+          <div class="step-desc">See real-time producer availability and book your session instantly.</div>
         </div>
         <div class="step-card fade-in">
           <div class="step-num">4</div>
@@ -691,7 +437,6 @@
   <section class="section ig-section studios-centered">
     <div class="section-inner">
       <h2 class="ig-handle fade-in">@serhantorlando</h2>
-
       <div class="ig-stats fade-in" id="ig-stats">
         <div class="ig-stat">
           <span class="ig-stat-val" id="ig-followers">--</span>
@@ -706,7 +451,6 @@
           <span class="ig-stat-label">Views</span>
         </div>
       </div>
-
       <div class="ig-feed-container fade-in">
         <behold-widget feed-id="sEaGICgObCJCzVPJEUrp"></behold-widget>
         <script>
@@ -720,48 +464,49 @@
   </section>
 
   <!-- ==================== PACKAGES ==================== -->
-  <section class="section packages-section studios-centered">
+  <section class="section packages-section studios-centered" id="packages">
     <div class="section-inner">
       <div class="section-header fade-in">
         <span class="section-eyebrow">What We Offer</span>
         <h2 class="section-title">Sessions and Packages</h2>
         <div class="section-rule"></div>
+        <p style="color:rgba(255,255,255,0.45);font-size:14px;margin-top:12px;">Select a package to start your booking.</p>
       </div>
 
       <!-- LISTING PACKAGES -->
       <div class="package-category fade-in">
         <div class="package-cat-label">Listing Packages</div>
         <div class="packages-grid">
-          <div class="package-card">
+          <div class="package-card" data-pkg="standard-listing" data-price="250" data-name="Standard Listing Package" data-dur="120" data-producer="danny">
             <div class="package-name">Standard Listing Package</div>
             <div class="package-price">$250</div>
-            <div class="package-duration">2 hrs - Property tour + vertical short + social cut</div>
+            <div class="package-duration">2 hrs . Property tour + vertical short + social cut</div>
             <div class="package-desc">Your complete listing launch kit. Full property walkthrough, one vertical short cut, and one social cut ready for all platforms.</div>
           </div>
-          <div class="package-card">
+          <div class="package-card" data-pkg="social-cut-listing" data-price="200" data-name="Social Cut Listing Package" data-dur="120" data-producer="both">
             <div class="package-name">Social Cut Listing Package</div>
             <div class="package-price">$200</div>
-            <div class="package-duration">2 hrs - Up to 4 social cuts</div>
+            <div class="package-duration">2 hrs . Up to 4 social cuts</div>
             <div class="package-desc">Four short stories. One powerful listing. Up to four social cuts optimized for Reels, TikTok, and Shorts.</div>
           </div>
-          <div class="package-card complimentary">
+          <div class="package-card complimentary" data-pkg="signature" data-price="0" data-name="SERHANT. Signature" data-dur="360" data-producer="danny+hailey">
             <div class="package-badge">$2.5M+ LISTINGS</div>
             <div class="package-name">SERHANT. Signature</div>
             <div class="package-price free">Complimentary</div>
-            <div class="package-duration">6 hrs - Danny + Hailey</div>
+            <div class="package-duration">6 hrs . Danny + Hailey</div>
             <div class="package-desc">The ultimate property launch. Cinematic YouTube feature, vertical reels, lifestyle footage, and channel distribution. For $2.5M+ listings only.</div>
           </div>
-          <div class="package-card complimentary">
+          <div class="package-card complimentary" data-pkg="signature-broker-open" data-price="0" data-name="Signature Broker Open" data-dur="120" data-producer="danny">
             <div class="package-badge">$2.5M+ LISTINGS</div>
             <div class="package-name">Signature Broker Open</div>
             <div class="package-price free">Complimentary</div>
-            <div class="package-duration">2 hrs - Event coverage</div>
+            <div class="package-duration">2 hrs . Event coverage</div>
             <div class="package-desc">Full event coverage for your broker open. Professional production, social-ready cuts, and same-day highlights.</div>
           </div>
-          <div class="package-card">
+          <div class="package-card" data-pkg="builder-feature" data-price="450" data-name="Builder Feature (Model Homes)" data-dur="220" data-producer="danny">
             <div class="package-name">Builder Feature</div>
             <div class="package-price">$450</div>
-            <div class="package-duration">3 hrs 40 min</div>
+            <div class="package-duration">3 hrs 40 min . Model homes</div>
             <div class="package-desc">Built for new construction. Model home tours, community highlights, and builder brand content in one session.</div>
           </div>
         </div>
@@ -769,27 +514,27 @@
 
       <!-- SOCIAL & CONTENT -->
       <div class="package-category fade-in">
-        <div class="package-cat-label">Social and Agent Content</div>
+        <div class="package-cat-label">Agent Branding</div>
         <div class="packages-grid">
-          <div class="package-card">
+          <div class="package-card" data-pkg="reels-office" data-price="100" data-name="Reels Session In Office" data-dur="60" data-producer="both">
             <div class="package-name">Reels In Office</div>
             <div class="package-price">$100</div>
-            <div class="package-duration">1 hr - Office studio setting</div>
+            <div class="package-duration">1 hr . Office studio setting</div>
             <div class="package-desc">One focused hour in the office to shoot your agent content, talking head videos, or educational reels.</div>
           </div>
-          <div class="package-card">
+          <div class="package-card" data-pkg="reels-location" data-price="200" data-name="Reels Session On Location" data-dur="120" data-producer="both">
             <div class="package-name">Reels On Location</div>
             <div class="package-price">$200</div>
-            <div class="package-duration">2 hrs - Any location</div>
+            <div class="package-duration">2 hrs . Any location</div>
             <div class="package-desc">On-location social content shoot. Lifestyle reels, neighborhood content, or listing-adjacent agent videos.</div>
           </div>
-          <div class="package-card">
+          <div class="package-card" data-pkg="youtube-neighborhood" data-price="300" data-name="YouTube Neighborhood Spotlight" data-dur="240" data-producer="danny">
             <div class="package-name">YouTube Neighborhood Tour</div>
             <div class="package-price">$300</div>
             <div class="package-duration">4 hrs</div>
             <div class="package-desc">A full neighborhood feature for your YouTube channel. Establish yourself as the local expert with long-form content.</div>
           </div>
-          <div class="package-card">
+          <div class="package-card" data-pkg="new-agent-intro" data-price="200" data-name="New Agent Intro Video" data-dur="120" data-producer="danny">
             <div class="package-name">New Agent Introduction</div>
             <div class="package-price">$200</div>
             <div class="package-duration">2 hrs</div>
@@ -802,58 +547,190 @@
       <div class="package-category fade-in">
         <div class="package-cat-label">Events and Live Coverage</div>
         <div class="packages-grid">
-          <div class="package-card">
+          <div class="package-card" data-pkg="event-highlight" data-price="250" data-name="Full Event Coverage Highlight Reel" data-dur="120" data-producer="danny">
             <div class="package-name">Full Event Highlight Reel</div>
             <div class="package-price">$250</div>
-            <div class="package-duration">2 hrs - Full event + edited highlight</div>
-            <div class="package-desc">Complete event coverage with a polished highlight reel delivered for your next open house, client event, or office activation.</div>
+            <div class="package-duration">2 hrs . Full event + edited highlight</div>
+            <div class="package-desc">Complete event coverage with a polished highlight reel for your next open house, client event, or office activation.</div>
           </div>
-          <div class="package-card">
+          <div class="package-card" data-pkg="event-social" data-price="200" data-name="Event Coverage Social Cut" data-dur="120" data-producer="both">
             <div class="package-name">Event Coverage Social Cut</div>
             <div class="package-price">$200</div>
-            <div class="package-duration">2 hrs - Social-optimized cuts</div>
+            <div class="package-duration">2 hrs . Social-optimized cuts</div>
             <div class="package-desc">Event coverage focused on social output. Multiple short cuts for Instagram, TikTok, and Stories from any event.</div>
           </div>
         </div>
       </div>
 
-      <!-- STRATEGY -->
+      <!-- STRATEGY & ADD-ONS -->
       <div class="package-category fade-in">
         <div class="package-cat-label">Strategy and Add-Ons</div>
         <div class="packages-grid">
-          <div class="package-card">
+          <div class="package-card" data-pkg="brand-strategy" data-price="75" data-name="Brand Strategy Session" data-dur="30" data-producer="hailey">
             <div class="package-name">Brand Strategy Session</div>
             <div class="package-price">$75</div>
-            <div class="package-duration">30 min - Hailey</div>
+            <div class="package-duration">30 min . With Hailey</div>
             <div class="package-desc">A focused 30-minute strategy session with Hailey to map out your content plan, brand voice, and video direction.</div>
           </div>
-          <div class="package-card">
+          <div class="package-card" data-pkg="podcast" data-price="200" data-name="Podcast Style Content Session" data-dur="60" data-producer="danny">
             <div class="package-name">Podcast Content</div>
             <div class="package-price">$200</div>
             <div class="package-duration">1 hr</div>
             <div class="package-desc">Studio-quality podcast recording with video. Multi-camera setup, branded graphics, and social clip exports.</div>
           </div>
-          <div class="package-card">
+          <div class="package-card" data-pkg="extra-reel" data-price="25" data-name="Extra Reel" data-dur="15" data-producer="both">
             <div class="package-name">Extra Reel</div>
             <div class="package-price">$25 add-on</div>
             <div class="package-duration">15 min</div>
-            <div class="package-desc">Add an extra reel to any session. Shoot one more while you're on set. Minimal cost, maximum content.</div>
+            <div class="package-desc">Add an extra reel to any session. Shoot one more while you're on set.</div>
           </div>
         </div>
       </div>
+    </div>
+  </section>
 
+  <!-- ==================== BOOKING FORM ==================== -->
+  <section class="booking-section" id="booking-form">
+    <div class="booking-inner">
+      <div class="booking-form-col">
+        <div class="booking-header">Book Your Session</div>
+        <div class="booking-selected-name" id="booking-pkg-name">Standard Listing Package</div>
+
+        <!-- Address with autocomplete -->
+        <div class="form-group">
+          <label class="form-label">Property / Location Address</label>
+          <input type="text" class="form-input" id="booking-address" placeholder="Start typing an address..." autocomplete="off">
+          <div class="form-hint">Travel fees may apply for locations 45+ miles from Orlando.</div>
+        </div>
+
+        <!-- Date / Time -->
+        <div class="form-group">
+          <label class="form-label">Preferred Date and Time</label>
+          <div class="datetime-row">
+            <input type="date" class="form-input" id="booking-date" min="">
+            <input type="time" class="form-input" id="booking-time" min="09:00" max="17:00" step="1800" value="10:00">
+          </div>
+          <div class="form-hint">Sessions available Monday through Friday, 9:00 AM to 5:00 PM.</div>
+        </div>
+
+        <!-- Access Info -->
+        <div class="form-group">
+          <label class="form-label">Access Instructions</label>
+          <div class="form-row">
+            <input type="text" class="form-input" id="booking-gate" placeholder="Gate code">
+            <input type="text" class="form-input" id="booking-lockbox" placeholder="Lockbox code">
+          </div>
+        </div>
+
+        <!-- Sq Ft / Agents on Camera -->
+        <div class="form-group">
+          <div class="form-row">
+            <div>
+              <label class="form-label">Square Footage</label>
+              <input type="text" class="form-input" id="booking-sqft" placeholder="e.g. 3,200">
+            </div>
+            <div>
+              <label class="form-label">Agents on Camera</label>
+              <select class="form-select" id="booking-agents-cam">
+                <option value="1">1 agent</option>
+                <option value="2">2 agents</option>
+                <option value="3">3 agents</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- MLS Live Date -->
+        <div class="form-group">
+          <label class="form-label">MLS Go-Live Date (if applicable)</label>
+          <input type="date" class="form-input" id="booking-mls-date">
+        </div>
+
+        <!-- Extra Reels -->
+        <div class="form-group" id="extra-reels-group">
+          <label class="form-label">Extra Reels ($25 each)</label>
+          <div class="stepper">
+            <button type="button" class="stepper-btn" onclick="adjustReels(-1)">-</button>
+            <span class="stepper-val" id="reels-count">0</span>
+            <button type="button" class="stepper-btn" onclick="adjustReels(1)">+</button>
+          </div>
+        </div>
+
+        <!-- Promo Code -->
+        <div class="form-group">
+          <label class="form-label">Promo Code</label>
+          <div style="display:flex;gap:10px;">
+            <input type="text" class="form-input" id="booking-promo" placeholder="Enter code" style="flex:1;">
+            <button type="button" class="stepper-btn" style="width:auto;padding:0 16px;font-size:12px;font-weight:700;letter-spacing:1px;" onclick="applyPromo()">APPLY</button>
+          </div>
+          <div class="form-hint" id="promo-status"></div>
+        </div>
+
+        <!-- Notes -->
+        <div class="form-group">
+          <label class="form-label">Notes for Producer</label>
+          <textarea class="form-textarea" id="booking-notes" placeholder="Special instructions, shot list ideas, or anything else..."></textarea>
+        </div>
+      </div>
+
+      <!-- PRICE SUMMARY -->
+      <div class="price-summary">
+        <div class="price-summary-title">Price Summary</div>
+
+        <div class="price-line">
+          <span class="price-line-label pkg-label" id="price-pkg-name">Standard Listing Package</span>
+          <span class="price-line-value" id="price-pkg-val">$250</span>
+        </div>
+        <div class="price-line" id="price-reels-row" style="display:none;">
+          <span class="price-line-label">Extra Reels</span>
+          <span class="price-line-value" id="price-reels-val">$0</span>
+        </div>
+        <div class="price-line" id="price-travel-row" style="display:none;">
+          <span class="price-line-label">Travel Fee</span>
+          <span class="price-line-value travel" id="price-travel-val">$0</span>
+        </div>
+        <div class="price-line" id="price-promo-row" style="display:none;">
+          <span class="price-line-label">Promo Discount</span>
+          <span class="price-line-value discount" id="price-promo-val">-$0</span>
+        </div>
+
+        <div class="price-divider"></div>
+
+        <div class="price-total">
+          <span class="price-total-label">Total</span>
+          <span class="price-total-value" id="price-total">$250</span>
+        </div>
+
+        <button class="book-btn" id="book-btn" onclick="submitBooking()">
+          Book Session
+        </button>
+        <p class="price-note">Payment processed via Square at time of booking. Home Squad members are not charged.</p>
+      </div>
     </div>
   </section>
 
   <!-- ==================== BOTTOM CTA ==================== -->
   <section class="studios-bottom-cta">
-    <h2>Ready to Book?</h2>
-    <p>Select your package, pick a time, and let's create content that sells.</p>
-    <a href="https://serhant-studios-orlando.aryeo.com/portal" target="_blank" rel="noopener" class="studios-cta" style="position:relative;">
-      Book Your Session
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </a>
+    <h2>Ready to Create?</h2>
+    <p>Select your package, pick a time, and let our producers bring your vision to life.</p>
+    <button class="studios-cta" onclick="document.getElementById('packages').scrollIntoView({behavior:'smooth'})">
+      View Packages
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </button>
   </section>
+
+  <!-- CONFIRMATION MODAL -->
+  <div class="booking-modal-overlay" id="booking-modal">
+    <div class="booking-modal">
+      <div class="modal-check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <h3>Session Booked</h3>
+      <p id="modal-msg">Your Standard Listing Package has been booked.</p>
+      <p class="modal-detail" id="modal-detail">A confirmation email will be sent to you and the studiosorlando@serhant.com calendar.</p>
+      <button class="modal-close-btn" onclick="closeModal()">Done</button>
+    </div>
+  </div>
 
   <!-- FOOTER -->
   <footer class="site-footer">
@@ -865,42 +742,239 @@
     </div>
   </footer>
 
+  <!-- Google Places Autocomplete -->
+  <script>
+    function initPlaces() {
+      const input = document.getElementById('booking-address');
+      if (!input || !window.google?.maps?.places) return;
+      const ac = new google.maps.places.Autocomplete(input, {
+        types: ['address'],
+        componentRestrictions: { country: 'us' },
+        fields: ['formatted_address','geometry']
+      });
+      ac.addListener('place_changed', () => {
+        const place = ac.getPlace();
+        if (place?.geometry?.location) {
+          const lat = place.geometry.location.lat();
+          const lng = place.geometry.location.lng();
+          // Orlando office: 28.5383, -81.3792
+          const dist = haversine(28.5383, -81.3792, lat, lng);
+          setTravelFee(dist);
+        }
+      });
+    }
+    function haversine(lat1, lon1, lat2, lon2) {
+      const R = 3959; // miles
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+  </script>
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxxxxxxxxxxxxxxxxxxxxxxxxxx&libraries=places&callback=initPlaces">
+  </script>
+
   <script src="shared.js"></script>
   <script>
     /* ============================================================
-       STUDIOS - SUPABASE INSTAGRAM DATA
+       STUDIOS BOOKING ENGINE
        ============================================================ */
+
+    // ---- State ----
+    let selectedPkg   = null;
+    let extraReels    = 0;
+    let travelFee     = 0;
+    let promoDiscount = 0; // percentage (0-100)
+    let promoCode     = '';
+
+    // ---- Promo codes (100% off = free) ----
+    const PROMO_CODES = {
+      '500K':       100, 'MARK':       100, 'HOMESQUAD': 100,
+      'SERHANT':    100, 'VIP':        100, 'ORLANDO':   100,
+      'STUDIOS':    100, 'LAUNCH':     100, 'WELCOME':   100,
+      'REELSDEAL':  100, 'CONTENT':    100,
+    };
+
+    // ---- Travel fee tiers ----
+    function setTravelFee(miles) {
+      if (miles <= 44)       travelFee = 0;
+      else if (miles <= 70)  travelFee = 100;
+      else if (miles <= 100) travelFee = 200;
+      else                   travelFee = 350;
+      updatePrice();
+    }
+
+    // ---- Package selection ----
+    document.querySelectorAll('.package-card').forEach(card => {
+      card.addEventListener('click', () => {
+        // Deselect all
+        document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+
+        selectedPkg = {
+          id:       card.dataset.pkg,
+          name:     card.dataset.name,
+          price:    parseInt(card.dataset.price),
+          duration: parseInt(card.dataset.dur),
+          producer: card.dataset.producer,
+        };
+
+        // Update booking form
+        document.getElementById('booking-pkg-name').textContent = selectedPkg.name;
+        document.getElementById('price-pkg-name').textContent   = selectedPkg.name;
+
+        // Hide extra reels stepper if the selected package IS extra reel
+        const reelGroup = document.getElementById('extra-reels-group');
+        if (selectedPkg.id === 'extra-reel') {
+          reelGroup.style.display = 'none';
+          extraReels = 0;
+        } else {
+          reelGroup.style.display = '';
+        }
+
+        updatePrice();
+
+        // Open booking form
+        const form = document.getElementById('booking-form');
+        form.classList.add('open');
+        setTimeout(() => form.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+      });
+    });
+
+    // ---- Extra reels ----
+    function adjustReels(delta) {
+      extraReels = Math.max(0, Math.min(10, extraReels + delta));
+      document.getElementById('reels-count').textContent = extraReels;
+      updatePrice();
+    }
+
+    // ---- Promo code ----
+    function applyPromo() {
+      const input = document.getElementById('booking-promo');
+      const status = document.getElementById('promo-status');
+      const code = input.value.trim().toUpperCase();
+
+      if (PROMO_CODES[code] !== undefined) {
+        promoDiscount = PROMO_CODES[code];
+        promoCode = code;
+        status.textContent = promoDiscount === 100 ? 'Code applied. Session is complimentary.' : `Code applied. ${promoDiscount}% off.`;
+        status.style.color = '#4caf50';
+      } else {
+        promoDiscount = 0; promoCode = '';
+        status.textContent = 'Invalid code.';
+        status.style.color = '#ff5252';
+      }
+      updatePrice();
+    }
+
+    // ---- Price calculator ----
+    function updatePrice() {
+      if (!selectedPkg) return;
+
+      const pkgPrice   = selectedPkg.price;
+      const reelsPrice = extraReels * 25;
+      const subtotal   = pkgPrice + reelsPrice + travelFee;
+      const discount   = Math.round(subtotal * (promoDiscount / 100));
+      const total      = Math.max(0, subtotal - discount);
+
+      document.getElementById('price-pkg-val').textContent = pkgPrice === 0 ? 'Free' : `$${pkgPrice}`;
+
+      // Reels row
+      const reelsRow = document.getElementById('price-reels-row');
+      if (extraReels > 0) {
+        reelsRow.style.display = ''; 
+        document.getElementById('price-reels-val').textContent = `$${reelsPrice}`;
+      } else { reelsRow.style.display = 'none'; }
+
+      // Travel row
+      const travelRow = document.getElementById('price-travel-row');
+      if (travelFee > 0) {
+        travelRow.style.display = '';
+        document.getElementById('price-travel-val').textContent = `$${travelFee}`;
+      } else { travelRow.style.display = 'none'; }
+
+      // Promo row
+      const promoRow = document.getElementById('price-promo-row');
+      if (discount > 0) {
+        promoRow.style.display = '';
+        document.getElementById('price-promo-val').textContent = `-$${discount}`;
+      } else { promoRow.style.display = 'none'; }
+
+      document.getElementById('price-total').textContent = total === 0 ? 'Free' : `$${total}`;
+    }
+
+    // ---- Set min date to tomorrow ----
+    (function() {
+      const d = new Date();
+      d.setDate(d.getDate() + 1);
+      // Skip to Monday if Saturday/Sunday
+      const dow = d.getDay();
+      if (dow === 0) d.setDate(d.getDate() + 1);
+      if (dow === 6) d.setDate(d.getDate() + 2);
+      document.getElementById('booking-date').min = d.toISOString().split('T')[0];
+      document.getElementById('booking-date').value = d.toISOString().split('T')[0];
+    })();
+
+    // ---- Submit booking ----
+    function submitBooking() {
+      if (!selectedPkg) return;
+      const addr = document.getElementById('booking-address').value.trim();
+      const date = document.getElementById('booking-date').value;
+      const time = document.getElementById('booking-time').value;
+
+      if (!addr) { document.getElementById('booking-address').focus(); return; }
+      if (!date) { document.getElementById('booking-date').focus(); return; }
+
+      // Show confirmation modal
+      const msg = document.getElementById('modal-msg');
+      const detail = document.getElementById('modal-detail');
+      msg.textContent = `Your ${selectedPkg.name} has been booked for ${formatDate(date)} at ${formatTime(time)}.`;
+      detail.textContent = `Location: ${addr}. A confirmation email will be sent to you and the studiosorlando@serhant.com calendar.`;
+      document.getElementById('booking-modal').classList.add('active');
+    }
+
+    function formatDate(d) {
+      const [y,m,day] = d.split('-');
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return `${months[parseInt(m)-1]} ${parseInt(day)}, ${y}`;
+    }
+    function formatTime(t) {
+      const [h,m] = t.split(':').map(Number);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const hr = h > 12 ? h - 12 : h === 0 ? 12 : h;
+      return `${hr}:${String(m).padStart(2,'0')} ${ampm}`;
+    }
+
+    function closeModal() {
+      document.getElementById('booking-modal').classList.remove('active');
+    }
+
+    // ---- Instagram stats from Supabase ----
     const SB = 'https://lqothpzxhxvhvyikmphx.supabase.co/rest/v1';
     const SK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxb3RocHp4aHh2aHZ5aWttcGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5ODkzNjgsImV4cCI6MjA5MDU2NTM2OH0.zDE-lniLRF3TdYZmMMSQL20vF_H74_qiMlJM2tX_nKo';
-    const SH = { 'apikey': SK, 'Authorization': 'Bearer ' + SK };
-
-    function sb(path) { return fetch(SB + path, { headers: SH }).then(r => r.json()); }
-
     function fmtK(n) {
       if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
       if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
       return n.toLocaleString();
     }
-
-    async function loadInstagram() {
+    (async function loadIG() {
       try {
-        // Fetch latest snapshot for stats only
-        const latest = await sb('/vista_social_snapshots?select=followers,engagement_total&order=snapshot_date.desc&limit=1');
-        if (latest && latest[0]) {
-          const data = latest[0];
-          document.getElementById('ig-followers').textContent = data.followers ? fmtK(data.followers) : '6,598';
-          document.getElementById('ig-engagement').textContent = data.engagement_total ? fmtK(data.engagement_total) : '32.7K';
-          document.getElementById('ig-views').textContent = '343K';
+        const r = await fetch(SB + '/vista_social_snapshots?select=followers,engagement_total&order=snapshot_date.desc&limit=1', {
+          headers: { 'apikey': SK, 'Authorization': 'Bearer ' + SK }
+        });
+        const d = await r.json();
+        if (d?.[0]) {
+          document.getElementById('ig-followers').textContent = d[0].followers ? fmtK(d[0].followers) : '6,590';
+          document.getElementById('ig-engagement').textContent = d[0].engagement_total ? fmtK(d[0].engagement_total) : '32.4K';
+          document.getElementById('ig-views').textContent = '347K';
         }
       } catch(e) {
-        console.warn('Instagram data:', e);
-        document.getElementById('ig-followers').textContent = '6,598';
-        document.getElementById('ig-engagement').textContent = '32.7K';
-        document.getElementById('ig-views').textContent = '343K';
+        document.getElementById('ig-followers').textContent = '6,590';
+        document.getElementById('ig-engagement').textContent = '32.4K';
+        document.getElementById('ig-views').textContent = '347K';
       }
-    }
-
-    loadInstagram();
+    })();
   </script>
 </body>
 </html>
