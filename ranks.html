@@ -420,13 +420,24 @@
     }
 
     async function fetchData() {
-      // Pull rankings directly from Hub API — same backend as the app
-      const [ytdRes, q1Res, monthRes] = await Promise.all([
+      // Pull rankings + pipeline from Hub API — same backend as the app
+      const [ytdRes, q1Res, monthRes, pipeRes] = await Promise.all([
         fetch(`${HUB_API}?period=ytd&key=${HUB_KEY}`).then(r => r.json()).catch(() => ({})),
         fetch(`${HUB_API}?${periodToHubParams('q1')}&key=${HUB_KEY}`).then(r => r.json()).catch(() => ({})),
         fetch(`${HUB_API}?${periodToHubParams('month')}&key=${HUB_KEY}`).then(r => r.json()).catch(() => ({})),
+        fetch('https://app.serhantorlandohub.com/api/pipeline?period=ytd&key=hub-cron-secret-2026').then(r => r.json()).catch(() => null),
       ]);
       hubData = { ytd: ytdRes, q1: q1Res, month: monthRes };
+      // Use pipeline for accurate office totals
+      if (pipeRes?.summary) {
+        const s = pipeRes.summary;
+        const clV = s.closed.volume + (s.referrals?.volume||0);
+        const clU = s.closed.count + (s.referrals?.count||0);
+        set('hero-vol', fmtM(clV));
+        set('hero-sales', fmtN(clU));
+        set('total-vol', fmtM(clV));
+        set('total-sales', fmtN(clU));
+      }
 
       // Active listings from Supabase (not in Hub rankings API)
       const snap = await sb('/courted_active_listings?select=snapshot_date&order=snapshot_date.desc&limit=1');
@@ -456,10 +467,7 @@
       const totals = data.office_totals || {};
       const totalVol = ranked.reduce((s, [_, d]) => s + d.vol, 0);
       const totalSales = totals.total_deals || ranked.reduce((s, [_, d]) => s + d.sales, 0);
-      set('hero-vol', fmtM(totalVol));
-      set('hero-sales', fmtN(totalSales));
-      set('total-vol', fmtM(totalVol));
-      set('total-sales', fmtN(totalSales));
+      // hero-vol and hero-sales set from pipeline API in fetchData — don't overwrite
       const totalListings = Object.values(listingsMap).reduce((s, v) => s + v, 0);
       set('total-listings', fmtN(totalListings));
 
