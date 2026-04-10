@@ -421,6 +421,35 @@ function buildPace(clVol,clGCI,clUnits) {
     <div style="margin-top:14px;font-size:10px;color:rgba(255,255,255,0.25);font-weight:600;">${(yp*100).toFixed(0)}% of 2026 elapsed &nbsp;·&nbsp; ${clUnits} units closed &nbsp;·&nbsp; White line = on-pace marker</div>`;
 }
 
+// Hub API leaderboard builder — uses /api/pipeline by_agent
+function buildLeaderboardFromHub(byAgent) {
+  if (!byAgent?.length) { const el=document.getElementById('lb-grid'); if(el) el.innerHTML='<div style="color:rgba(255,255,255,0.4);padding:24px;text-align:center;">No data</div>'; return; }
+  document.getElementById('lb-grid').innerHTML = byAgent.map((a,i)=>`
+    <div class="agent-row">
+      <div class="agent-top">
+        <div class="agent-num">#${i+1}</div>
+        <div class="agent-av">${inits(a.agent_name)}</div>
+        <div class="agent-nm">${a.agent_name}</div>
+        <div class="agent-pipe">${fmt(a.total_pipeline||0)}</div>
+      </div>
+      <div class="agent-bk">
+        ${(a.closed?.volume||0)>0?`<span><span class="cl-val">${fmt(a.closed.volume)}</span> closed (${a.closed.count})</span>`:''}
+        ${(a.pending?.volume||0)>0?`<span><span class="pe-val">${fmt(a.pending.volume)}</span> pending (${a.pending.count})</span>`:''}
+        ${(a.active_listings?.volume||0)>0?`<span><span class="li-val">${fmt(a.active_listings.volume)}</span> listed (${a.active_listings.count})</span>`:''}
+      </div>
+    </div>`).join('');
+}
+
+// Hub API GCI builder — uses /api/leadership-data financials revenue_by_agent
+function buildGCIFromHub(agents) {
+  if (!agents?.length) return;
+  const totR = agents.reduce((s,a)=>s+(a.total_revenue||0),0);
+  const totV = agents.reduce((s,a)=>s+(a.volume||0),0);
+  document.getElementById('gci-tbody').innerHTML = agents.map(a=>`
+    <tr><td>${a.name||a.agent_name}</td><td style="color:rgba(255,255,255,0.4);font-size:11px;">${a.deals||0} deal${(a.deals||0)!==1?'s':''}</td><td>${fmt(a.volume||0)}</td><td>${fmtFull(a.total_revenue||a.commission||0)}</td></tr>
+  `).join('') + `<tr class="total-row"><td>OFFICE TOTAL</td><td></td><td>${fmt(totV)}</td><td>${fmtFull(totR)}</td></tr>`;
+}
+
 function buildLeaderboard(tx, snap) {
   const agents = {};
   tx.forEach(t => {
@@ -544,12 +573,61 @@ function renderAnnouncements(anns) {
     : '<div style="color:rgba(255,255,255,0.3);font-size:13px;padding:8px 0;">No active announcements.</div>';
 }
 
-// Open access -- load data directly
-  loadSupabaseData();
-  // Try Hub API with anon token if available
-  sb.auth.getSession().then(({data:{session}}) => {
-    loadHubAPI(session ? session.access_token : null);
-  });
+// ── Load everything from Hub APIs ──
+async function loadAll() {
+  const K = '?key=hub-cron-secret-2026';
+  const H = 'https://app.serhantorlandohub.com';
+  const [pipe, lb, ld] = await Promise.all([
+    fetch(`${H}/api/pipeline${K}&period=ytd`).then(r=>r.json()).catch(()=>null),
+    fetch(`${H}/api/leaderboard${K}`).then(r=>r.json()).catch(()=>null),
+    fetch(`${H}/api/leadership-data${K}`).then(r=>r.json()).catch(()=>null),
+  ]);
+
+  if (pipe?.summary) {
+    const s = pipe.summary;
+    const clV = s.closed.volume  + (s.referrals?.volume||0);
+    const clU = s.closed.count   + (s.referrals?.count||0);
+    const peV = s.pending.volume + (s.on_hold?.volume||0);
+    const peU = s.pending.count  + (s.on_hold?.count||0);
+    const liV = s.active_listings.volume;
+    const liU = s.active_listings.count;
+    // Pipeline strip
+    qs('pv-cl',fmt(clV)); qs('pu-cl',clU+' deals');
+    qs('pv-pe',fmt(peV)); qs('pu-pe',peU+' deals');
+    qs('pv-li',fmt(liV)); qs('pu-li',liU+' listings');
+    qs('pv-to',fmt(clV+peV+liV));
+    // Sales tab cards
+    qs('sc-cl-val',fmt(clV)); qs('sc-cl-sub',clU+' deals');
+    qs('sc-pe-val',fmt(peV)); qs('sc-pe-sub',peU+' deals');
+    qs('sc-li-val',fmt(liV)); qs('sc-li-sub',liU+' listings');
+    qs('sc-to-val',fmt(clV+peV+liV));
+    // Office stats
+    qs('stat-closed-vol',fmt(clV)); qs('stat-closed-units',clU);
+    qs('stat-avg',clU>0?fmt(clV/clU):'--');
+    qs('stat-pending',fmt(peV)); qs('stat-listings',fmt(liV));
+    // GCI from leadership-data
+    const gci = ld?.financials?.ytd ? (ld.financials.ytd.revenue||0)+(ld.financials.ytd.studios_revenue||0) : 0;
+    qs('stat-gci',fmtFull(gci));
+    buildPace(clV, gci, clU);
+    // Leaderboard
+    if (pipe.by_agent?.length) buildLeaderboardFromHub(pipe.by_agent);
+    const dtEl = document.getElementById('data-date');
+    if (dtEl) dtEl.textContent = 'TB data as of '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  }
+
+  if (ld) {
+    if (ld.financials) {
+      renderFinancials(ld.financials);
+      if (ld.financials.revenue_by_agent?.length) buildGCIFromHub(ld.financials.revenue_by_agent);
+    }
+    if (ld.engagement)    renderEngagement(ld.engagement);
+    if (ld.brain)         renderBrain(ld.brain);
+    if (ld.announcements) renderAnnouncements(ld.announcements);
+    document.querySelectorAll('.api-notice').forEach(el=>el.remove());
+  }
+}
+
+loadAll();
 </script>
 </body>
 </html>
