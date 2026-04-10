@@ -279,6 +279,26 @@
 const SB_URL = 'https://lqothpzxhxvhvyikmphx.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxb3RocHp4aHh2aHZ5aWttcGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5ODkzNjgsImV4cCI6MjA5MDU2NTM2OH0.zDE-lniLRF3TdYZmMMSQL20vF_H74_qiMlJM2tX_nKo';
 const HUB_API = 'https://app.serhantorlandohub.com/api/leadership-data';
+const HUB_KEY = '?key=hub-cron-secret-2026';
+
+// Load pipeline numbers from Hub API immediately
+fetch('https://app.serhantorlandohub.com/api/pipeline' + HUB_KEY + '&period=ytd')
+  .then(r => r.json()).then(d => {
+    if (!d?.summary) return;
+    const s = d.summary;
+    const cl = s.closed.volume + (s.referrals?.volume||0);
+    const clU = s.closed.count + (s.referrals?.count||0);
+    const pe = s.pending.volume + (s.on_hold?.volume||0);
+    const peU = s.pending.count + (s.on_hold?.count||0);
+    const li = s.active_listings.volume;
+    const liU = s.active_listings.count;
+    const fmtV = n => n>=1e6?'$'+(n/1e6).toFixed(1)+'M':n>=1e3?'$'+Math.round(n/1e3)+'K':'$'+n;
+    const qs = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+    qs('pv-cl',fmtV(cl)); qs('pu-cl',clU+' deals');
+    qs('pv-pe',fmtV(pe)); qs('pu-pe',peU+' deals');
+    qs('pv-li',fmtV(li)); qs('pu-li',liU+' listings');
+    qs('pv-to',fmtV(cl+pe+li));
+  }).catch(()=>{});
 const ALLOWED = ['mark@serhant.com','sarah.raumaker@serhant.com'];
 const GOALS   = { vol: 300_000_000, gci: 7_500_000 };
 const CLOSED_S  = new Set(['Closed & Processed for Payment','Closed/Rented - Ready for processing','Rented & Processed for Payment']);
@@ -307,8 +327,10 @@ async function checkSession() {
   const { data: { session } } = await sb.auth.getSession();
   if (session && ALLOWED.includes(session.user.email)) showApp(session);
 }
-document.getElementById('ms-btn').addEventListener('click', async () => {
-  const btn = document.getElementById('ms-btn');
+// ms-btn removed — auth handled by auth-check.js
+if (false) {
+  document.getElementById('ms-btn_removed')?.addEventListener('click', async () => {
+  const btn = null;
   btn.textContent = 'Redirecting...'; btn.disabled = true;
   await sb.auth.signInWithOAuth({
     provider: 'azure',
@@ -450,7 +472,7 @@ function buildGCI(closed) {
 // HUB API (financial, engagement, brain)
 async function loadHubAPI(token) {
   try {
-    const res = await fetch(HUB_API, { headers: { Authorization: 'Bearer '+token } });
+    const res = await fetch(HUB_API + HUB_KEY, { headers: token ? { Authorization: 'Bearer '+token } : {} });
     if (!res.ok) return; // endpoint not yet live
     const d = await res.json();
     if (d.financials) renderFinancials(d.financials);
@@ -526,7 +548,7 @@ function renderAnnouncements(anns) {
   loadSupabaseData();
   // Try Hub API with anon token if available
   sb.auth.getSession().then(({data:{session}}) => {
-    if (session) loadHubAPI(session.access_token);
+    loadHubAPI(session ? session.access_token : null);
   });
 </script>
 </body>
