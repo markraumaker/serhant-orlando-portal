@@ -408,6 +408,16 @@
 
     const LB_API = 'https://app.serhantorlandohub.com/api/leaderboard';
     const HUB_KEY = 'hub-cron-secret-2026';
+    // Only these agents appear on the leaderboard — per Hub attribution rules
+    const VALID_AGENTS = new Set([
+      'Mark Raumaker','Samantha Andrade','The Attwoods','Mark Baker','Julimar Barreiro',
+      'Gladys Bezerra','Genson Blimline','Mary De Boer','Octavia Burgman','Vinny Cordaro',
+      'Dino Dodani','Jonathan Fadoul','Liza Farzati','Claire Fernando','Andrea Florez',
+      'Chad Going','Allison Haberman','John Harbuck','Gavin Hatch','The Home Boys',
+      'Claire Jesso','The Kinkelas','Clinton Luke','Ashley McCoy','Nia Medina',
+      'Lisell Melo','Ellene Ortega','Josue Polo','Luis Quintero','The Rogers',
+      'Aida Roman','Rob Stack','Gabriella Sadler','Vanessa Scotland','Jocelin Yau'
+    ]);
     let hubData = {};
     let listingsMap = {};
     let currentPeriod = 'ytd';
@@ -432,7 +442,7 @@
       pipeRes; // unused
       const mapPipe = (p) => {
         const agents = (p?.by_agent||[])
-          .filter(a => (a.closed?.volume||0) > 0)
+          .filter(a => (a.closed?.volume||0) > 0 && VALID_AGENTS.has(a.agent_name))
           .sort((a,b) => (b.closed?.volume||0)-(a.closed?.volume||0));
         return { rankings: agents.map(a => ({ agent_name: a.agent_name, total_volume: a.closed?.volume||0, deal_count: a.closed?.count||0 })) };
       };
