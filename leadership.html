@@ -338,6 +338,7 @@ if (false) {
   });
 });
 document.getElementById('sign-out-btn').addEventListener('click', async () => { await sb.auth.signOut(); location.reload(); });
+} // end if(false)
 
 function showApp(session) { loadSupabaseData(); loadHubAPI(session.access_token); }
 
