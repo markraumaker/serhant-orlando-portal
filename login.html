@@ -16,13 +16,13 @@
       display:flex;flex-direction:column;align-items:center;
       text-align:center;
     }
-    .logo{height:28px;margin-bottom:32px;}
-    .title{font-size:22px;font-weight:900;color:white;margin-bottom:8px;}
-    .sub{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.6;margin-bottom:32px;}
+    .logo{height:28px;margin-bottom:40px;}
+    .title{font-size:24px;font-weight:900;color:white;margin-bottom:10px;}
+    .sub{font-size:13px;color:rgba(255,255,255,0.35);line-height:1.6;margin-bottom:40px;}
 
     .ms-btn{
       display:flex;align-items:center;justify-content:center;gap:12px;
-      width:100%;padding:16px 24px;
+      width:100%;padding:18px 24px;
       background:white;border:none;border-radius:100px;
       font-size:15px;font-weight:700;color:#1a1a2e;
       font-family:'Montserrat',sans-serif;
@@ -31,188 +31,78 @@
     }
     .ms-btn:hover{
       transform:translateY(-2px);
-      box-shadow:0 4px 20px rgba(0,0,0,0.25);
+      box-shadow:0 4px 24px rgba(0,0,0,0.3);
     }
     .ms-btn:active{transform:translateY(0);}
     .ms-btn svg{width:20px;height:20px;flex-shrink:0;}
 
-    .divider{
-      display:flex;align-items:center;gap:12px;
-      width:100%;margin:24px 0;color:rgba(255,255,255,0.2);font-size:11px;
-      font-weight:600;letter-spacing:1px;text-transform:uppercase;
-    }
-    .divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.1);}
-
-    .form{display:flex;flex-direction:column;gap:10px;width:100%;}
-    .input{
-      background:rgba(255,255,255,0.07);
-      border:1px solid rgba(255,255,255,0.12);
-      border-radius:10px;padding:14px 18px;
-      font-size:14px;color:white;
-      font-family:'Montserrat',sans-serif;outline:none;
-      transition:border-color .2s;
-    }
-    .input:focus{border-color:rgba(255,255,255,0.3);}
-    .input::placeholder{color:rgba(255,255,255,0.25);}
-
-    .btn{
-      background:#121275;border:none;border-radius:10px;
-      padding:14px;font-size:14px;font-weight:700;
-      color:white;cursor:pointer;
-      font-family:'Montserrat',sans-serif;
-      transition:background .2s;
-    }
-    .btn:hover:not(:disabled){background:#1a1a9a;}
-    .btn:disabled{opacity:0.55;cursor:default;}
-
-    .err{font-size:12px;color:#f87171;margin-top:4px;display:none;text-align:center;}
-
-    /* Sent state */
-    .sent-box{
-      background:rgba(16,185,129,0.08);
-      border:1px solid rgba(16,185,129,0.2);
-      border-radius:14px;padding:28px 24px;
-      display:flex;flex-direction:column;align-items:center;gap:12px;
+    .err{
+      font-size:12px;color:#f87171;margin-top:16px;
+      display:none;text-align:center;
+      background:rgba(248,113,113,0.08);
+      border:1px solid rgba(248,113,113,0.2);
+      border-radius:10px;padding:12px 16px;
       width:100%;
     }
-    .sent-title{font-size:16px;font-weight:800;color:#10b981;}
-    .sent-body{font-size:13px;color:rgba(255,255,255,0.45);line-height:1.65;}
-    .sent-email{color:white;font-weight:700;}
-    .sent-note{font-size:11px;color:rgba(255,255,255,0.25);margin-top:4px;}
-    .resend-btn{
-      margin-top:8px;background:none;border:none;
-      color:rgba(255,255,255,0.3);font-size:12px;font-weight:600;
-      cursor:pointer;font-family:'Montserrat',sans-serif;
-      text-decoration:underline;
-    }
-    .resend-btn:hover{color:rgba(255,255,255,0.6);}
 
-    /* Loading */
-    .loading-box{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;}
+    .loading-box{display:none;flex-direction:column;align-items:center;gap:14px;width:100%;}
+    .loading-box.active{display:flex;}
     .spinner{width:28px;height:28px;border:3px solid rgba(255,255,255,0.1);border-top-color:#6868ee;border-radius:50%;animation:spin .7s linear infinite;}
     @keyframes spin{to{transform:rotate(360deg);}}
     .loading-txt{font-size:13px;color:rgba(255,255,255,0.4);font-weight:600;}
-
-    #state-sent,#state-loading{display:none;}
   </style>
 </head>
 <body>
 <div class="card">
   <img src="assets/logos/SERHANT-Orlando-White.svg" alt="SERHANT. Orlando" class="logo">
   <div class="title">Agent Portal</div>
-  <div class="sub">Sign in with your SERHANT. account.</div>
+  <div class="sub">Sign in with your SERHANT. Microsoft account.</div>
 
-  <!-- State 1: Login options -->
-  <div id="state-input" style="width:100%;">
-    <!-- Microsoft SSO (primary) -->
-    <button class="ms-btn" id="ms-login-btn" onclick="loginWithMicrosoft()">
+  <div id="login-view" style="width:100%;">
+    <button class="ms-btn" id="ms-btn" onclick="loginWithMicrosoft()">
       <svg viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
       Sign in with Microsoft
     </button>
-
-    <div class="divider">or</div>
-
-    <!-- Magic link fallback -->
-    <form class="form" id="login-form">
-      <input type="email" class="input" id="email" placeholder="you@serhant.com" required autocomplete="email">
-      <button type="submit" class="btn" id="submit-btn">Send Sign-In Link</button>
-      <div class="err" id="err-msg"></div>
-    </form>
+    <div class="err" id="err-msg"></div>
   </div>
 
-  <!-- State 2: Magic link sent -->
-  <div id="state-sent">
-    <div class="sent-box">
-      <div class="sent-title">Check your inbox</div>
-      <div class="sent-body">
-        We sent a sign-in link to<br>
-        <span class="sent-email" id="sent-to"></span><br><br>
-        Open your Outlook and click the link. It expires in 10 minutes.
-      </div>
-      <div class="sent-note">Don't see it? Check your spam folder.</div>
-      <button class="resend-btn" id="resend-btn">Send again</button>
-    </div>
-  </div>
-
-  <!-- State 3: Processing -->
-  <div id="state-loading">
-    <div class="loading-box">
-      <div class="spinner"></div>
-      <div class="loading-txt">Signing you in...</div>
-    </div>
+  <div class="loading-box" id="loading-view">
+    <div class="spinner"></div>
+    <div class="loading-txt">Signing you in...</div>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-const SB_URL = 'https://lqothpzxhxvhvyikmphx.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxb3RocHp4aHh2aHZ5aWttcGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5ODkzNjgsImV4cCI6MjA5MDU2NTM2OH0.zDE-lniLRF3TdYZmMMSQL20vF_H74_qiMlJM2tX_nKo';
 const HUB_API = 'https://app.serhantorlandohub.com';
-const sb = supabase.createClient(SB_URL, SB_KEY);
-const REDIRECT = window.location.origin + '/login.html';
 
-function show(id) {
-  ['state-input','state-sent','state-loading'].forEach(s =>
-    document.getElementById(s).style.display = s === id ? '' : 'none');
-}
-
-// ─── Microsoft OAuth (popup flow) ───
 function loginWithMicrosoft() {
-  show('state-loading');
-  
-  const w = 500, h = 700;
-  const left = (screen.width - w) / 2;
-  const top = (screen.height - h) / 2;
-  const popup = window.open(
-    HUB_API + '/api/auth/microsoft-connect?portal=true',
-    'microsoft-login',
-    `width=${w},height=${h},left=${left},top=${top},toolbar=no,menubar=no`
-  );
-  
-  // Listen for message from popup
-  window.addEventListener('message', function handler(event) {
-    if (event.origin !== HUB_API) return;
-    
-    const data = event.data;
-    if (data.type === 'microsoft-auth-success') {
-      // Store the auth token
-      localStorage.setItem('portal_auth_token', data.token);
-      localStorage.setItem('portal_user_email', data.email);
-      localStorage.setItem('portal_user_name', data.name);
-      
-      window.removeEventListener('message', handler);
-      if (popup && !popup.closed) popup.close();
-      
-      // Redirect to portal
-      const dest = sessionStorage.getItem('portal_redirect') || 'index.html';
-      sessionStorage.removeItem('portal_redirect');
-      window.location.replace(dest);
-    } else if (data.type === 'microsoft-auth-error') {
-      window.removeEventListener('message', handler);
-      if (popup && !popup.closed) popup.close();
-      show('state-input');
-      const err = document.getElementById('err-msg');
-      err.textContent = data.error || 'Microsoft sign-in failed. Try again.';
-      err.style.display = 'block';
-    }
-  });
-  
-  // Check if popup was closed without completing
-  const checkClosed = setInterval(() => {
-    if (popup && popup.closed) {
-      clearInterval(checkClosed);
-      show('state-input');
-    }
-  }, 500);
+  document.getElementById('login-view').style.display = 'none';
+  document.getElementById('loading-view').classList.add('active');
+  document.getElementById('err-msg').style.display = 'none';
+
+  // Redirect directly to the Hub's Microsoft OAuth endpoint
+  // After auth, Hub redirects back to portal with token
+  window.location.href = HUB_API + '/api/auth/microsoft?redirect=' + encodeURIComponent(window.location.origin + '/login.html');
 }
 
-// ─── Supabase magic link callback ───
-async function handleCallback() {
-  if (window.location.hash.includes('access_token') || window.location.search.includes('code=')) {
-    show('state-loading');
-    await new Promise(r => setTimeout(r, 800));
-    const { data: { session } } = await sb.auth.getSession();
-    if (session) {
+// Handle callback from Microsoft OAuth
+function handleCallback() {
+  const params = new URLSearchParams(window.location.search);
+  
+  // Check if this is a callback with token
+  if (params.get('ms_callback') === '1' || params.get('connected') === 'true' || params.get('token')) {
+    document.getElementById('login-view').style.display = 'none';
+    document.getElementById('loading-view').classList.add('active');
+    
+    const token = params.get('token');
+    const email = params.get('email');
+    const name = params.get('name');
+    
+    if (token || params.get('connected') === 'true') {
+      if (token) localStorage.setItem('portal_auth_token', token);
+      if (email) localStorage.setItem('portal_user_email', email);
+      if (name) localStorage.setItem('portal_user_name', name);
+      
       window.history.replaceState(null, '', window.location.pathname);
       const dest = sessionStorage.getItem('portal_redirect') || 'index.html';
       sessionStorage.removeItem('portal_redirect');
@@ -220,32 +110,24 @@ async function handleCallback() {
       return true;
     }
   }
-  // Check for Microsoft auth token in URL (from popup redirect)
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('ms_auth') === 'success' && params.get('token')) {
-    localStorage.setItem('portal_auth_token', params.get('token'));
-    localStorage.setItem('portal_user_email', params.get('email') || '');
-    localStorage.setItem('portal_user_name', params.get('name') || '');
+  
+  // Check if there's an error
+  if (params.get('error')) {
+    const err = document.getElementById('err-msg');
+    err.textContent = params.get('error_description') || 'Sign-in failed. Please try again.';
+    err.style.display = 'block';
     window.history.replaceState(null, '', window.location.pathname);
-    const dest = sessionStorage.getItem('portal_redirect') || 'index.html';
-    sessionStorage.removeItem('portal_redirect');
-    window.location.replace(dest);
-    return true;
+    return false;
   }
+  
   return false;
 }
 
-async function init() {
-  if (await handleCallback()) return;
-  // Check existing sessions
-  const { data: { session } } = await sb.auth.getSession();
-  if (session) {
-    const dest = sessionStorage.getItem('portal_redirect') || 'index.html';
-    sessionStorage.removeItem('portal_redirect');
-    window.location.replace(dest);
-    return;
-  }
-  // Check Microsoft token in localStorage
+function init() {
+  // Handle OAuth callback first
+  if (handleCallback()) return;
+  
+  // Check if already authenticated
   const msToken = localStorage.getItem('portal_auth_token');
   if (msToken) {
     const dest = sessionStorage.getItem('portal_redirect') || 'index.html';
@@ -253,47 +135,10 @@ async function init() {
     window.location.replace(dest);
     return;
   }
-  show('state-input');
+  
+  // Show login
+  document.getElementById('login-view').style.display = '';
 }
-
-// ─── Magic link form ───
-document.getElementById('login-form').addEventListener('submit', async e => {
-  e.preventDefault();
-  const email = document.getElementById('email').value.trim().toLowerCase();
-  const btn   = document.getElementById('submit-btn');
-  const err   = document.getElementById('err-msg');
-  err.style.display = 'none';
-
-  if (!email.endsWith('@serhant.com')) {
-    err.textContent = 'Only @serhant.com email addresses are allowed.';
-    err.style.display = 'block'; return;
-  }
-
-  btn.textContent = 'Sending...'; btn.disabled = true;
-
-  const { error } = await sb.auth.signInWithOtp({
-    email,
-    options: {
-      emailRedirectTo: REDIRECT,
-      shouldCreateUser: true
-    }
-  });
-
-  if (error) {
-    btn.textContent = 'Send Sign-In Link'; btn.disabled = false;
-    err.textContent = 'Could not send the link. Try again.';
-    err.style.display = 'block';
-  } else {
-    document.getElementById('sent-to').textContent = email;
-    show('state-sent');
-  }
-});
-
-document.getElementById('resend-btn').addEventListener('click', () => {
-  show('state-input');
-  document.getElementById('submit-btn').textContent = 'Send Sign-In Link';
-  document.getElementById('submit-btn').disabled = false;
-});
 
 init();
 </script>
