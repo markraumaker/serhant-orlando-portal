@@ -45,13 +45,17 @@
   var sessionResult = await sb.auth.getSession();
   var session = sessionResult.data.session;
 
-  if (!session) {
+  // Check Microsoft auth token if no Supabase session
+  var msToken = localStorage.getItem('portal_auth_token');
+  var msEmail = (localStorage.getItem('portal_user_email') || '').toLowerCase();
+
+  if (!session && !msToken) {
     sessionStorage.setItem('portal_redirect', window.location.href);
     window.location.replace('login.html');
     return;
   }
 
-  var email = (session.user.email || '').toLowerCase();
+  var email = session ? (session.user.email || '').toLowerCase() : msEmail;
 
   // Role check for protected pages
   if (PROTECTED[page] && ROLES[PROTECTED[page]].indexOf(email) === -1) {
