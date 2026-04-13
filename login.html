@@ -73,90 +73,27 @@
 </div>
 
 <script>
-// Azure AD config -- same app registration as the Hub
-const CLIENT_ID = 'f2995b88-7c96-492a-8956-70dcf9b0e70c';
-const TENANT_ID = '78533c6a-7050-42e0-81e7-c21fcab6bf16';
-const REDIRECT_URI = window.location.origin + '/login.html';
-const SCOPES = 'openid profile email User.Read';
+var HUB_API = 'https://app.serhantorlandohub.com';
 
 function loginWithMicrosoft() {
   document.getElementById('login-view').style.display = 'none';
   document.getElementById('loading-view').classList.add('active');
   document.getElementById('err-msg').style.display = 'none';
 
-  // Build Microsoft OAuth URL directly -- no Hub backend needed
-  // Only requesting identity scopes (User.Read) -- already admin-consented
-  var params = new URLSearchParams({
-    client_id: CLIENT_ID,
-    response_type: 'id_token',
-    redirect_uri: REDIRECT_URI,
-    scope: SCOPES,
-    response_mode: 'fragment',
-    prompt: 'select_account',
-    nonce: Math.random().toString(36).substring(2)
-  });
-
-  window.location.href = 'https://login.microsoftonline.com/' + TENANT_ID + '/oauth2/v2.0/authorize?' + params.toString();
+  // Hub's /api/auth/microsoft route uses light scopes (User.Read only)
+  // Already admin-consented, no consent wall
+  // Hub callback reads state, validates portal origin, redirects back with token
+  window.location.href = HUB_API + '/api/auth/microsoft?redirect=' + encodeURIComponent(window.location.origin + '/login.html');
 }
 
-// Handle the callback -- Microsoft returns id_token in URL fragment
 function handleCallback() {
-  // Check fragment (implicit flow returns tokens in hash)
-  var hash = window.location.hash.substring(1);
-  if (!hash) return false;
+  var params = new URLSearchParams(window.location.search);
 
-  var params = new URLSearchParams(hash);
-  var idToken = params.get('id_token');
-  var error = params.get('error');
-
-  if (error) {
-    var desc = params.get('error_description') || 'Sign-in failed. Please try again.';
-    showError(desc);
-    window.history.replaceState(null, '', window.location.pathname);
-    return true;
-  }
-
-  if (!idToken) return false;
-
-  // Decode the JWT payload (no verification needed -- Microsoft signed it)
-  try {
-    var payload = JSON.parse(atob(idToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
-    var email = (payload.preferred_username || payload.email || payload.upn || '').toLowerCase();
-    var name = payload.name || payload.given_name || email.split('@')[0];
-
-    if (!email || !email.endsWith('@serhant.com')) {
-      showError('Access restricted to SERHANT. accounts.');
-      window.history.replaceState(null, '', window.location.pathname);
-      return true;
-    }
-
-    // Store auth data
-    localStorage.setItem('portal_auth_token', idToken);
-    localStorage.setItem('portal_user_email', email);
-    localStorage.setItem('portal_user_name', name);
-
-    // Show loading state
+  // Hub redirects back with ?connected=true&token=X&email=X&name=X
+  if (params.get('connected') === 'true' || params.get('token')) {
     document.getElementById('login-view').style.display = 'none';
     document.getElementById('loading-view').classList.add('active');
 
-    // Clean URL and redirect
-    window.history.replaceState(null, '', window.location.pathname);
-    var dest = sessionStorage.getItem('portal_redirect') || 'index.html';
-    sessionStorage.removeItem('portal_redirect');
-    window.location.replace(dest);
-    return true;
-
-  } catch (e) {
-    showError('Could not verify your identity. Please try again.');
-    window.history.replaceState(null, '', window.location.pathname);
-    return true;
-  }
-}
-
-// Also handle query param callback (legacy Hub redirect flow)
-function handleQueryCallback() {
-  var params = new URLSearchParams(window.location.search);
-  if (params.get('connected') === 'true' || params.get('token')) {
     var token = params.get('token');
     var email = params.get('email');
     var name = params.get('name');
@@ -164,9 +101,6 @@ function handleQueryCallback() {
     if (token) localStorage.setItem('portal_auth_token', token);
     if (email) localStorage.setItem('portal_user_email', email);
     if (name) localStorage.setItem('portal_user_name', name);
-
-    document.getElementById('login-view').style.display = 'none';
-    document.getElementById('loading-view').classList.add('active');
 
     window.history.replaceState(null, '', window.location.pathname);
     var dest = sessionStorage.getItem('portal_redirect') || 'index.html';
@@ -176,7 +110,10 @@ function handleQueryCallback() {
   }
 
   if (params.get('error')) {
-    showError(params.get('error_description') || 'Sign-in failed. Please try again.');
+    var err = document.getElementById('err-msg');
+    err.textContent = params.get('error_description') || 'Sign-in failed. Please try again.';
+    err.style.display = 'block';
+    document.getElementById('login-view').style.display = '';
     window.history.replaceState(null, '', window.location.pathname);
     return true;
   }
@@ -184,20 +121,10 @@ function handleQueryCallback() {
   return false;
 }
 
-function showError(msg) {
-  var err = document.getElementById('err-msg');
-  err.textContent = msg;
-  err.style.display = 'block';
-  document.getElementById('login-view').style.display = '';
-  document.getElementById('loading-view').classList.remove('active');
-}
-
 function init() {
-  // Handle OAuth callback (fragment for direct flow, query for Hub flow)
   if (handleCallback()) return;
-  if (handleQueryCallback()) return;
 
-  // Check if already authenticated
+  // Already authenticated
   var token = localStorage.getItem('portal_auth_token');
   if (token) {
     var dest = sessionStorage.getItem('portal_redirect') || 'index.html';
@@ -206,7 +133,6 @@ function init() {
     return;
   }
 
-  // Show login
   document.getElementById('login-view').style.display = '';
 }
 
