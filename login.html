@@ -82,7 +82,7 @@ function loginWithMicrosoft() {
 
   // Redirect directly to the Hub's Microsoft OAuth endpoint
   // After auth, Hub redirects back to portal with token
-  window.location.href = HUB_API + '/api/auth/microsoft?redirect=' + encodeURIComponent(window.location.origin + '/login.html');
+  window.location.href = HUB_API + '/api/auth/microsoft-connect?redirect=' + encodeURIComponent(window.location.origin + '/login.html');
 }
 
 // Handle callback from Microsoft OAuth
