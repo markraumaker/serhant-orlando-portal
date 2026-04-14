@@ -1115,13 +1115,13 @@
   <div class="toast" id="toast"></div>
 
   <script src="shared.js"></script>
+  <script src="preview-mode.js"></script>
   <script>
   (function() {
     const HUB    = 'https://app.serhantorlandohub.com';
     const ADMINS = ['mark@serhant.com', 'sarah.raumaker@serhant.com'];
 
-    const rawEmail = localStorage.getItem('portal_user_email') || '';
-    const email    = rawEmail.toLowerCase().trim();
+    const email = (localStorage.getItem('portal_user_email') || '').toLowerCase().trim(); // Admin page always uses real email, not preview
 
     let allBookings = [];
     let promos      = [];

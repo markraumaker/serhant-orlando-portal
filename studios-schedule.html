@@ -773,15 +773,18 @@
   <div class="toast" id="toast"></div>
 
   <script src="shared.js"></script>
+  <script src="preview-mode.js"></script>
   <script>
   (function() {
     const HUB       = 'https://app.serhantorlandohub.com';
     const PRODUCERS = ['daniel.botton@serhant.com', 'hailey@serhant.com'];
+    const OPERATORS = ['mark@serhant.com', 'sarah.raumaker@serhant.com'];
 
-    const rawEmail  = localStorage.getItem('portal_user_email') || '';
-    const email     = rawEmail.toLowerCase().trim();
-    const userName  = localStorage.getItem('portal_user_name') || '';
+    const email     = (window.__previewEmail || localStorage.getItem('portal_user_email') || '').toLowerCase().trim();
+    const userName  = window.__previewName || localStorage.getItem('portal_user_name') || '';
     const firstName = userName.split(' ')[0] || '';
+    const realEmail = (localStorage.getItem('portal_user_email') || '').toLowerCase();
+    const isPreview = OPERATORS.includes(realEmail) && email !== realEmail;
 
     let allBookings  = [];
     let weekOff      = 0;
@@ -830,7 +833,7 @@
     function init() {
       if (!email) return; // auth-check.js handles redirect
 
-      if (!PRODUCERS.includes(email)) {
+      if (!PRODUCERS.includes(email) && !isPreview) {
         el('access-denied').style.display = 'block';
         return;
       }
