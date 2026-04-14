@@ -869,7 +869,7 @@
             allBookings = data.bookings || [];
             // Collect Outlook-only events for this producer
             const myProducer = email === 'daniel.botton@serhant.com' ? 'danny' : 'hailey';
-            const myEvents = (data.events && data.events[myProducer]) || [];
+            const myEvents = data[myProducer] || (data.events && data.events[myProducer]) || [];
             outlookEvents = myEvents.filter(e => e.type === 'outlook');
           } else {
             throw new Error('Calendar endpoint returned ' + r.status);

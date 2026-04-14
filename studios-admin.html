@@ -1241,7 +1241,7 @@
           if (calRes.ok) {
             const calData = await calRes.json();
             allBookings = calData.bookings || [];
-            outlookEvents = calData.events || { danny: [], hailey: [] };
+            outlookEvents = { danny: calData.danny || (calData.events || {}).danny || [], hailey: calData.hailey || (calData.events || {}).hailey || [] };
           } else {
             allBookings = data.bookings || [];
             outlookEvents = { danny: [], hailey: [] };
