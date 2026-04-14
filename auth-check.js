@@ -74,6 +74,12 @@
     return;
   }
 
+  // Leadership redirects to Hub app
+  if (page === 'leadership.html' && ROLES.leadership.indexOf(email) !== -1) {
+    window.location.replace('https://app.serhantorlandohub.com');
+    return;
+  }
+
   // All good — show the page
   document.documentElement.style.visibility = '';
 
