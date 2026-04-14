@@ -11,13 +11,13 @@
     html{scroll-behavior:smooth;}
     body{min-height:100vh;font-family:'Montserrat',sans-serif;background:#06061a;color:white;overflow-x:hidden;}
 
-    :root{--cobalt:#121275;--cobalt-glow:rgba(18,18,117,0.4);}
+    :root{.cobalt:#121275;.cobalt-glow:rgba(18,18,117,0.4);}
 
     /* Hero */
     .hero{
       min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
       text-align:center;padding:60px 24px;position:relative;
-      background:radial-gradient(ellipse at 50% 0%, var(--cobalt-glow) 0%, transparent 60%);
+      background:radial-gradient(ellipse at 50% 0%, var(.cobalt-glow) 0%, transparent 60%);
     }
     .hero::after{
       content:'';position:absolute;bottom:0;left:0;right:0;height:120px;
@@ -67,7 +67,7 @@
     /* CTA section */
     .cta-section{
       padding:80px 24px;text-align:center;
-      background:radial-gradient(ellipse at 50% 100%, var(--cobalt-glow) 0%, transparent 60%);
+      background:radial-gradient(ellipse at 50% 100%, var(.cobalt-glow) 0%, transparent 60%);
     }
     .cta-section h2{font-size:clamp(22px,5vw,32px);font-weight:900;margin-bottom:12px;}
     .cta-sub{font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:32px;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.7;}
@@ -75,12 +75,12 @@
     .cta-btn{
       display:inline-flex;align-items:center;gap:12px;
       padding:18px 40px;border-radius:100px;
-      background:var(--cobalt);color:white;
+      background:var(.cobalt);color:white;
       font-size:15px;font-weight:700;font-family:'Montserrat',sans-serif;
       text-decoration:none;transition:all 0.3s;cursor:pointer;border:none;
-      box-shadow:0 4px 20px var(--cobalt-glow);
+      box-shadow:0 4px 20px var(.cobalt-glow);
     }
-    .cta-btn:hover{transform:translateY(-3px);box-shadow:0 8px 32px var(--cobalt-glow);}
+    .cta-btn:hover{transform:translateY(-3px);box-shadow:0 8px 32px var(.cobalt-glow);}
     .cta-btn svg{width:18px;height:18px;flex-shrink:0;}
 
     .cta-note{font-size:11px;color:rgba(255,255,255,0.2);margin-top:16px;}
@@ -99,7 +99,7 @@
 </head>
 <body>
 
-  <!-- HERO -->
+  <!. HERO .>
   <section class="hero">
     <div class="logo-wrap">
       <img src="assets/logos/SERHANT-Orlando-White.svg" alt="SERHANT. Orlando">
@@ -119,7 +119,7 @@
     </div>
   </section>
 
-  <!-- FEATURES -->
+  <!. FEATURES .>
   <section class="features" id="features">
     <div class="features-label">Everything you need</div>
     <h2>Built for SERHANT. agents.</h2>
@@ -158,7 +158,7 @@
     </div>
   </section>
 
-  <!-- CTA -->
+  <!. CTA .>
   <section class="cta-section">
     <h2>Ready?</h2>
     <p class="cta-sub">Sign in with your SERHANT. Microsoft account. One time, and you're in.</p>
@@ -170,7 +170,7 @@
     <div class="cta-note">One sign-in per device. You won't be asked again.</div>
   </section>
 
-  <!-- FOOTER -->
+  <!. FOOTER .>
   <footer class="footer">
     SERHANT. Orlando / 37 N. Orange Ave #900B, Orlando FL 32801
   </footer>

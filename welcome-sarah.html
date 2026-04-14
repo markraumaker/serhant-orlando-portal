@@ -10,11 +10,11 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     html{scroll-behavior:smooth;}
     body{min-height:100vh;font-family:'Montserrat',sans-serif;background:#06061a;color:white;overflow-x:hidden;}
-    :root{--accent:#121275;--glow:rgba(18,18,117,0.35);}
-    .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 24px;position:relative;background:radial-gradient(ellipse at 50% 0%,var(--glow) 0%,transparent 60%);}
+    :root{.accent:#121275;.glow:rgba(18,18,117,0.35);}
+    .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 24px;position:relative;background:radial-gradient(ellipse at 50% 0%,var(.glow) 0%,transparent 60%);}
     .hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(transparent,#06061a);pointer-events:none;}
     .logo-wrap{margin-bottom:40px;}
-    .logo-wrap img{height:28px;opacity:0.9;}
+    .logo-wrap img{height:72px;opacity:1;}
     .hero h1{font-size:clamp(28px,6vw,48px);font-weight:900;line-height:1.1;margin-bottom:14px;max-width:600px;}
     .hero-sub{font-size:clamp(13px,2vw,15px);color:rgba(255,255,255,0.4);line-height:1.7;max-width:480px;margin-bottom:40px;}
     .cta{display:inline-flex;align-items:center;gap:12px;padding:18px 40px;border-radius:100px;background:white;color:#06061a;font-size:15px;font-weight:700;font-family:'Montserrat',sans-serif;text-decoration:none;transition:all 0.3s;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(255,255,255,0.1);}
@@ -32,11 +32,11 @@
     .card-icon{font-size:24px;margin-bottom:10px;}
     .card-title{font-size:14px;font-weight:800;margin-bottom:4px;}
     .card-desc{font-size:11px;color:rgba(255,255,255,0.35);line-height:1.7;}
-    .cta-section{padding:80px 24px;text-align:center;background:radial-gradient(ellipse at 50% 100%,var(--glow) 0%,transparent 60%);}
+    .cta-section{padding:80px 24px;text-align:center;background:radial-gradient(ellipse at 50% 100%,var(.glow) 0%,transparent 60%);}
     .cta-section h2{font-size:clamp(20px,4vw,28px);font-weight:900;margin-bottom:10px;}
     .cta-section p{font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:28px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.7;}
-    .cta2{display:inline-flex;align-items:center;gap:12px;padding:18px 40px;border-radius:100px;background:var(--accent);color:white;font-size:15px;font-weight:700;font-family:'Montserrat',sans-serif;text-decoration:none;transition:all 0.3s;border:none;cursor:pointer;box-shadow:0 4px 20px var(--glow);}
-    .cta2:hover{transform:translateY(-3px);box-shadow:0 8px 32px var(--glow);}
+    .cta2{display:inline-flex;align-items:center;gap:12px;padding:18px 40px;border-radius:100px;background:var(.accent);color:white;font-size:15px;font-weight:700;font-family:'Montserrat',sans-serif;text-decoration:none;transition:all 0.3s;border:none;cursor:pointer;box-shadow:0 4px 20px var(.glow);}
+    .cta2:hover{transform:translateY(-3px);box-shadow:0 8px 32px var(.glow);}
     .cta2 svg{width:18px;height:18px;}
     .note{font-size:11px;color:rgba(255,255,255,0.2);margin-top:14px;}
     .footer{padding:24px;text-align:center;font-size:11px;color:rgba(255,255,255,0.12);border-top:1px solid rgba(255,255,255,0.05);}
@@ -47,7 +47,7 @@
   <section class="hero">
     <div class="logo-wrap"><img src="assets/logos/SERHANT-Orlando-White.svg" alt="SERHANT. Orlando"></div>
     <h1>Hey Sarah. This is your command center.</h1>
-    <p class="hero-sub">Everything running the office -- rankings, studios, financials, agent activity -- all in one place. Built for you.</p>
+    <p class="hero-sub">Rankings, studios, financials, agent activity. All in one place. Built for you.</p>
     <a href="login.html" class="cta">
       <svg viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
       Sign in with Microsoft
