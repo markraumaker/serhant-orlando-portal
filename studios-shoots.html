@@ -471,6 +471,46 @@
     }
     .btn-reschedule:hover { color: #6868ee; }
     .btn-reschedule:hover::after { transform: scaleX(1); }
+
+    /* Delivery content */
+    .delivery-box {
+      margin: 12px 0;
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(76,175,80,0.06);
+      border: 1px solid rgba(76,175,80,0.15);
+    }
+    .delivery-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: #4caf50; margin-bottom: 10px;
+    }
+    .delivery-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .delivery-item:last-child { border-bottom: none; }
+    .delivery-item-label {
+      font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75);
+    }
+    .delivery-dl-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 8px;
+      background: rgba(76,175,80,0.12); border: 1px solid rgba(76,175,80,0.25);
+      color: #4caf50; font-size: 11px; font-weight: 700;
+      text-decoration: none; transition: all 0.2s;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .delivery-dl-btn:hover { background: rgba(76,175,80,0.2); border-color: rgba(76,175,80,0.4); }
+    .delivery-pay-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 20px; border-radius: 10px; margin-bottom: 12px;
+      background: rgba(255,183,77,0.12); border: 1px solid rgba(255,183,77,0.3);
+      color: #ffb74d; font-size: 12px; font-weight: 700;
+      text-decoration: none; transition: all 0.2s;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .delivery-pay-btn:hover { background: rgba(255,183,77,0.2); }
     .btn-cancel:disabled::after { display: none; }
 
     /* ================================================================
@@ -1110,6 +1150,50 @@
         </div>`;
     }
 
+    function deliverySection(b) {
+      const items = b.delivery_items || [];
+      const hasItems = items.length > 0;
+      const hasUrl = !!b.delivery_url;
+      const needsPayment = b.payment_status === 'pending' && b.total > 0 && b.booking_number;
+
+      if (!hasItems && !hasUrl && !needsPayment) return '';
+
+      let html = '<div class="delivery-box">';
+
+      if (needsPayment) {
+        html += `<a href="https://app.serhantorlandohub.com/studios/pay/${x(b.booking_number)}" class="delivery-pay-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Complete Payment to Access Content
+        </a>`;
+      }
+
+      if (hasItems) {
+        html += '<div class="delivery-label">Your Content</div>';
+        items.forEach(item => {
+          const label = item.label || item.type || 'Content';
+          const url = item.url || item.link || '';
+          if (!url) return;
+          html += `<div class="delivery-item">
+            <span class="delivery-item-label">${x(label)}</span>
+            <div class="delivery-item-actions">
+              <a href="${x(url)}" target="_blank" rel="noopener" class="delivery-dl-btn" title="Download">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                Download
+              </a>
+            </div>
+          </div>`;
+        });
+      } else if (hasUrl && !needsPayment) {
+        html += `<a href="${x(b.delivery_url)}" target="_blank" rel="noopener" class="delivery-dl-btn" style="padding:10px 20px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          Download Content
+        </a>`;
+      }
+
+      html += '</div>';
+      return html;
+    }
+
     function sessionCard(b, idx) {
       const status    = (b.status || 'confirmed').toLowerCase();
       const canCancel = status !== 'cancelled' && status !== 'completed';
@@ -1148,16 +1232,7 @@
 
             <div class="sc-bknum">${x(String(bkNum))}</div>
 
-            ${b.delivery_url ? `
-            <a href="${x(b.delivery_url)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;background:rgba(76,175,80,0.12);border:1px solid rgba(76,175,80,0.3);color:#4caf50;font-size:12px;font-weight:700;text-decoration:none;margin-bottom:12px;transition:all 0.2s;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-              Download Your Content
-            </a>` : ''}
-
-            ${(b.payment_status === 'pending' && b.total > 0 && b.booking_number) ? `
-            <a href="https://app.serhantorlandohub.com/studios/pay/${x(b.booking_number)}" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;background:rgba(255,183,77,0.12);border:1px solid rgba(255,183,77,0.3);color:#ffb74d;font-size:12px;font-weight:700;text-decoration:none;margin-bottom:12px;">
-              Complete Payment
-            </a>` : ''}
+            ${deliverySection(b)}
 
             <div class="sc-actions">
               <span class="badge ${badgeClass(status)}"><span class="badge-dot"></span>${status}</span>

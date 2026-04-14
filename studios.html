@@ -632,37 +632,40 @@
           <input type="hidden" id="booking-time" value="10:00">
         </div>
 
-        <!-- Access Info -->
-        <div class="form-group">
-          <label class="form-label">Access Instructions</label>
-          <div class="form-row">
-            <input type="text" class="form-input" id="booking-gate" placeholder="Gate code">
-            <input type="text" class="form-input" id="booking-lockbox" placeholder="Lockbox code">
-          </div>
-        </div>
-
-        <!-- Sq Ft / Agents on Camera -->
-        <div class="form-group">
-          <div class="form-row">
-            <div>
-              <label class="form-label">Square Footage</label>
-              <input type="text" class="form-input" id="booking-sqft" placeholder="e.g. 3,200">
-            </div>
-            <div>
-              <label class="form-label">Agents on Camera</label>
-              <select class="form-select" id="booking-agents-cam">
-                <option value="1">1 agent</option>
-                <option value="2">2 agents</option>
-                <option value="3">3 agents</option>
-              </select>
+        <!-- Listing-only fields (hidden for non-listing packages) -->
+        <div id="listing-fields">
+          <!-- Access Info -->
+          <div class="form-group">
+            <label class="form-label">Access Instructions</label>
+            <div class="form-row">
+              <input type="text" class="form-input" id="booking-gate" placeholder="Gate code">
+              <input type="text" class="form-input" id="booking-lockbox" placeholder="Lockbox code">
             </div>
           </div>
-        </div>
 
-        <!-- MLS Live Date -->
-        <div class="form-group">
-          <label class="form-label">MLS Go-Live Date (if applicable)</label>
-          <input type="date" class="form-input" id="booking-mls-date">
+          <!-- Sq Ft / Agents on Camera -->
+          <div class="form-group">
+            <div class="form-row">
+              <div>
+                <label class="form-label">Square Footage</label>
+                <input type="text" class="form-input" id="booking-sqft" placeholder="e.g. 3,200">
+              </div>
+              <div>
+                <label class="form-label">Agents on Camera</label>
+                <select class="form-select" id="booking-agents-cam">
+                  <option value="1">1 agent</option>
+                  <option value="2">2 agents</option>
+                  <option value="3">3 agents</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- MLS Live Date -->
+          <div class="form-group">
+            <label class="form-label">MLS Go-Live Date (if applicable)</label>
+            <input type="date" class="form-input" id="booking-mls-date">
+          </div>
         </div>
 
         <!-- Extra Reels -->
@@ -863,6 +866,14 @@
 
         // Reset slot selection
         selectedSlot = null;
+
+        // Show/hide listing-specific fields
+        const LISTING_PKGS = ['standard-listing', 'social-cut-listing', 'signature', 'signature-broker-open', 'builder-feature'];
+        const listingFields = document.getElementById('listing-fields');
+        if (listingFields) {
+          listingFields.style.display = LISTING_PKGS.includes(selectedPkg.id) ? '' : 'none';
+        }
+
         updatePrice();
 
         // Open booking form
