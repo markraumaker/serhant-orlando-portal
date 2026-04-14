@@ -1242,7 +1242,9 @@
       container.innerHTML = '<span style="font-size:12px;color:rgba(255,255,255,0.3);">Loading...</span>';
       el('reschedule-time').value = '';
       try {
-        const pkgId = pendingReschedulePkg || 'standard-listing';
+        let pkgId = pendingReschedulePkg || 'standard-listing';
+        // Normalize: strip trailing '-package' if present (booking stores 'social-cut-listing-package', availability expects 'social-cut-listing')
+        pkgId = pkgId.replace(/-package$/, '');
         const r = await fetch(HUB + '/api/studios/availability?date=' + date + '&package_id=' + encodeURIComponent(pkgId));
         const d = await r.json();
         if (d.slots && d.slots.length > 0) {
