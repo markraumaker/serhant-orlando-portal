@@ -407,9 +407,13 @@
       </div>
 
       <button class="studios-cta" onclick="document.getElementById('packages').scrollIntoView({behavior:'smooth'})">
-        Book Your Session
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Book Your Session Below
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="scroll-arrow"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
       </button>
+      <style>
+        @keyframes bounce-down { 0%,100%{transform:translateY(0)} 50%{transform:translateY(4px)} }
+        .scroll-arrow { animation: bounce-down 1.5s ease-in-out infinite; }
+      </style>
     </div>
   </section>
 
