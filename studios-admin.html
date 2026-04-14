@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Studios Admin | SERHANT. STUDIOS</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="auth-check.js"></script>
+
+  <style>
+    /* ================================================================
+       PAGE BASE
+       ================================================================ */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      background: #06061a;
+      color: rgba(255,255,255,0.82);
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    /* ----------------------------------------------------------------
+       PAGE HEADER
+       ---------------------------------------------------------------- */
+    .page-header {
+      background: linear-gradient(135deg, #08082a 0%, #0d0d3a 50%, #111150 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 100px 24px 52px;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 80% at 0% 50%, rgba(104,104,238,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 60% at 100% 30%, rgba(60,60,200,0.08) 0%, transparent 55%);
+    }
+    .page-header-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1140px;
+      margin: 0 auto;
+    }
+    .page-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      margin-bottom: 20px;
+      transition: color 0.18s;
+    }
+    .page-back:hover { color: rgba(255,255,255,0.7); }
+    .page-back:hover svg { transform: translateX(-3px); }
+    .page-back svg { transition: transform 0.18s; }
+    .page-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #6868ee;
+      margin-bottom: 8px;
+    }
+    .page-title {
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin: 0 0 12px;
+    }
+    .page-header-actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .operator-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(104,104,238,0.12);
+      border: 1px solid rgba(104,104,238,0.25);
+      border-radius: 30px;
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #6868ee;
+      letter-spacing: 0.5px;
+    }
+    .operator-badge span { width: 6px; height: 6px; border-radius: 50%; background: #6868ee; }
+
+    /* ----------------------------------------------------------------
+       MAIN
+       ---------------------------------------------------------------- */
+    .page-main {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ----------------------------------------------------------------
+       SECTION
+       ---------------------------------------------------------------- */
+    .sec-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #6868ee;
+      margin: 0 0 6px;
+    }
+    .sec-heading {
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin: 0 0 28px;
+    }
+
+    /* ----------------------------------------------------------------
+       SKELETON
+       ---------------------------------------------------------------- */
+    @keyframes shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position:  200% 0; }
+    }
+    .skeleton {
+      background: linear-gradient(90deg,
+        rgba(255,255,255,0.04) 25%,
+        rgba(255,255,255,0.08) 50%,
+        rgba(255,255,255,0.04) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+      border-radius: 8px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .skeleton { animation: none; background: rgba(255,255,255,0.05); }
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fadein { animation: fadein 0.3s ease both; }
+
+    /* ----------------------------------------------------------------
+       STATS ROW
+       ---------------------------------------------------------------- */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .stats-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      max-width: 360px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 900px) { .stats-row { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 520px)  { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+
+    .stat-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .stat-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+    .stat-value {
+      font-size: 26px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+    }
+    .stat-value.v-green  { color: #4caf50; }
+    .stat-value.v-red    { color: #ff5252; }
+    .stat-value.v-amber  { color: #ffb74d; }
+    .stat-value.v-purple { color: #6868ee; }
+
+    /* ----------------------------------------------------------------
+       CARD
+       ---------------------------------------------------------------- */
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin: 0 0 20px;
+    }
+
+    /* ----------------------------------------------------------------
+       FILTER ROW
+       ---------------------------------------------------------------- */
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .filter-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-right: 4px;
+    }
+    .filter-btn {
+      padding: 7px 16px;
+      border-radius: 40px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.18s, background 0.18s, color 0.18s;
+    }
+    .filter-btn:hover { border-color: rgba(104,104,238,0.5); color: #fff; }
+    .filter-btn.active {
+      background: rgba(104,104,238,0.18);
+      border-color: #6868ee;
+      color: #fff;
+    }
+
+    /* ----------------------------------------------------------------
+       DATE FILTER
+       ---------------------------------------------------------------- */
+    .date-filter {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .date-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      font-weight: 600;
+    }
+    .date-input {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.18s;
+    }
+    .date-input:focus { border-color: #6868ee; }
+    input[type="date"].date-input::-webkit-calendar-picker-indicator {
+      filter: invert(0.5) sepia(1) hue-rotate(200deg);
+      cursor: pointer;
+    }
+
+    /* ----------------------------------------------------------------
+       TABLE
+       ---------------------------------------------------------------- */
+    .table-wrap { width: 100%; overflow-x: auto; }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .data-table th {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      white-space: nowrap;
+    }
+    .data-table td {
+      padding: 13px 14px;
+      color: rgba(255,255,255,0.75);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: middle;
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .table-empty td {
+      text-align: center;
+      padding: 36px;
+      color: rgba(255,255,255,0.22);
+      font-size: 13px;
+    }
+    @media (max-width: 700px) {
+      .data-table thead { display: none; }
+      .data-table tbody tr {
+        display: block;
+        border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 12px;
+        margin-bottom: 12px;
+        padding: 12px 16px;
+      }
+      .data-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        border-bottom: none;
+        font-size: 12px;
+        gap: 12px;
+      }
+      .data-table td::before {
+        content: attr(data-label);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.28);
+        flex-shrink: 0;
+      }
+      .data-table tr:hover td { background: none; }
+    }
+
+    /* ----------------------------------------------------------------
+       BADGES
+       ---------------------------------------------------------------- */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 40px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .badge-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .b-confirmed { background: rgba(76,175,80,0.14);  border: 1px solid rgba(76,175,80,0.35);  color: #4caf50; }
+    .b-pending   { background: rgba(255,183,77,0.14); border: 1px solid rgba(255,183,77,0.35); color: #ffb74d; }
+    .b-cancelled { background: rgba(255,82,82,0.12);  border: 1px solid rgba(255,82,82,0.3);   color: #ff5252; }
+    .b-completed { background: rgba(255,255,255,0.06);border: 1px solid rgba(255,255,255,0.12);color: rgba(255,255,255,0.4); }
+    .b-free      { background: rgba(76,175,80,0.1);   border: 1px solid rgba(76,175,80,0.25);  color: #4caf50; }
+    .b-paid      { background: rgba(104,104,238,0.12);border: 1px solid rgba(104,104,238,0.3); color: #6868ee; }
+
+    /* ----------------------------------------------------------------
+       BUTTONS
+       ---------------------------------------------------------------- */
+    .btn-cancel {
+      padding: 6px 13px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,82,82,0.4);
+      background: transparent;
+      color: #ff5252;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s;
+      white-space: nowrap;
+    }
+    .btn-cancel:hover { background: rgba(255,82,82,0.1); }
+    .btn-cancel:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .btn-deactivate {
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,82,82,0.3);
+      background: transparent;
+      color: #ff5252;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+    .btn-deactivate:hover { background: rgba(255,82,82,0.1); }
+    .btn-deactivate:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #4040b8, #6868ee);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.18s, transform 0.18s;
+      box-shadow: 0 0 24px rgba(104,104,238,0.25);
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+    .btn-ghost {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: transparent;
+      color: rgba(255,255,255,0.55);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 0.18s, color 0.18s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
+
+    /* ----------------------------------------------------------------
+       PROMO CODES
+       ---------------------------------------------------------------- */
+    .promo-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .promo-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 12px 16px;
+      flex-wrap: wrap;
+    }
+    .promo-code { font-size: 14px; font-weight: 800; color: #fff; letter-spacing: 1px; }
+    .promo-pct  { font-size: 13px; font-weight: 700; color: #4caf50; }
+    .promo-meta { font-size: 12px; color: rgba(255,255,255,0.35); }
+
+    .promo-form {
+      display: grid;
+      grid-template-columns: 1fr 180px auto;
+      gap: 12px;
+      align-items: end;
+    }
+    @media (max-width: 560px) { .promo-form { grid-template-columns: 1fr; } }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+    .form-input, .form-select {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 11px 14px;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.18s;
+    }
+    .form-input::placeholder { color: rgba(255,255,255,0.18); }
+    .form-input:focus, .form-select:focus { border-color: #6868ee; }
+    .form-select option { background: #0d0d2e; color: #fff; }
+
+    .promo-feedback {
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 10px;
+      min-height: 16px;
+    }
+    .promo-feedback.ok  { color: #4caf50; }
+    .promo-feedback.err { color: #ff5252; }
+
+    /* ----------------------------------------------------------------
+       ERROR + EMPTY
+       ---------------------------------------------------------------- */
+    .error-banner {
+      background: rgba(255,82,82,0.06);
+      border: 1px solid rgba(255,82,82,0.2);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 13px;
+      color: rgba(255,82,82,0.85);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 36px 24px;
+      color: rgba(255,255,255,0.25);
+    }
+    .empty-state svg { margin-bottom: 14px; opacity: 0.4; }
+    .empty-state p { font-size: 13px; margin: 0; }
+
+    /* ----------------------------------------------------------------
+       ACCESS DENIED
+       ---------------------------------------------------------------- */
+    .access-denied {
+      max-width: 480px;
+      margin: 80px auto;
+      text-align: center;
+      padding: 0 24px;
+    }
+    .access-denied h2 { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+    .access-denied p { font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.7; margin-bottom: 24px; }
+    .access-denied a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #4040b8, #6868ee);
+      color: #fff;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    /* ----------------------------------------------------------------
+       MODAL
+       ---------------------------------------------------------------- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(6px);
+      z-index: 9200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: #0d0d2e;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 36px 32px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+      transform: scale(0.95);
+      transition: transform 0.2s;
+    }
+    .modal-overlay.open .modal { transform: scale(1); }
+    .modal-icon {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+      background: rgba(255,82,82,0.12);
+      border: 1px solid rgba(255,82,82,0.28);
+      color: #ff5252;
+    }
+    .modal h3 { font-size: 18px; font-weight: 800; color: #fff; margin: 0 0 10px; }
+    .modal p  { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.7; margin: 0 0 18px; }
+    .modal-textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 11px 14px;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      outline: none;
+      resize: vertical;
+      min-height: 72px;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+      transition: border-color 0.18s;
+    }
+    .modal-textarea:focus { border-color: #6868ee; }
+    .modal-textarea::placeholder { color: rgba(255,255,255,0.18); }
+    .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
+    .btn-confirm-cancel {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      background: #ff5252;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.18s;
+    }
+    .btn-confirm-cancel:hover { opacity: 0.85; }
+    .btn-confirm-cancel:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* ----------------------------------------------------------------
+       TOAST
+       ---------------------------------------------------------------- */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: #0d0d2e;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      z-index: 9999;
+      transform: translateY(10px);
+      opacity: 0;
+      transition: transform 0.25s, opacity 0.25s;
+      max-width: 320px;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.t-success { border-color: rgba(76,175,80,0.4); color: #4caf50; }
+    .toast.t-error   { border-color: rgba(255,82,82,0.4); color: #ff5252; }
+
+    /* ----------------------------------------------------------------
+       SECTION DIVIDER
+       ---------------------------------------------------------------- */
+    .sec-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(80,80,220,0.3) 20%, rgba(120,100,255,0.45) 50%, rgba(80,80,220,0.3) 80%, transparent 100%);
+      border: none;
+      margin: 0;
+    }
+
+    @media (max-width: 600px) {
+      .page-header { padding: 90px 16px 40px; }
+      .page-main { padding: 32px 16px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="site-nav" role="navigation">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="SERHANT. Orlando Home">
+        <img src="assets/S-Orlando-White.svg" alt="S. Orlando" style="height:32px;width:auto;">
+      </a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" role="list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="ranks.html">Ranks</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="squad.html">Squad</a></li>
+        <li><a href="studios.html">Studios</a></li>
+        <li><a href="leadership.html" id="leadership-nav-link" style="display:none">LEADERS</a><a href="brain.html">The Brain</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ACCESS DENIED -->
+  <div id="access-denied" style="display:none;">
+    <div class="access-denied">
+      <h2>Access Restricted</h2>
+      <p>This page is only available to Studios administrators.</p>
+      <a href="studios.html">Back to Studios</a>
+    </div>
+  </div>
+
+  <!-- AUTHORIZED CONTENT -->
+  <div id="authorized-content" style="display:none;">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="page-header-inner">
+        <a href="studios.html" class="page-back">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+          Back to Studios
+        </a>
+        <div class="page-eyebrow">SERHANT. STUDIOS</div>
+        <h1 class="page-title" id="page-title">Studios Admin</h1>
+        <div class="page-header-actions">
+          <div class="operator-badge"><span></span><span id="operator-badge-name">Operator</span></div>
+          <a href="studios.html" class="btn-primary" style="margin-top:0;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Book a Session
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="sec-divider">
+
+    <!-- MAIN CONTENT -->
+    <main class="page-main">
+
+      <!-- Error -->
+      <div id="error-banner" style="display:none;" class="error-banner">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+        <span id="error-msg">Unable to load dashboard.</span>
+      </div>
+
+      <!-- Stats skeleton -->
+      <div class="stats-row" id="stats-skeleton">
+        <div class="stat-card"><div class="skeleton" style="height:28px;width:60px;margin-bottom:8px;"></div><div class="skeleton" style="height:10px;width:80%;"></div></div>
+        <div class="stat-card"><div class="skeleton" style="height:28px;width:60px;margin-bottom:8px;"></div><div class="skeleton" style="height:10px;width:80%;"></div></div>
+        <div class="stat-card"><div class="skeleton" style="height:28px;width:60px;margin-bottom:8px;"></div><div class="skeleton" style="height:10px;width:80%;"></div></div>
+        <div class="stat-card"><div class="skeleton" style="height:28px;width:60px;margin-bottom:8px;"></div><div class="skeleton" style="height:10px;width:80%;"></div></div>
+        <div class="stat-card"><div class="skeleton" style="height:28px;width:60px;margin-bottom:8px;"></div><div class="skeleton" style="height:10px;width:80%;"></div></div>
+      </div>
+
+      <!-- Stats (real) -->
+      <div class="stats-row fadein" id="stats-row" style="display:none;">
+        <div class="stat-card">
+          <span class="stat-value v-purple" id="stat-total">--</span>
+          <span class="stat-label">Total Sessions</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value v-green" id="stat-rev">--</span>
+          <span class="stat-label">Revenue</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="stat-free">--</span>
+          <span class="stat-label">Free Sessions</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value v-amber" id="stat-paid">--</span>
+          <span class="stat-label">Paid Sessions</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value v-red" id="stat-cancelled">--</span>
+          <span class="stat-label">Cancelled</span>
+        </div>
+      </div>
+
+      <!-- Producer split -->
+      <div class="stats-split fadein" id="stats-split" style="display:none;">
+        <div class="stat-card">
+          <span class="stat-value v-purple" id="stat-danny" style="font-size:20px;">--</span>
+          <span class="stat-label">Danny's Sessions</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value v-purple" id="stat-hailey" style="font-size:20px;">--</span>
+          <span class="stat-label">Hailey's Sessions</span>
+        </div>
+      </div>
+
+      <!-- Bookings Table -->
+      <div class="card">
+        <p class="card-title">Upcoming Sessions</p>
+
+        <div class="filter-row">
+          <span class="filter-label">Producer</span>
+          <button class="filter-btn active" data-pf="all"    onclick="applyFilter('all')">All</button>
+          <button class="filter-btn"         data-pf="danny"  onclick="applyFilter('danny')">Danny</button>
+          <button class="filter-btn"         data-pf="hailey" onclick="applyFilter('hailey')">Hailey</button>
+        </div>
+
+        <div class="date-filter">
+          <span class="date-label">From</span>
+          <input type="date" class="date-input" id="filter-from" onchange="renderTable()">
+          <span class="date-label">To</span>
+          <input type="date" class="date-input" id="filter-to"   onchange="renderTable()">
+          <button class="filter-btn" onclick="clearDates()">Clear</button>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Agent</th>
+                <th>Package</th>
+                <th>Producer</th>
+                <th>Payment</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="bookings-tbody">
+              <tr><td colspan="9" style="text-align:center;padding:32px;">
+                <div class="skeleton" style="height:12px;width:55%;margin:0 auto 10px;"></div>
+                <div class="skeleton" style="height:12px;width:35%;margin:0 auto;"></div>
+              </td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Promo Code Manager -->
+      <div class="card">
+        <p class="card-title">Promo Codes</p>
+
+        <div class="promo-list" id="promo-list">
+          <div class="skeleton" style="height:48px;border-radius:10px;"></div>
+          <div class="skeleton" style="height:48px;border-radius:10px;margin-top:10px;"></div>
+        </div>
+
+        <div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:20px;">
+          <p class="card-title" style="margin-bottom:14px;">Add New Code</p>
+          <div class="promo-form">
+            <div class="form-group">
+              <label class="form-label">Code</label>
+              <input type="text" id="promo-code-input" class="form-input"
+                placeholder="e.g. SUMMER25" maxlength="30"
+                oninput="this.value = this.value.toUpperCase().replace(/\s/g,'')">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Discount</label>
+              <select id="promo-pct-select" class="form-select">
+                <option value="">Select %</option>
+                <option value="100">100% off (Free)</option>
+                <option value="50">50% off</option>
+                <option value="25">25% off</option>
+              </select>
+            </div>
+            <button class="btn-primary" onclick="createPromo()" style="height:fit-content;align-self:end;">Add Code</button>
+          </div>
+          <div class="promo-feedback" id="promo-feedback"></div>
+        </div>
+      </div>
+
+    </main>
+
+  </div><!-- end authorized-content -->
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-bottom-bar">
+        <span class="footer-copy">&copy; 2026 SERHANT. ORLANDO. All rights reserved.</span>
+        <span class="footer-addr">37 N. Orange Ave #900B, Orlando FL 32801</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CANCEL MODAL -->
+  <div class="modal-overlay" id="cancel-modal">
+    <div class="modal">
+      <div class="modal-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </div>
+      <h3>Cancel Session?</h3>
+      <p id="cancel-desc">This will cancel the booking. This cannot be undone.</p>
+      <textarea class="modal-textarea" id="cancel-reason" placeholder="Reason for cancellation (optional)"></textarea>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="closeModal()">Keep It</button>
+        <button class="btn-confirm-cancel" id="cancel-confirm-btn" onclick="doCancel()">Cancel Session</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script src="shared.js"></script>
+  <script>
+  (function() {
+    const HUB       = 'https://app.serhantorlandohub.com';
+    const OPERATORS = ['mark@serhant.com', 'sarah.raumaker@serhant.com'];
+
+    const rawEmail  = localStorage.getItem('portal_user_email') || '';
+    const email     = rawEmail.toLowerCase().trim();
+    const userName  = localStorage.getItem('portal_user_name') || '';
+    const firstName = userName.split(' ')[0] || '';
+
+    let allBookings      = [];
+    let producerFilter   = 'all';
+    let pendingCancelId  = null;
+    let pendingCancelEmail = null;
+
+    /* ---- helpers ---- */
+    function el(id) { return document.getElementById(id); }
+    function enc(s) { return encodeURIComponent(s); }
+    function x(str) {
+      return String(str)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+    function fmtDate(raw) {
+      if (!raw) return '';
+      try {
+        const d = new Date(String(raw).includes('T') ? raw : raw.substring(0,10) + 'T00:00:00');
+        return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+      } catch { return raw; }
+    }
+    function fmtTime(raw) {
+      if (!raw) return '';
+      try {
+        if (String(raw).includes('T')) return new Date(raw).toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+        const [h, m] = String(raw).split(':').map(Number);
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        return (h % 12 || 12) + ':' + String(m || 0).padStart(2,'0') + ' ' + ampm;
+      } catch { return raw; }
+    }
+    function fmtCents(cents) {
+      if (cents == null) return '--';
+      return '$' + (cents / 100).toLocaleString('en-US', { maximumFractionDigits: 0 });
+    }
+    function badgeClass(status) {
+      return { confirmed:'b-confirmed', pending:'b-pending', cancelled:'b-cancelled', completed:'b-completed' }[status] || 'b-confirmed';
+    }
+
+    let toastTimer = null;
+    function showToast(msg, type) {
+      const t = el('toast');
+      t.textContent = msg;
+      t.className = 'toast t-' + (type||'success') + ' show';
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 3800);
+    }
+
+    /* ---- gate check ---- */
+    function init() {
+      if (!email) return;
+      if (!OPERATORS.includes(email)) {
+        el('access-denied').style.display = 'block';
+        return;
+      }
+      el('authorized-content').style.display = 'block';
+      if (firstName) {
+        el('page-title').textContent = 'Studios Admin';
+        el('operator-badge-name').textContent = firstName + ' - Operator';
+      }
+      loadData();
+    }
+
+    /* ---- load data ---- */
+    async function loadData() {
+      try {
+        const r = await fetch(HUB + '/api/studios/admin?email=' + enc(email) + '&view=upcoming');
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const data = await r.json();
+
+        renderStats(data.stats || {});
+        allBookings = data.bookings || [];
+        renderTable();
+        renderPromos(data.promo_codes || []);
+      } catch(e) {
+        el('stats-skeleton').style.display = 'none';
+        el('error-banner').style.display = 'flex';
+        el('error-msg').textContent = 'Failed to load dashboard: ' + e.message;
+      }
+    }
+
+    /* ---- stats ---- */
+    function renderStats(stats) {
+      el('stats-skeleton').style.display = 'none';
+      el('stats-row').style.display = 'grid';
+      el('stats-split').style.display = 'grid';
+
+      const rev = stats.total_revenue_cents != null
+        ? '$' + (stats.total_revenue_cents / 100).toLocaleString('en-US', { maximumFractionDigits: 0 })
+        : (stats.total_revenue != null ? '$' + Number(stats.total_revenue).toLocaleString('en-US', { maximumFractionDigits: 0 }) : '--');
+
+      el('stat-total').textContent     = stats.total_bookings  ?? '--';
+      el('stat-rev').textContent       = rev;
+      el('stat-free').textContent      = stats.free_sessions   ?? '--';
+      el('stat-paid').textContent      = stats.paid_sessions   ?? '--';
+      el('stat-cancelled').textContent = stats.cancelled       ?? '--';
+      el('stat-danny').textContent     = stats.danny_sessions  ?? '--';
+      el('stat-hailey').textContent    = stats.hailey_sessions ?? '--';
+    }
+
+    /* ---- table ---- */
+    window.applyFilter = function(producer) {
+      producerFilter = producer;
+      document.querySelectorAll('[data-pf]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.pf === producer);
+      });
+      renderTable();
+    };
+
+    window.clearDates = function() {
+      el('filter-from').value = '';
+      el('filter-to').value   = '';
+      renderTable();
+    };
+
+    window.renderTable = function() {
+      const tbody   = el('bookings-tbody');
+      const fromVal = el('filter-from').value;
+      const toVal   = el('filter-to').value;
+      const from    = fromVal ? new Date(fromVal + 'T00:00:00') : null;
+      const to      = toVal   ? new Date(toVal   + 'T23:59:59') : null;
+
+      let filtered = producerFilter === 'all'
+        ? allBookings
+        : allBookings.filter(b => (b.producer || '').toLowerCase().includes(producerFilter));
+
+      if (from || to) {
+        filtered = filtered.filter(b => {
+          const raw = b.session_date || b.date || b.booking_date || '';
+          if (!raw) return true;
+          const d = new Date(raw.substring(0,10) + 'T00:00:00');
+          if (from && d < from) return false;
+          if (to   && d > to)   return false;
+          return true;
+        });
+      }
+
+      if (!filtered.length) {
+        tbody.innerHTML = '<tr class="table-empty"><td colspan="9">No sessions match the current filters.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(b => {
+        const status    = (b.status || 'confirmed').toLowerCase();
+        const badgeCls  = badgeClass(status);
+        const payStatus = (b.payment_status || b.pay_status || '').toLowerCase();
+        const payBadge  = payStatus === 'free' ? 'b-free' : payStatus === 'paid' ? 'b-paid' : 'b-pending';
+        const payLabel  = payStatus || (b.price_cents === 0 || b.price === 0 ? 'free' : 'pending');
+        const total     = b.price_cents != null
+          ? fmtCents(b.price_cents)
+          : (b.price != null ? '$' + Number(b.price).toLocaleString('en-US', { maximumFractionDigits: 0 }) : '--');
+        const canCancel = status !== 'cancelled' && status !== 'completed';
+        const bId       = b.id || b.booking_id || '';
+
+        return `<tr>
+          <td data-label="Date">${fmtDate(b.session_date || b.date || b.booking_date)}</td>
+          <td data-label="Time">${fmtTime(b.start_time || b.time)}</td>
+          <td data-label="Agent">${x(b.agent_name || b.agent || '')}</td>
+          <td data-label="Package">${x(b.package_name || b.package || '')}</td>
+          <td data-label="Producer">${x(b.producer || '')}</td>
+          <td data-label="Payment">
+            <span class="badge ${payBadge}"><span class="badge-dot"></span>${payLabel}</span>
+          </td>
+          <td data-label="Total" style="font-weight:700;">${total}</td>
+          <td data-label="Status">
+            <span class="badge ${badgeCls}"><span class="badge-dot"></span>${status}</span>
+          </td>
+          <td data-label="">
+            ${canCancel ? `<button class="btn-cancel"
+              onclick="openCancel('${x(String(bId))}','${x(b.agent_email || email)}',
+                'Cancel ${x(b.agent_name || 'this')}\\'s session on ${fmtDate(b.session_date || b.date || b.booking_date)}?')">
+              Cancel
+            </button>` : ''}
+          </td>
+        </tr>`;
+      }).join('');
+    };
+
+    /* ---- promos ---- */
+    function renderPromos(codes) {
+      const list = el('promo-list');
+      if (!codes.length) {
+        list.innerHTML = '<div class="empty-state" style="padding:20px 0;"><p>No active promo codes.</p></div>';
+        return;
+      }
+      list.innerHTML = codes.map(c => `
+        <div class="promo-row" id="promo-${x(c.code)}">
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+            <span class="promo-code">${x(c.code)}</span>
+            <span class="promo-pct">${c.discount_percent}% off</span>
+            ${c.uses != null ? `<span class="promo-meta">${c.uses} use${c.uses !== 1 ? 's' : ''}</span>` : ''}
+            ${c.created ? `<span class="promo-meta">Created ${fmtDate(c.created)}</span>` : ''}
+          </div>
+          <button class="btn-deactivate" onclick="deactivatePromo('${x(c.code)}',this)">Deactivate</button>
+        </div>`
+      ).join('');
+    }
+
+    window.createPromo = async function() {
+      const codeEl = el('promo-code-input');
+      const pctEl  = el('promo-pct-select');
+      const fb     = el('promo-feedback');
+      const code   = codeEl.value.trim().toUpperCase();
+      const pct    = parseInt(pctEl.value, 10);
+
+      if (!code) { fb.className = 'promo-feedback err'; fb.textContent = 'Enter a code.'; return; }
+      if (isNaN(pct) || pct < 1 || pct > 100) { fb.className = 'promo-feedback err'; fb.textContent = 'Select a discount percentage.'; return; }
+
+      fb.className = 'promo-feedback'; fb.textContent = 'Creating...';
+      try {
+        const r = await fetch(HUB + '/api/studios/promo/manage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, code, discount_percent: pct })
+        });
+        if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || d.message || 'HTTP ' + r.status); }
+        codeEl.value = ''; pctEl.value = '';
+        fb.className = 'promo-feedback ok'; fb.textContent = 'Code "' + code + '" created.';
+        showToast('Promo code ' + code + ' created.', 'success');
+        loadData();
+      } catch(e) {
+        fb.className = 'promo-feedback err'; fb.textContent = 'Error: ' + e.message;
+      }
+    };
+
+    window.deactivatePromo = async function(code, btn) {
+      if (!confirm('Deactivate promo code "' + code + '"?')) return;
+      btn.disabled = true; btn.textContent = '...';
+      try {
+        const r = await fetch(HUB + '/api/studios/promo/manage', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, code })
+        });
+        if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || d.message || 'HTTP ' + r.status); }
+        showToast('"' + code + '" deactivated.', 'success');
+        const row = el('promo-' + code);
+        if (row) { row.style.opacity = '0'; row.style.transition = 'opacity 0.3s'; setTimeout(() => row.remove(), 320); }
+      } catch(e) {
+        btn.disabled = false; btn.textContent = 'Deactivate';
+        showToast('Error: ' + e.message, 'error');
+      }
+    };
+
+    /* ---- cancel modal ---- */
+    window.openCancel = function(bookingId, bookingEmail, desc) {
+      pendingCancelId    = bookingId;
+      pendingCancelEmail = bookingEmail;
+      el('cancel-desc').textContent = desc || 'Cancel this session?';
+      el('cancel-reason').value = '';
+      el('cancel-confirm-btn').disabled = false;
+      el('cancel-confirm-btn').textContent = 'Cancel Session';
+      el('cancel-modal').classList.add('open');
+    };
+
+    window.closeModal = function() {
+      el('cancel-modal').classList.remove('open');
+    };
+
+    el('cancel-modal').addEventListener('click', e => {
+      if (e.target === el('cancel-modal')) closeModal();
+    });
+
+    window.doCancel = async function() {
+      if (!pendingCancelId) return;
+      const btn    = el('cancel-confirm-btn');
+      const reason = el('cancel-reason').value.trim();
+      btn.disabled = true; btn.textContent = 'Cancelling...';
+      try {
+        const r = await fetch(HUB + '/api/studios/cancel', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ booking_id: pendingCancelId, reason: reason || null, email: pendingCancelEmail || email })
+        });
+        if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || d.message || 'HTTP ' + r.status); }
+        closeModal();
+        showToast('Session cancelled.', 'success');
+        loadData();
+      } catch(e) {
+        showToast('Could not cancel: ' + e.message, 'error');
+        btn.disabled = false; btn.textContent = 'Cancel Session';
+      }
+    };
+
+    /* ---- boot ---- */
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => setTimeout(init, 150));
+    } else {
+      setTimeout(init, 150);
+    }
+
+  })();
+  </script>
+</body>
+</html>

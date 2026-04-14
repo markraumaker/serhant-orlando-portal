@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schedule | SERHANT. STUDIOS</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="auth-check.js"></script>
+
+  <style>
+    /* ================================================================
+       PAGE BASE
+       ================================================================ */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      background: #06061a;
+      color: rgba(255,255,255,0.82);
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    /* ----------------------------------------------------------------
+       PAGE HEADER
+       ---------------------------------------------------------------- */
+    .page-header {
+      background: linear-gradient(135deg, #08082a 0%, #0d0d3a 50%, #111150 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 100px 24px 52px;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 80% at 0% 50%, rgba(104,104,238,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 60% at 100% 30%, rgba(60,60,200,0.08) 0%, transparent 55%);
+    }
+    .page-header-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1140px;
+      margin: 0 auto;
+    }
+    .page-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      margin-bottom: 20px;
+      transition: color 0.18s;
+    }
+    .page-back:hover { color: rgba(255,255,255,0.7); }
+    .page-back:hover svg { transform: translateX(-3px); }
+    .page-back svg { transition: transform 0.18s; }
+    .page-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #6868ee;
+      margin-bottom: 8px;
+    }
+    .page-title {
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin: 0 0 12px;
+    }
+    .page-subtitle {
+      font-size: 14px;
+      color: rgba(255,255,255,0.4);
+    }
+    .producer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(104,104,238,0.12);
+      border: 1px solid rgba(104,104,238,0.25);
+      border-radius: 30px;
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #6868ee;
+      letter-spacing: 0.5px;
+      margin-top: 16px;
+    }
+    .producer-badge span {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #6868ee;
+    }
+
+    /* ----------------------------------------------------------------
+       MAIN
+       ---------------------------------------------------------------- */
+    .page-main {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ----------------------------------------------------------------
+       SECTION
+       ---------------------------------------------------------------- */
+    .sec-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #6868ee;
+      margin: 0 0 6px;
+    }
+    .sec-heading {
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin: 0 0 28px;
+    }
+
+    /* ----------------------------------------------------------------
+       SKELETON
+       ---------------------------------------------------------------- */
+    @keyframes shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position:  200% 0; }
+    }
+    .skeleton {
+      background: linear-gradient(90deg,
+        rgba(255,255,255,0.04) 25%,
+        rgba(255,255,255,0.08) 50%,
+        rgba(255,255,255,0.04) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+      border-radius: 8px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .skeleton { animation: none; background: rgba(255,255,255,0.05); }
+    }
+
+    /* ----------------------------------------------------------------
+       FADE IN
+       ---------------------------------------------------------------- */
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fadein { animation: fadein 0.3s ease both; }
+
+    /* ----------------------------------------------------------------
+       WEEK NAVIGATION
+       ---------------------------------------------------------------- */
+    .week-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .week-label {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      flex: 1;
+    }
+    .week-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.6);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.18s, color 0.18s;
+    }
+    .week-btn:hover { border-color: #6868ee; color: #fff; }
+    .week-today-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.55);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 0.18s, color 0.18s;
+    }
+    .week-today-btn:hover { border-color: #6868ee; color: #fff; }
+
+    /* ----------------------------------------------------------------
+       5-DAY CALENDAR GRID (Mon-Fri)
+       ---------------------------------------------------------------- */
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+    .cal-grid-skel {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 700px) {
+      .cal-grid, .cal-grid-skel { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    }
+    @media (max-width: 420px) {
+      .cal-grid, .cal-grid-skel { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .day-col {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .day-header {
+      text-align: center;
+      padding: 8px 4px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .day-header.today {
+      border-color: rgba(104,104,238,0.5);
+      background: rgba(104,104,238,0.1);
+    }
+    .day-name {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      display: block;
+      margin-bottom: 3px;
+    }
+    .day-num {
+      font-size: 18px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.5);
+      display: block;
+      line-height: 1;
+    }
+    .day-header.today .day-num { color: #6868ee; }
+
+    .cal-chip {
+      background: rgba(104,104,238,0.14);
+      border: 1px solid rgba(104,104,238,0.28);
+      border-radius: 8px;
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: border-color 0.18s, background 0.18s;
+    }
+    .cal-chip:hover { border-color: #6868ee; background: rgba(104,104,238,0.22); }
+    .cal-chip.chip-cancelled { background: rgba(255,82,82,0.08); border-color: rgba(255,82,82,0.25); }
+    .chip-time  { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.9); display: block; }
+    .chip-agent { font-size: 10px; color: rgba(255,255,255,0.5); display: block; margin-top: 2px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .chip-pkg   { font-size: 9px; color: rgba(104,104,238,0.8); display: block; margin-top: 2px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .cal-empty  { font-size: 10px; color: rgba(255,255,255,0.12); text-align: center; padding: 12px 0; }
+
+    /* ----------------------------------------------------------------
+       DETAIL CARDS
+       ---------------------------------------------------------------- */
+    .sessions-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 28px;
+    }
+    .sessions-card-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin: 0 0 20px;
+    }
+    .sessions-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+    .detail-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 24px;
+      transition: border-color 0.2s;
+    }
+    .detail-card:hover { border-color: rgba(104,104,238,0.28); }
+    .dc-date { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6868ee; margin-bottom: 4px; }
+    .dc-time { font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -0.02em; margin-bottom: 2px; }
+    .dc-pkg  { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 18px; }
+    .dc-divider { height: 1px; background: rgba(255,255,255,0.07); margin-bottom: 16px; }
+    .dc-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .dc-row:last-child { margin-bottom: 0; }
+    .dc-row svg { width: 15px; height: 15px; color: rgba(255,255,255,0.28); flex-shrink: 0; margin-top: 1px; }
+    .dc-row strong { color: rgba(255,255,255,0.88); font-weight: 600; }
+    .dc-row a { color: #6868ee; text-decoration: none; }
+    .dc-row a:hover { text-decoration: underline; }
+    .dc-bknum { font-size: 10px; color: rgba(255,255,255,0.2); font-weight: 600; margin: 14px 0; }
+    .dc-code-pill {
+      display: inline-block;
+      background: rgba(255,183,77,0.12);
+      border: 1px solid rgba(255,183,77,0.28);
+      border-radius: 5px;
+      padding: 2px 7px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffb74d;
+      letter-spacing: 0.5px;
+    }
+    .dc-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .dc-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    /* ----------------------------------------------------------------
+       BADGES
+       ---------------------------------------------------------------- */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 40px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .badge-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .b-confirmed { background: rgba(76,175,80,0.14);  border: 1px solid rgba(76,175,80,0.35);  color: #4caf50; }
+    .b-pending   { background: rgba(255,183,77,0.14); border: 1px solid rgba(255,183,77,0.35); color: #ffb74d; }
+    .b-cancelled { background: rgba(255,82,82,0.12);  border: 1px solid rgba(255,82,82,0.3);   color: #ff5252; }
+    .b-completed { background: rgba(255,255,255,0.06);border: 1px solid rgba(255,255,255,0.12);color: rgba(255,255,255,0.4); }
+
+    /* ----------------------------------------------------------------
+       BUTTONS
+       ---------------------------------------------------------------- */
+    .btn-cancel {
+      padding: 6px 13px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,82,82,0.4);
+      background: transparent;
+      color: #ff5252;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s;
+      white-space: nowrap;
+    }
+    .btn-cancel:hover { background: rgba(255,82,82,0.1); }
+    .btn-cancel:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .btn-reschedule {
+      padding: 6px 13px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,183,77,0.4);
+      background: transparent;
+      color: #ffb74d;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s;
+      white-space: nowrap;
+    }
+    .btn-reschedule:hover { background: rgba(255,183,77,0.1); }
+
+    .btn-ghost {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: transparent;
+      color: rgba(255,255,255,0.55);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 0.18s, color 0.18s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
+
+    /* ----------------------------------------------------------------
+       ERROR STATE
+       ---------------------------------------------------------------- */
+    .error-banner {
+      background: rgba(255,82,82,0.06);
+      border: 1px solid rgba(255,82,82,0.2);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 13px;
+      color: rgba(255,82,82,0.85);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    /* ----------------------------------------------------------------
+       EMPTY STATE
+       ---------------------------------------------------------------- */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 44px 24px;
+      color: rgba(255,255,255,0.25);
+    }
+    .empty-state svg { margin-bottom: 14px; opacity: 0.4; }
+    .empty-state p { font-size: 13px; line-height: 1.7; max-width: 30ch; margin: 0; }
+
+    /* ----------------------------------------------------------------
+       MODALS
+       ---------------------------------------------------------------- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(6px);
+      z-index: 9200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: #0d0d2e;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 36px 32px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+      transform: scale(0.95);
+      transition: transform 0.2s;
+    }
+    .modal-overlay.open .modal { transform: scale(1); }
+    .modal-icon {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .modal-icon.cancel-icon { background: rgba(255,82,82,0.12); border: 1px solid rgba(255,82,82,0.28); color: #ff5252; }
+    .modal-icon.reschedule-icon { background: rgba(255,183,77,0.12); border: 1px solid rgba(255,183,77,0.28); color: #ffb74d; }
+    .modal h3 { font-size: 18px; font-weight: 800; color: #fff; margin: 0 0 10px; }
+    .modal p  { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.7; margin: 0 0 18px; }
+    .modal-textarea, .modal-input {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 11px 14px;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.18s;
+    }
+    .modal-textarea { resize: vertical; min-height: 72px; margin-bottom: 20px; }
+    .modal-input { margin-bottom: 12px; }
+    .modal-textarea:focus, .modal-input:focus { border-color: #6868ee; }
+    .modal-textarea::placeholder, .modal-input::placeholder { color: rgba(255,255,255,0.18); }
+    .modal-form-label {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 6px;
+    }
+    .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
+
+    .btn-confirm-cancel {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      background: #ff5252;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.18s;
+    }
+    .btn-confirm-cancel:hover { opacity: 0.85; }
+    .btn-confirm-cancel:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .btn-confirm-reschedule {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      background: #ffb74d;
+      color: #0d0d2e;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: opacity 0.18s;
+    }
+    .btn-confirm-reschedule:hover { opacity: 0.85; }
+    .btn-confirm-reschedule:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* ----------------------------------------------------------------
+       TOAST
+       ---------------------------------------------------------------- */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: #0d0d2e;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      z-index: 9999;
+      transform: translateY(10px);
+      opacity: 0;
+      transition: transform 0.25s, opacity 0.25s;
+      max-width: 320px;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.t-success { border-color: rgba(76,175,80,0.4); color: #4caf50; }
+    .toast.t-error   { border-color: rgba(255,82,82,0.4); color: #ff5252; }
+
+    /* ----------------------------------------------------------------
+       SECTION DIVIDER
+       ---------------------------------------------------------------- */
+    .sec-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(80,80,220,0.3) 20%, rgba(120,100,255,0.45) 50%, rgba(80,80,220,0.3) 80%, transparent 100%);
+      border: none;
+      margin: 0;
+    }
+
+    /* ----------------------------------------------------------------
+       ACCESS DENIED
+       ---------------------------------------------------------------- */
+    .access-denied {
+      max-width: 480px;
+      margin: 80px auto;
+      text-align: center;
+      padding: 0 24px;
+    }
+    .access-denied h2 { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+    .access-denied p { font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.7; margin-bottom: 24px; }
+    .access-denied a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #4040b8, #6868ee);
+      color: #fff;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 600px) {
+      .page-header { padding: 90px 16px 40px; }
+      .page-main { padding: 32px 16px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="site-nav" role="navigation">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="SERHANT. Orlando Home">
+        <img src="assets/S-Orlando-White.svg" alt="S. Orlando" style="height:32px;width:auto;">
+      </a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" role="list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="ranks.html">Ranks</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="squad.html">Squad</a></li>
+        <li><a href="studios.html">Studios</a></li>
+        <li><a href="leadership.html" id="leadership-nav-link" style="display:none">LEADERS</a><a href="brain.html">The Brain</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ACCESS DENIED (hidden until auth resolves) -->
+  <div id="access-denied" style="display:none;">
+    <div class="access-denied">
+      <h2>Access Restricted</h2>
+      <p>This page is only available to producers. If you need to book a session, head back to Studios.</p>
+      <a href="studios.html">Back to Studios</a>
+    </div>
+  </div>
+
+  <!-- AUTHORIZED CONTENT (hidden until auth resolves) -->
+  <div id="authorized-content" style="display:none;">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="page-header-inner">
+        <a href="studios.html" class="page-back">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+          Back to Studios
+        </a>
+        <div class="page-eyebrow">SERHANT. STUDIOS</div>
+        <h1 class="page-title" id="page-title">Your Schedule</h1>
+        <div class="producer-badge">
+          <span></span>
+          <span id="producer-badge-name">Producer</span>
+        </div>
+      </div>
+    </div>
+
+    <hr class="sec-divider">
+
+    <!-- MAIN CONTENT -->
+    <main class="page-main">
+
+      <!-- Error -->
+      <div id="error-banner" style="display:none;" class="error-banner">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+        <span id="error-msg">Unable to load your schedule.</span>
+      </div>
+
+      <!-- Section heading -->
+      <p class="sec-label">Schedule</p>
+      <h2 class="sec-heading" id="schedule-heading">This Week</h2>
+
+      <!-- Week navigation -->
+      <div class="week-nav">
+        <button class="week-btn" onclick="weekOffset(-1)" title="Previous week">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span class="week-label" id="week-label">Loading...</span>
+        <button class="week-btn" onclick="weekOffset(1)" title="Next week">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <button class="week-today-btn" onclick="resetWeek()">Today</button>
+      </div>
+
+      <!-- Calendar skeleton -->
+      <div class="cal-grid-skel" id="cal-skeleton">
+        <div class="day-col"><div class="day-header skeleton" style="height:56px;"></div></div>
+        <div class="day-col"><div class="day-header skeleton" style="height:56px;"></div></div>
+        <div class="day-col"><div class="day-header skeleton" style="height:56px;"></div></div>
+        <div class="day-col"><div class="day-header skeleton" style="height:56px;"></div></div>
+        <div class="day-col"><div class="day-header skeleton" style="height:56px;"></div></div>
+      </div>
+
+      <!-- Calendar (real) -->
+      <div class="cal-grid" id="cal-grid" style="display:none;"></div>
+
+      <!-- Session detail cards -->
+      <div class="sessions-card" id="sessions-card" style="display:none;">
+        <p class="sessions-card-title" id="sessions-card-title">Sessions This Week</p>
+        <div class="sessions-detail-grid" id="sessions-detail-grid"></div>
+      </div>
+
+    </main>
+
+  </div><!-- end authorized-content -->
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-bottom-bar">
+        <span class="footer-copy">&copy; 2026 SERHANT. ORLANDO. All rights reserved.</span>
+        <span class="footer-addr">37 N. Orange Ave #900B, Orlando FL 32801</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CANCEL MODAL -->
+  <div class="modal-overlay" id="cancel-modal">
+    <div class="modal">
+      <div class="modal-icon cancel-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </div>
+      <h3>Cancel Session?</h3>
+      <p id="cancel-desc">This will cancel the booking. This cannot be undone.</p>
+      <textarea class="modal-textarea" id="cancel-reason" placeholder="Reason for cancellation (optional)"></textarea>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="closeModal('cancel-modal')">Keep It</button>
+        <button class="btn-confirm-cancel" id="cancel-confirm-btn" onclick="doCancel()">Cancel Session</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESCHEDULE MODAL -->
+  <div class="modal-overlay" id="reschedule-modal">
+    <div class="modal">
+      <div class="modal-icon reschedule-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h4v4"/></svg>
+      </div>
+      <h3>Reschedule Session</h3>
+      <p id="reschedule-desc">Choose a new date and time for this session.</p>
+      <label class="modal-form-label">New Date</label>
+      <input type="date" class="modal-input" id="reschedule-date">
+      <label class="modal-form-label">New Time</label>
+      <input type="time" class="modal-input" id="reschedule-time">
+      <label class="modal-form-label">Note to Agent (optional)</label>
+      <textarea class="modal-textarea" id="reschedule-note" placeholder="e.g. Moved due to schedule conflict" style="min-height:56px;"></textarea>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="closeModal('reschedule-modal')">Cancel</button>
+        <button class="btn-confirm-reschedule" id="reschedule-confirm-btn" onclick="doReschedule()">Confirm Reschedule</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script src="shared.js"></script>
+  <script>
+  (function() {
+    const HUB       = 'https://app.serhantorlandohub.com';
+    const PRODUCERS = ['daniel.botton@serhant.com', 'hailey@serhant.com'];
+
+    const rawEmail  = localStorage.getItem('portal_user_email') || '';
+    const email     = rawEmail.toLowerCase().trim();
+    const userName  = localStorage.getItem('portal_user_name') || '';
+    const firstName = userName.split(' ')[0] || '';
+
+    let allBookings  = [];
+    let weekOff      = 0;
+    let pendingCancelId    = null;
+    let pendingCancelEmail = null;
+    let pendingRescheduleId = null;
+
+    /* ---- helpers ---- */
+    function el(id) { return document.getElementById(id); }
+    function enc(s) { return encodeURIComponent(s); }
+    function x(str) {
+      return String(str)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+    function fmtDate(raw) {
+      if (!raw) return '';
+      try {
+        const d = new Date(String(raw).includes('T') ? raw : raw.substring(0,10) + 'T00:00:00');
+        return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+      } catch { return raw; }
+    }
+    function fmtTime(raw) {
+      if (!raw) return '';
+      try {
+        if (String(raw).includes('T')) return new Date(raw).toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+        const [h, m] = String(raw).split(':').map(Number);
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        return (h % 12 || 12) + ':' + String(m || 0).padStart(2,'0') + ' ' + ampm;
+      } catch { return raw; }
+    }
+    function badgeClass(status) {
+      return { confirmed:'b-confirmed', pending:'b-pending', cancelled:'b-cancelled', completed:'b-completed' }[status] || 'b-confirmed';
+    }
+
+    let toastTimer = null;
+    function showToast(msg, type) {
+      const t = el('toast');
+      t.textContent = msg;
+      t.className = 'toast t-' + (type||'success') + ' show';
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 3800);
+    }
+
+    /* ---- gate check ---- */
+    function init() {
+      if (!email) return; // auth-check.js handles redirect
+
+      if (!PRODUCERS.includes(email)) {
+        el('access-denied').style.display = 'block';
+        return;
+      }
+
+      el('authorized-content').style.display = 'block';
+
+      // Set names
+      if (firstName) {
+        el('page-title').textContent = firstName + "'s Schedule";
+        el('producer-badge-name').textContent = firstName + ' - Producer';
+      }
+
+      loadSchedule();
+    }
+
+    /* ---- load data ---- */
+    async function loadSchedule() {
+      try {
+        const r = await fetch(HUB + '/api/studios/admin?email=' + enc(email) + '&view=upcoming');
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const data = await r.json();
+        allBookings = data.bookings || [];
+        el('cal-skeleton').style.display = 'none';
+        el('cal-grid').style.display = 'grid';
+        renderWeek();
+      } catch(e) {
+        el('cal-skeleton').style.display = 'none';
+        el('error-banner').style.display = 'flex';
+        el('error-msg').textContent = 'Could not load schedule: ' + e.message;
+      }
+    }
+
+    /* ---- render week ---- */
+    function renderWeek() {
+      const today = new Date();
+      today.setHours(0,0,0,0);
+
+      // Start of the week (Monday)
+      const dayOfWeek = today.getDay(); // 0=Sun
+      const diffToMon = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+      const weekStart = new Date(today);
+      weekStart.setDate(today.getDate() + diffToMon + (weekOff * 7));
+
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const days   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+      // Week end (Friday)
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 4);
+
+      el('week-label').textContent =
+        months[weekStart.getMonth()] + ' ' + weekStart.getDate() +
+        ' - ' +
+        months[weekEnd.getMonth()] + ' ' + weekEnd.getDate() + ', ' + weekEnd.getFullYear();
+
+      // Map bookings by date
+      const byDay = {};
+      allBookings.forEach(b => {
+        const raw = b.session_date || b.date || b.booking_date || '';
+        if (!raw) return;
+        const key = raw.substring(0,10);
+        if (!byDay[key]) byDay[key] = [];
+        byDay[key].push(b);
+      });
+
+      // Build 5 Mon-Fri columns
+      const grid = el('cal-grid');
+      grid.innerHTML = '';
+      const weekBookings = [];
+
+      for (let i = 0; i < 5; i++) {
+        const d = new Date(weekStart);
+        d.setDate(weekStart.getDate() + i);
+        const key     = d.toISOString().substring(0,10);
+        const isToday = d.getTime() === today.getTime();
+        const dayBks  = byDay[key] || [];
+        if (dayBks.length) weekBookings.push(...dayBks);
+
+        const chips = dayBks.map(b => {
+          const cancelled = (b.status || '').toLowerCase() === 'cancelled';
+          const bId = b.id || b.booking_id || '';
+          return `<div class="cal-chip ${cancelled ? 'chip-cancelled' : ''}"
+            onclick="scrollToCard('card-${x(String(bId))}')">
+            <span class="chip-time">${fmtTime(b.start_time || b.time)}</span>
+            <span class="chip-agent">${x(b.agent_name || b.agent || 'Agent')}</span>
+            <span class="chip-pkg">${x(b.package_name || b.package || '')}</span>
+          </div>`;
+        }).join('');
+
+        const col = document.createElement('div');
+        col.className = 'day-col';
+        col.innerHTML = `
+          <div class="day-header${isToday ? ' today' : ''}">
+            <span class="day-name">${days[d.getDay()]}</span>
+            <span class="day-num">${d.getDate()}</span>
+          </div>
+          ${chips || '<span class="cal-empty">-</span>'}`;
+        grid.appendChild(col);
+      }
+
+      renderDetailCards(weekBookings);
+    }
+
+    /* ---- render detail cards ---- */
+    function renderDetailCards(bookings) {
+      const card  = el('sessions-card');
+      const grid  = el('sessions-detail-grid');
+      const title = el('sessions-card-title');
+      card.style.display = 'block';
+
+      if (!bookings.length) {
+        title.textContent = 'This Week';
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+          </svg>
+          <p>No sessions scheduled this week.</p>
+        </div>`;
+        return;
+      }
+
+      title.textContent = bookings.length + ' Session' + (bookings.length !== 1 ? 's' : '') + ' This Week';
+
+      bookings.sort((a, b) => {
+        const da = (a.session_date || a.date || a.booking_date || '') + (a.start_time || a.time || '');
+        const db = (b.session_date || b.date || b.booking_date || '') + (b.start_time || b.time || '');
+        return da.localeCompare(db);
+      });
+
+      grid.innerHTML = bookings.map(b => detailCard(b)).join('');
+    }
+
+    function detailCard(b) {
+      const bId     = b.id || b.booking_id || '';
+      const status  = (b.status || 'confirmed').toLowerCase();
+      const canAct  = status !== 'cancelled' && status !== 'completed';
+      const endTime = b.end_time ? ' - ' + fmtTime(b.end_time) : '';
+
+      return `
+        <div class="detail-card fadein" id="card-${x(String(bId))}">
+          <div class="dc-date">${fmtDate(b.session_date || b.date || b.booking_date)}</div>
+          <div class="dc-time">${fmtTime(b.start_time || b.time)}${endTime}</div>
+          <div class="dc-pkg">${x(b.package_name || b.package || '')}</div>
+          <div class="dc-divider"></div>
+
+          <div class="dc-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span><strong>${x(b.agent_name || b.agent || 'Agent')}</strong></span>
+          </div>
+
+          ${b.agent_email ? `
+          <div class="dc-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+            <span><a href="mailto:${x(b.agent_email)}">${x(b.agent_email)}</a></span>
+          </div>` : ''}
+
+          ${b.address || b.location ? `
+          <div class="dc-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            <span>${x(b.address || b.location)}</span>
+          </div>` : ''}
+
+          ${b.square_footage || b.sq_ft || b.sqft ? `
+          <div class="dc-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            <span>${x(b.square_footage || b.sq_ft || b.sqft)} sq ft</span>
+          </div>` : ''}
+
+          ${b.gate_code || b.gate ? `
+          <div class="dc-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>Gate code: <span class="dc-code-pill">${x(b.gate_code || b.gate)}</span></span>
+          </div>` : ''}
+
+          ${b.lockbox_code || b.lockbox ? `
+          <div class="dc-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="14" r="2"/><path d="M12 6v4"/></svg>
+            <span>Lockbox: <span class="dc-code-pill">${x(b.lockbox_code || b.lockbox)}</span></span>
+          </div>` : ''}
+
+          ${b.notes || b.special_notes ? `
+          <div class="dc-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+            <span>${x(b.notes || b.special_notes)}</span>
+          </div>` : ''}
+
+          <div class="dc-bknum">Booking #${x(String(bId))}</div>
+
+          <div class="dc-footer">
+            <span class="badge ${badgeClass(status)}"><span class="badge-dot"></span>${status}</span>
+            ${canAct ? `
+            <div class="dc-actions">
+              <button class="btn-reschedule"
+                onclick="openReschedule('${x(String(bId))}', '${x(b.agent_name || 'booking')} on ${fmtDate(b.session_date || b.date || b.booking_date)}')">
+                Reschedule
+              </button>
+              <button class="btn-cancel"
+                onclick="openCancel('${x(String(bId))}', '${x(b.agent_email || email)}', 'Cancel ${x(b.agent_name || 'this booking')} on ${fmtDate(b.session_date || b.date || b.booking_date)}?')">
+                Cancel
+              </button>
+            </div>` : ''}
+          </div>
+        </div>`;
+    }
+
+    /* ---- week navigation ---- */
+    window.weekOffset = function(delta) {
+      weekOff += delta;
+      renderWeek();
+    };
+    window.resetWeek = function() {
+      weekOff = 0;
+      renderWeek();
+    };
+    window.scrollToCard = function(cardId) {
+      const c = document.getElementById(cardId);
+      if (c) c.scrollIntoView({ behavior:'smooth', block:'center' });
+    };
+
+    /* ---- cancel modal ---- */
+    window.openCancel = function(bookingId, bookingEmail, desc) {
+      pendingCancelId    = bookingId;
+      pendingCancelEmail = bookingEmail;
+      el('cancel-desc').textContent = desc || 'Cancel this session?';
+      el('cancel-reason').value = '';
+      el('cancel-confirm-btn').disabled = false;
+      el('cancel-confirm-btn').textContent = 'Cancel Session';
+      el('cancel-modal').classList.add('open');
+    };
+
+    window.doCancel = async function() {
+      if (!pendingCancelId) return;
+      const btn    = el('cancel-confirm-btn');
+      const reason = el('cancel-reason').value.trim();
+      btn.disabled = true; btn.textContent = 'Cancelling...';
+      try {
+        const r = await fetch(HUB + '/api/studios/cancel', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ booking_id: pendingCancelId, reason: reason || null, email: pendingCancelEmail || email })
+        });
+        if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || d.message || 'HTTP ' + r.status); }
+        closeModal('cancel-modal');
+        showToast('Session cancelled.', 'success');
+        await loadSchedule();
+      } catch(e) {
+        showToast('Could not cancel: ' + e.message, 'error');
+        btn.disabled = false; btn.textContent = 'Cancel Session';
+      }
+    };
+
+    /* ---- reschedule modal ---- */
+    window.openReschedule = function(bookingId, desc) {
+      pendingRescheduleId = bookingId;
+      el('reschedule-desc').textContent = 'Choose a new date and time for: ' + desc;
+      el('reschedule-date').value = '';
+      el('reschedule-time').value = '';
+      el('reschedule-note').value = '';
+      el('reschedule-confirm-btn').disabled = false;
+      el('reschedule-confirm-btn').textContent = 'Confirm Reschedule';
+      el('reschedule-modal').classList.add('open');
+    };
+
+    window.doReschedule = async function() {
+      if (!pendingRescheduleId) return;
+      const btn  = el('reschedule-confirm-btn');
+      const date = el('reschedule-date').value;
+      const time = el('reschedule-time').value;
+      const note = el('reschedule-note').value.trim();
+      if (!date || !time) { showToast('Please select a new date and time.', 'error'); return; }
+      btn.disabled = true; btn.textContent = 'Saving...';
+      try {
+        const r = await fetch(HUB + '/api/studios/reschedule', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ booking_id: pendingRescheduleId, new_date: date, new_time: time, note: note || null, email })
+        });
+        if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || d.message || 'HTTP ' + r.status); }
+        closeModal('reschedule-modal');
+        showToast('Session rescheduled.', 'success');
+        await loadSchedule();
+      } catch(e) {
+        showToast('Could not reschedule: ' + e.message, 'error');
+        btn.disabled = false; btn.textContent = 'Confirm Reschedule';
+      }
+    };
+
+    window.closeModal = function(id) {
+      const m = el(id);
+      if (m) m.classList.remove('open');
+    };
+
+    ['cancel-modal','reschedule-modal'].forEach(id => {
+      const overlay = el(id);
+      if (overlay) overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(id); });
+    });
+
+    /* ---- boot ---- */
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => setTimeout(init, 150));
+    } else {
+      setTimeout(init, 150);
+    }
+
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Sessions | SERHANT. STUDIOS</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="auth-check.js"></script>
+
+  <style>
+    /* ================================================================
+       PAGE BASE
+       ================================================================ */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      background: #06061a;
+      color: rgba(255,255,255,0.82);
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    /* ----------------------------------------------------------------
+       PAGE HERO HEADER
+       ---------------------------------------------------------------- */
+    .page-header {
+      background: linear-gradient(135deg, #08082a 0%, #0d0d3a 50%, #111150 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 100px 24px 52px;
+      text-align: left;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 80% at 0% 50%, rgba(104,104,238,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 60% at 100% 30%, rgba(60,60,200,0.08) 0%, transparent 55%);
+    }
+    .page-header-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1140px;
+      margin: 0 auto;
+    }
+    .page-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      margin-bottom: 20px;
+      transition: color 0.18s;
+    }
+    .page-back:hover { color: rgba(255,255,255,0.7); }
+    .page-back svg { transition: transform 0.18s; }
+    .page-back:hover svg { transform: translateX(-3px); }
+    .page-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #6868ee;
+      margin-bottom: 8px;
+    }
+    .page-title {
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin: 0 0 12px;
+    }
+    .page-subtitle {
+      font-size: 14px;
+      color: rgba(255,255,255,0.4);
+      font-weight: 400;
+      max-width: 480px;
+    }
+    .page-header-actions {
+      margin-top: 24px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    /* ----------------------------------------------------------------
+       MAIN CONTENT
+       ---------------------------------------------------------------- */
+    .page-main {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ----------------------------------------------------------------
+       SECTION LABELS
+       ---------------------------------------------------------------- */
+    .sec-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.22);
+      margin: 0 0 14px;
+    }
+    .sec-heading {
+      font-size: clamp(18px, 2.5vw, 24px);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin: 0 0 24px;
+    }
+
+    /* ----------------------------------------------------------------
+       SKELETON
+       ---------------------------------------------------------------- */
+    @keyframes shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position:  200% 0; }
+    }
+    .skeleton {
+      background: linear-gradient(90deg,
+        rgba(255,255,255,0.04) 25%,
+        rgba(255,255,255,0.08) 50%,
+        rgba(255,255,255,0.04) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+      border-radius: 8px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .skeleton { animation: none; background: rgba(255,255,255,0.05); }
+    }
+
+    /* ----------------------------------------------------------------
+       FADE IN
+       ---------------------------------------------------------------- */
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fadein { animation: fadein 0.3s ease both; }
+
+    /* ----------------------------------------------------------------
+       CARD
+       ---------------------------------------------------------------- */
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+
+    /* ----------------------------------------------------------------
+       SESSION CARDS GRID
+       ---------------------------------------------------------------- */
+    .sessions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    .session-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 22px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .session-card:hover {
+      border-color: rgba(104,104,238,0.28);
+      transform: translateY(-2px);
+    }
+    .sc-pkg  { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .sc-dt   { font-size: 12px; font-weight: 700; color: #6868ee; margin-bottom: 14px; }
+    .sc-row  {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+    .sc-row svg { width: 14px; height: 14px; color: rgba(255,255,255,0.28); flex-shrink: 0; margin-top: 1px; }
+    .sc-bknum {
+      font-size: 10px;
+      color: rgba(255,255,255,0.22);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-top: 12px;
+      margin-bottom: 14px;
+    }
+    .sc-actions { display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
+
+    /* ----------------------------------------------------------------
+       PAST SESSIONS LIST
+       ---------------------------------------------------------------- */
+    .past-list {
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .past-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      flex-wrap: wrap;
+    }
+    .past-row:last-child { border-bottom: none; }
+    .past-row:hover { background: rgba(255,255,255,0.02); }
+    .past-date { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.3); min-width: 110px; white-space: nowrap; }
+    .past-pkg  { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.55); flex: 1; }
+
+    /* ----------------------------------------------------------------
+       BADGES
+       ---------------------------------------------------------------- */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 40px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .badge-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .b-confirmed { background: rgba(76,175,80,0.14);  border: 1px solid rgba(76,175,80,0.35);  color: #4caf50; }
+    .b-pending   { background: rgba(255,183,77,0.14); border: 1px solid rgba(255,183,77,0.35); color: #ffb74d; }
+    .b-cancelled { background: rgba(255,82,82,0.12);  border: 1px solid rgba(255,82,82,0.3);   color: #ff5252; }
+    .b-completed { background: rgba(255,255,255,0.06);border: 1px solid rgba(255,255,255,0.12);color: rgba(255,255,255,0.4); }
+
+    /* ----------------------------------------------------------------
+       BUTTONS
+       ---------------------------------------------------------------- */
+    .btn-cancel {
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,82,82,0.4);
+      background: transparent;
+      color: #ff5252;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s;
+      white-space: nowrap;
+    }
+    .btn-cancel:hover { background: rgba(255,82,82,0.1); }
+    .btn-cancel:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #4040b8, #6868ee);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.18s, transform 0.18s;
+      box-shadow: 0 0 24px rgba(104,104,238,0.25);
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .btn-ghost {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: transparent;
+      color: rgba(255,255,255,0.55);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 0.18s, color 0.18s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
+
+    /* ----------------------------------------------------------------
+       ERROR STATE
+       ---------------------------------------------------------------- */
+    .error-banner {
+      background: rgba(255,82,82,0.06);
+      border: 1px solid rgba(255,82,82,0.2);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 13px;
+      color: rgba(255,82,82,0.85);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    /* ----------------------------------------------------------------
+       EMPTY STATE
+       ---------------------------------------------------------------- */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 52px 24px;
+      color: rgba(255,255,255,0.25);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+    }
+    .empty-state svg { margin-bottom: 16px; opacity: 0.35; }
+    .empty-state p { font-size: 14px; line-height: 1.7; max-width: 30ch; margin: 0 0 24px; }
+    .empty-state a { color: #6868ee; text-decoration: none; font-weight: 700; }
+    .empty-state a:hover { text-decoration: underline; }
+
+    /* ----------------------------------------------------------------
+       MODAL
+       ---------------------------------------------------------------- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(6px);
+      z-index: 9200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: #0d0d2e;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 36px 32px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+      transform: scale(0.95);
+      transition: transform 0.2s;
+    }
+    .modal-overlay.open .modal { transform: scale(1); }
+    .modal-icon {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+      background: rgba(255,82,82,0.12);
+      border: 1px solid rgba(255,82,82,0.28);
+      color: #ff5252;
+    }
+    .modal h3 { font-size: 18px; font-weight: 800; color: #fff; margin: 0 0 10px; }
+    .modal p  { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.7; margin: 0 0 18px; }
+    .modal-textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 11px 14px;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      outline: none;
+      resize: vertical;
+      min-height: 72px;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+      transition: border-color 0.18s;
+    }
+    .modal-textarea:focus { border-color: #6868ee; }
+    .modal-textarea::placeholder { color: rgba(255,255,255,0.18); }
+    .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
+    .btn-confirm-cancel {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      background: #ff5252;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.18s;
+    }
+    .btn-confirm-cancel:hover { opacity: 0.85; }
+    .btn-confirm-cancel:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* ----------------------------------------------------------------
+       TOAST
+       ---------------------------------------------------------------- */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: #0d0d2e;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      z-index: 9999;
+      transform: translateY(10px);
+      opacity: 0;
+      transition: transform 0.25s, opacity 0.25s;
+      max-width: 320px;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.t-success { border-color: rgba(76,175,80,0.4); color: #4caf50; }
+    .toast.t-error   { border-color: rgba(255,82,82,0.4); color: #ff5252; }
+
+    /* ----------------------------------------------------------------
+       SECTION DIVIDER
+       ---------------------------------------------------------------- */
+    .sec-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(80,80,220,0.3) 20%, rgba(120,100,255,0.45) 50%, rgba(80,80,220,0.3) 80%, transparent 100%);
+      border: none;
+      margin: 0;
+    }
+
+    /* ----------------------------------------------------------------
+       RESPONSIVE
+       ---------------------------------------------------------------- */
+    @media (max-width: 600px) {
+      .page-header { padding: 90px 16px 40px; }
+      .page-main { padding: 32px 16px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="site-nav" role="navigation">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="SERHANT. Orlando Home">
+        <img src="assets/S-Orlando-White.svg" alt="S. Orlando" style="height:32px;width:auto;">
+      </a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" role="list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="ranks.html">Ranks</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="squad.html">Squad</a></li>
+        <li><a href="studios.html">Studios</a></li>
+        <li><a href="leadership.html" id="leadership-nav-link" style="display:none">LEADERS</a><a href="brain.html">The Brain</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="page-header-inner">
+      <a href="studios.html" class="page-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        Back to Studios
+      </a>
+      <div class="page-eyebrow">SERHANT. STUDIOS</div>
+      <h1 class="page-title" id="page-main-title">My Sessions</h1>
+      <p class="page-subtitle">View your upcoming and past production sessions.</p>
+      <div class="page-header-actions">
+        <a href="studios.html" class="btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Book a Session
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+
+  <!-- MAIN CONTENT -->
+  <main class="page-main">
+
+    <!-- Error banner -->
+    <div id="error-banner" style="display:none;" class="error-banner">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+      <span id="error-msg">Unable to load your sessions.</span>
+    </div>
+
+    <!-- UPCOMING SESSIONS -->
+    <div style="margin-bottom: 48px;">
+      <p class="sec-label" id="upcoming-label" style="display:none;">Upcoming</p>
+      <div class="sessions-grid" id="upcoming-grid">
+        <div class="session-card skeleton" style="height:180px;"></div>
+        <div class="session-card skeleton" style="height:180px;"></div>
+      </div>
+    </div>
+
+    <!-- PAST SESSIONS -->
+    <div id="past-section" style="display:none;">
+      <p class="sec-label">Past Sessions</p>
+      <div class="past-list" id="past-list"></div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-bottom-bar">
+        <span class="footer-copy">&copy; 2026 SERHANT. ORLANDO. All rights reserved.</span>
+        <span class="footer-addr">37 N. Orange Ave #900B, Orlando FL 32801</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- CANCEL MODAL -->
+  <div class="modal-overlay" id="cancel-modal">
+    <div class="modal">
+      <div class="modal-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </div>
+      <h3>Cancel Session?</h3>
+      <p id="cancel-desc">This will cancel the booking. This cannot be undone.</p>
+      <textarea class="modal-textarea" id="cancel-reason" placeholder="Reason for cancellation (optional)"></textarea>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="closeModal()">Keep It</button>
+        <button class="btn-confirm-cancel" id="cancel-confirm-btn" onclick="doCancel()">Cancel Session</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script src="shared.js"></script>
+  <script>
+  (function() {
+    const HUB = 'https://app.serhantorlandohub.com';
+
+    const rawEmail  = localStorage.getItem('portal_user_email') || '';
+    const email     = rawEmail.toLowerCase().trim();
+    const userName  = localStorage.getItem('portal_user_name') || '';
+    const firstName = userName.split(' ')[0] || '';
+
+    let pendingCancelId = null;
+
+    /* ---- helpers ---- */
+    function el(id) { return document.getElementById(id); }
+    function enc(s) { return encodeURIComponent(s); }
+    function x(str) {
+      return String(str)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+    function fmtDate(raw) {
+      if (!raw) return '';
+      try {
+        const d = new Date(String(raw).includes('T') ? raw : raw.substring(0,10) + 'T00:00:00');
+        return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+      } catch { return raw; }
+    }
+    function fmtTime(raw) {
+      if (!raw) return '';
+      try {
+        if (String(raw).includes('T')) return new Date(raw).toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+        const [h, m] = String(raw).split(':').map(Number);
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        return (h % 12 || 12) + ':' + String(m || 0).padStart(2,'0') + ' ' + ampm;
+      } catch { return raw; }
+    }
+    function capitalize(s) {
+      if (!s) return s;
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+    function badgeClass(status) {
+      return { confirmed:'b-confirmed', pending:'b-pending', cancelled:'b-cancelled', completed:'b-completed' }[status] || 'b-confirmed';
+    }
+
+    let toastTimer = null;
+    function showToast(msg, type) {
+      const t = el('toast');
+      t.textContent = msg;
+      t.className = 'toast t-' + (type||'success') + ' show';
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 3800);
+    }
+
+    /* ---- page title ---- */
+    function init() {
+      if (!email) {
+        // auth-check.js handles redirect; show nothing
+        return;
+      }
+      if (firstName) {
+        el('page-main-title').textContent = firstName + "'s Sessions";
+      }
+      loadSessions();
+    }
+
+    /* ---- load sessions ---- */
+    async function loadSessions() {
+      try {
+        const r = await fetch(HUB + '/api/studios/my-bookings?email=' + enc(email));
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const data = await r.json();
+        renderUpcoming(data.upcoming || []);
+        renderPast(data.past || []);
+      } catch(e) {
+        el('upcoming-grid').innerHTML = '';
+        el('error-banner').style.display = 'flex';
+        el('error-msg').textContent = 'Could not load your sessions: ' + e.message;
+      }
+    }
+
+    function renderUpcoming(bookings) {
+      const grid = el('upcoming-grid');
+      const lbl  = el('upcoming-label');
+
+      if (!bookings.length) {
+        lbl.style.display = 'none';
+        grid.innerHTML = `
+          <div class="empty-state" style="grid-column:1/-1;">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h8M8 18h5"/>
+            </svg>
+            <p>No sessions yet. Book your first session.</p>
+            <a href="studios.html">Book a Session &rarr;</a>
+          </div>`;
+        return;
+      }
+
+      lbl.style.display = 'block';
+      grid.innerHTML = bookings.map(b => sessionCard(b)).join('');
+    }
+
+    function sessionCard(b) {
+      const status   = (b.status || 'confirmed').toLowerCase();
+      const canCancel = status !== 'cancelled' && status !== 'completed';
+      const bId      = b.id || b.booking_id || b.booking_number || '';
+      const endTime  = b.end_time ? ' - ' + fmtTime(b.end_time) : '';
+      const producer = b.producer ? capitalize(b.producer) : null;
+
+      return `
+        <div class="session-card fadein">
+          <div class="sc-pkg">${x(b.package_name || b.package || 'Session')}</div>
+          <div class="sc-dt">${fmtDate(b.session_date || b.date || b.booking_date)} &middot; ${fmtTime(b.start_time || b.time)}${endTime}</div>
+
+          ${b.address || b.location ? `
+          <div class="sc-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            <span>${x(b.address || b.location)}</span>
+          </div>` : ''}
+
+          ${producer ? `
+          <div class="sc-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <span>Producer: ${x(producer)}</span>
+          </div>` : ''}
+
+          <div class="sc-bknum">Booking #${x(String(bId))}</div>
+
+          <div class="sc-actions">
+            <span class="badge ${badgeClass(status)}"><span class="badge-dot"></span>${status}</span>
+            ${canCancel ? `
+            <button class="btn-cancel"
+              onclick="openCancel('${x(String(bId))}', '${x(b.package_name || 'session')} on ${fmtDate(b.session_date || b.date || b.booking_date)}')">
+              Cancel
+            </button>` : ''}
+          </div>
+        </div>`;
+    }
+
+    function renderPast(bookings) {
+      const section = el('past-section');
+      const list    = el('past-list');
+      if (!bookings.length) { section.style.display = 'none'; return; }
+      section.style.display = 'block';
+      list.innerHTML = bookings.map(b => {
+        const st = (b.status || 'completed').toLowerCase();
+        return `<div class="past-row">
+          <span class="past-date">${fmtDate(b.session_date || b.date || b.booking_date)}</span>
+          <span class="past-pkg">${x(b.package_name || b.package || 'Session')}</span>
+          <span class="badge ${badgeClass(st)}"><span class="badge-dot"></span>${st}</span>
+        </div>`;
+      }).join('');
+    }
+
+    /* ---- cancel modal ---- */
+    window.openCancel = function(bookingId, desc) {
+      pendingCancelId = bookingId;
+      el('cancel-desc').textContent = 'Cancel your ' + desc + '? This cannot be undone.';
+      el('cancel-reason').value = '';
+      el('cancel-confirm-btn').disabled = false;
+      el('cancel-confirm-btn').textContent = 'Cancel Session';
+      el('cancel-modal').classList.add('open');
+    };
+
+    window.closeModal = function() {
+      el('cancel-modal').classList.remove('open');
+    };
+
+    el('cancel-modal').addEventListener('click', e => {
+      if (e.target === el('cancel-modal')) closeModal();
+    });
+
+    window.doCancel = async function() {
+      if (!pendingCancelId) return;
+      const btn    = el('cancel-confirm-btn');
+      const reason = el('cancel-reason').value.trim();
+      btn.disabled = true; btn.textContent = 'Cancelling...';
+      try {
+        const r = await fetch(HUB + '/api/studios/cancel', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ booking_id: pendingCancelId, reason: reason || 'Cancelled by agent', email })
+        });
+        if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || d.message || 'HTTP ' + r.status); }
+        closeModal();
+        showToast('Session cancelled.', 'success');
+        await loadSessions();
+      } catch(e) {
+        showToast('Could not cancel: ' + e.message, 'error');
+        btn.disabled = false; btn.textContent = 'Cancel Session';
+      }
+    };
+
+    /* ---- boot ---- */
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => setTimeout(init, 150));
+    } else {
+      setTimeout(init, 150);
+    }
+
+  })();
+  </script>
+</body>
+</html>
