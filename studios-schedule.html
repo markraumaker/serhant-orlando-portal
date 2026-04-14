@@ -102,10 +102,11 @@
       letter-spacing: 0.5px;
       margin-top: 16px;
     }
-    .producer-badge span {
+    .producer-badge .badge-dot {
       width: 6px; height: 6px;
       border-radius: 50%;
       background: #6868ee;
+      flex-shrink: 0;
     }
 
     /* ----------------------------------------------------------------
@@ -664,10 +665,10 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
           Back to Studios
         </a>
-        <div class="page-eyebrow">SERHANT. STUDIOS</div>
+        <img src="assets/logos/Studios-Logo-White.png" alt="SERHANT. STUDIOS" style="height:18px;opacity:0.7;margin-bottom:12px;">
         <h1 class="page-title" id="page-title">Your Schedule</h1>
         <div class="producer-badge">
-          <span></span>
+          <span class="badge-dot"></span>
           <span id="producer-badge-name">Producer</span>
         </div>
       </div>
@@ -843,7 +844,7 @@
       // Set names
       if (firstName) {
         el('page-title').textContent = firstName + "'s Schedule";
-        el('producer-badge-name').textContent = firstName + ' - Producer';
+        el('producer-badge-name').textContent = firstName + ' / Producer';
       }
 
       loadSchedule();
