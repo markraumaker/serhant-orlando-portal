@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phone Setup | SERHANT. STUDIOS</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{min-height:100vh;font-family:'Montserrat',sans-serif;background:#06061a;color:white;}
+    body{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;}
+
+    .card{width:100%;max-width:400px;text-align:center;}
+    .logo-wrap{margin-bottom:32px;}
+    .logo-wrap img{height:22px;opacity:0.85;margin-bottom:5px;}
+    .logo-sub{font-size:9px;font-weight:700;letter-spacing:6px;color:rgba(255,255,255,0.45);text-transform:uppercase;display:block;}
+
+    h1{font-size:28px;font-weight:900;margin-bottom:10px;}
+    .sub{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.7;margin-bottom:36px;}
+
+    .step{
+      background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);
+      border-radius:20px;padding:28px;margin-bottom:16px;text-align:left;
+    }
+    .step-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6868ee;margin-bottom:8px;}
+    .step-title{font-size:16px;font-weight:800;margin-bottom:6px;}
+    .step-desc{font-size:12px;color:rgba(255,255,255,0.35);line-height:1.6;margin-bottom:16px;}
+
+    .step-btn{
+      display:flex;align-items:center;justify-content:center;gap:10px;
+      width:100%;padding:16px;border-radius:100px;
+      font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;
+      text-decoration:none;transition:all 0.25s;border:none;cursor:pointer;
+    }
+    .btn-purple{background:#6868ee;color:white;box-shadow:0 2px 12px rgba(104,104,238,0.3);}
+    .btn-purple:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(104,104,238,0.4);}
+
+    .ms-icon{width:18px;height:18px;flex-shrink:0;}
+
+    .check{
+      display:none;align-items:center;justify-content:center;gap:8px;
+      padding:14px;border-radius:14px;
+      background:rgba(76,175,80,0.08);border:1px solid rgba(76,175,80,0.2);
+      font-size:13px;font-weight:700;color:#4caf50;
+    }
+    .check.done{display:flex;}
+
+    .done-card{
+      display:none;text-align:center;margin-top:24px;
+      padding:32px;border-radius:20px;
+      background:rgba(76,175,80,0.06);border:1px solid rgba(76,175,80,0.15);
+    }
+    .done-card.visible{display:block;}
+    .done-title{font-size:20px;font-weight:800;color:#4caf50;margin-bottom:8px;}
+    .done-desc{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.7;margin-bottom:20px;}
+    .done-btn{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:14px 28px;border-radius:100px;
+      background:white;color:#1a1a2e;
+      font-size:14px;font-weight:700;font-family:'Montserrat',sans-serif;
+      text-decoration:none;transition:all 0.25s;
+    }
+    .done-btn:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(255,255,255,0.2);}
+
+    .footer{margin-top:40px;font-size:11px;color:rgba(255,255,255,0.2);text-align:center;}
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo-wrap">
+    <img src="assets/logos/SERHANT-White.svg" alt="SERHANT.">
+    <span class="logo-sub">Studios</span>
+  </div>
+
+  <h1>Phone Setup</h1>
+  <p class="sub">Sign in once with your SERHANT. Microsoft account and you're set on this device.</p>
+
+  <div class="step" id="step-box">
+    <div class="step-label">One-time setup</div>
+    <div class="step-title">Sign in to the Studios App</div>
+    <div class="step-desc">Your schedule, bookings, content delivery, and everything Studios. Right on your phone.</div>
+    <a href="https://app.serhantorlandohub.com" class="step-btn btn-purple" id="signin-btn">
+      <svg class="ms-icon" viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
+      Sign in with Microsoft
+    </a>
+  </div>
+
+  <div class="check" id="check-msg">
+    &#10003; You're signed in
+  </div>
+
+  <div class="done-card" id="done-card">
+    <div class="done-title">You're all set</div>
+    <div class="done-desc">The Studios app is connected. You won't need to sign in again on this phone.</div>
+    <a href="https://app.serhantorlandohub.com/studios" class="done-btn">
+      Open Studios
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+
+  <div class="footer">This only needs to be done once per device.</div>
+</div>
+
+</body>
+</html>
