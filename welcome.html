@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome | SERHANT. STUDIOS</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{min-height:100vh;font-family:'Montserrat',sans-serif;background:#06061a;color:white;overflow-x:hidden;}
+
+    /* Hero */
+    .hero{
+      min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      text-align:center;padding:60px 24px;position:relative;
+      background:radial-gradient(ellipse at 50% 0%, rgba(104,104,238,0.15) 0%, transparent 60%);
+    }
+    .hero::after{
+      content:'';position:absolute;bottom:0;left:0;right:0;height:120px;
+      background:linear-gradient(transparent,#06061a);pointer-events:none;
+    }
+
+    .logo-wrap{margin-bottom:40px;}
+    .logo-wrap img{height:28px;opacity:0.9;display:block;margin:0 auto 6px;}
+    .logo-sub{font-size:10px;font-weight:700;letter-spacing:7px;color:rgba(255,255,255,0.5);text-transform:uppercase;}
+
+    .hero h1{font-size:clamp(32px,7vw,56px);font-weight:900;line-height:1.1;margin-bottom:16px;max-width:600px;}
+    .hero-sub{font-size:clamp(13px,2vw,16px);color:rgba(255,255,255,0.4);line-height:1.7;max-width:460px;margin-bottom:40px;}
+
+    .hero-cta{
+      display:inline-flex;align-items:center;gap:12px;
+      padding:18px 36px;border-radius:100px;
+      background:white;color:#1a1a2e;
+      font-size:15px;font-weight:700;font-family:'Montserrat',sans-serif;
+      text-decoration:none;transition:all 0.3s;cursor:pointer;border:none;
+      box-shadow:0 4px 20px rgba(255,255,255,0.1);
+    }
+    .hero-cta:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(255,255,255,0.15);}
+    .hero-cta svg{width:18px;height:18px;flex-shrink:0;}
+
+    .scroll-hint{
+      position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;
+      font-size:11px;color:rgba(255,255,255,0.25);letter-spacing:2px;text-transform:uppercase;
+      display:flex;flex-direction:column;align-items:center;gap:8px;
+    }
+    .scroll-hint svg{animation:bounce-down 1.5s ease-in-out infinite;}
+    @keyframes bounce-down{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+    /* Features */
+    .features{padding:80px 24px;max-width:900px;margin:0 auto;}
+    .features-label{font-size:10px;font-weight:700;letter-spacing:4px;color:#6868ee;text-transform:uppercase;text-align:center;margin-bottom:12px;}
+    .features h2{font-size:clamp(24px,5vw,36px);font-weight:900;text-align:center;margin-bottom:48px;}
+
+    .feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;}
+    .feature-card{
+      background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);
+      border-radius:20px;padding:28px;transition:border-color 0.3s;
+    }
+    .feature-card:hover{border-color:rgba(104,104,238,0.3);}
+    .feature-icon{font-size:28px;margin-bottom:14px;}
+    .feature-title{font-size:15px;font-weight:800;margin-bottom:6px;}
+    .feature-desc{font-size:12px;color:rgba(255,255,255,0.35);line-height:1.7;}
+
+    /* CTA section */
+    .cta-section{
+      padding:80px 24px;text-align:center;
+      background:radial-gradient(ellipse at 50% 100%, rgba(104,104,238,0.1) 0%, transparent 60%);
+    }
+    .cta-section h2{font-size:clamp(22px,5vw,32px);font-weight:900;margin-bottom:12px;}
+    .cta-sub{font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:32px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.7;}
+
+    .cta-btn{
+      display:inline-flex;align-items:center;gap:12px;
+      padding:18px 36px;border-radius:100px;
+      background:#6868ee;color:white;
+      font-size:15px;font-weight:700;font-family:'Montserrat',sans-serif;
+      text-decoration:none;transition:all 0.3s;cursor:pointer;border:none;
+      box-shadow:0 4px 20px rgba(104,104,238,0.3);
+    }
+    .cta-btn:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(104,104,238,0.4);}
+    .cta-btn svg{width:18px;height:18px;flex-shrink:0;}
+
+    .cta-note{font-size:11px;color:rgba(255,255,255,0.2);margin-top:16px;}
+
+    /* Footer */
+    .footer{
+      padding:24px;text-align:center;font-size:11px;color:rgba(255,255,255,0.15);
+      border-top:1px solid rgba(255,255,255,0.05);
+    }
+
+    @media(max-width:480px){
+      .feature-grid{grid-template-columns:1fr;}
+      .hero{padding:40px 20px;min-height:90vh;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="logo-wrap">
+      <img src="assets/logos/SERHANT-White.svg" alt="SERHANT.">
+      <span class="logo-sub">Studios</span>
+    </div>
+
+    <h1>Your content. Booked, shot, and delivered.</h1>
+    <p class="hero-sub">Professional video production for your listings, social, and personal brand. Book a session, get your content, all in one place.</p>
+
+    <a href="login.html" class="hero-cta">
+      <svg viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
+      Get Started
+    </a>
+
+    <div class="scroll-hint">
+      Learn more
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="features-label">What you get</div>
+    <h2>Everything Studios. One login.</h2>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎬</div>
+        <div class="feature-title">Book Sessions</div>
+        <div class="feature-desc">Choose from 14 packages. Pick your date and time. See real-time availability. Confirm in seconds.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <div class="feature-title">Live Calendar</div>
+        <div class="feature-desc">See exactly when Danny and Hailey are available. No back-and-forth. No double bookings.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <div class="feature-title">Content Delivery</div>
+        <div class="feature-desc">Your finished videos land right in your media library. Download or share to Instagram, TikTok, anywhere.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💳</div>
+        <div class="feature-title">Simple Payment</div>
+        <div class="feature-desc">Pay when your content is ready. Apple Pay or card. No upfront charges. Promo codes available.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <div class="feature-title">Works Everywhere</div>
+        <div class="feature-desc">Book from your laptop. Check your schedule on your phone. Same account, same data, always in sync.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔔</div>
+        <div class="feature-title">Stay in the Loop</div>
+        <div class="feature-desc">Get notified when your content is ready. Reschedule or cancel anytime. Your sessions, your control.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Ready to go?</h2>
+    <p class="cta-sub">Sign in with your SERHANT. Microsoft account. One time, takes 5 seconds, and you're in.</p>
+
+    <a href="login.html" class="cta-btn">
+      <svg viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>
+      Sign in with Microsoft
+    </a>
+    <div class="cta-note">One sign-in per device. You won't be asked again.</div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    SERHANT. Studios Orlando
+  </footer>
+
+</body>
+</html>
