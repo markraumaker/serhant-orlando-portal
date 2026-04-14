@@ -383,6 +383,1833 @@
     </div>
   </nav>
 
+  <!-- ==================== MANAGEMENT DASHBOARD ==================== -->
+<!-- ================================================================
+     STUDIOS MANAGEMENT DASHBOARD
+     Three views: Agent | Producer | Operator
+     Insert at the top of studios.html body content.
+     Section ID: #studios-mgmt
+     ================================================================ -->
+
+<style>
+/* ================================================================
+   BASE - all rules prefixed .mgmt- or #studios-mgmt to avoid conflicts
+   ================================================================ */
+
+#studios-mgmt {
+  font-family: 'Montserrat', sans-serif;
+  display: none; /* revealed by JS after auth check */
+  background: #06061a;
+}
+
+/* shimmer loader */
+@keyframes mgmt-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.mgmt-skeleton {
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.08) 50%,
+    rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: mgmt-shimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mgmt-skeleton { animation: none; background: rgba(255,255,255,0.05); }
+}
+
+/* fade in */
+@keyframes mgmt-fadein {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.mgmt-fadein { animation: mgmt-fadein 0.3s ease both; }
+
+/* ---- layout ---- */
+.mgmt-wrap {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.mgmt-section {
+  padding: 52px 0 0;
+}
+.mgmt-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #6868ee;
+  margin: 0 0 6px;
+}
+.mgmt-section-heading {
+  font-size: clamp(20px, 2.5vw, 28px);
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 32px;
+  letter-spacing: -0.02em;
+}
+
+/* ---- card ---- */
+.mgmt-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 20px;
+}
+.mgmt-card-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin: 0 0 20px;
+}
+
+/* ---- stats row ---- */
+.mgmt-stats-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+@media (max-width: 900px) { .mgmt-stats-row { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 520px)  { .mgmt-stats-row { grid-template-columns: repeat(2, 1fr); } }
+
+.mgmt-stat-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.mgmt-stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+.mgmt-stat-value {
+  font-size: 26px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+}
+.mgmt-stat-value.v-green  { color: #4caf50; }
+.mgmt-stat-value.v-red    { color: #ff5252; }
+.mgmt-stat-value.v-amber  { color: #ffb74d; }
+.mgmt-stat-value.v-purple { color: #6868ee; }
+
+/* ---- badge ---- */
+.mgmt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 40px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.mgmt-badge-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.b-confirmed { background: rgba(76,175,80,0.14);  border: 1px solid rgba(76,175,80,0.35);  color: #4caf50; }
+.b-pending   { background: rgba(255,183,77,0.14); border: 1px solid rgba(255,183,77,0.35); color: #ffb74d; }
+.b-cancelled { background: rgba(255,82,82,0.12);  border: 1px solid rgba(255,82,82,0.3);   color: #ff5252; }
+.b-completed { background: rgba(255,255,255,0.06);border: 1px solid rgba(255,255,255,0.12);color: rgba(255,255,255,0.4); }
+.b-free      { background: rgba(76,175,80,0.1);   border: 1px solid rgba(76,175,80,0.25);  color: #4caf50; }
+.b-paid      { background: rgba(104,104,238,0.12);border: 1px solid rgba(104,104,238,0.3); color: #6868ee; }
+
+/* ---- filter row ---- */
+.mgmt-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.mgmt-filter-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  margin-right: 4px;
+}
+.mgmt-filter-btn {
+  padding: 7px 16px;
+  border-radius: 40px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: transparent;
+  color: rgba(255,255,255,0.5);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s, color 0.18s;
+}
+.mgmt-filter-btn:hover { border-color: rgba(104,104,238,0.5); color: #fff; }
+.mgmt-filter-btn.active {
+  background: rgba(104,104,238,0.18);
+  border-color: #6868ee;
+  color: #fff;
+}
+
+/* ---- date range filter ---- */
+.mgmt-date-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.mgmt-date-input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.18s;
+}
+.mgmt-date-input:focus { border-color: #6868ee; }
+input[type="date"].mgmt-date-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.5) sepia(1) hue-rotate(200deg);
+  cursor: pointer;
+}
+.mgmt-date-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  font-weight: 600;
+}
+
+/* ---- table ---- */
+.mgmt-table-wrap { width: 100%; overflow-x: auto; }
+.mgmt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.mgmt-table th {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  white-space: nowrap;
+}
+.mgmt-table td {
+  padding: 13px 14px;
+  color: rgba(255,255,255,0.75);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: middle;
+}
+.mgmt-table tr:last-child td { border-bottom: none; }
+.mgmt-table tr:hover td { background: rgba(255,255,255,0.02); }
+.mgmt-table-empty td {
+  text-align: center;
+  padding: 36px;
+  color: rgba(255,255,255,0.22);
+  font-size: 13px;
+}
+/* responsive table */
+@media (max-width: 700px) {
+  .mgmt-table thead { display: none; }
+  .mgmt-table tbody tr {
+    display: block;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    padding: 12px 16px;
+  }
+  .mgmt-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: none;
+    font-size: 12px;
+    gap: 12px;
+  }
+  .mgmt-table td::before {
+    content: attr(data-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.28);
+    flex-shrink: 0;
+  }
+  .mgmt-table tr:hover td { background: none; }
+}
+
+/* ---- buttons ---- */
+.mgmt-btn-cancel {
+  padding: 6px 13px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,82,82,0.4);
+  background: transparent;
+  color: #ff5252;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s;
+  white-space: nowrap;
+}
+.mgmt-btn-cancel:hover { background: rgba(255,82,82,0.1); }
+.mgmt-btn-cancel:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.mgmt-btn-reschedule {
+  padding: 6px 13px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,183,77,0.4);
+  background: transparent;
+  color: #ffb74d;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s;
+  white-space: nowrap;
+}
+.mgmt-btn-reschedule:hover { background: rgba(255,183,77,0.1); }
+
+.mgmt-btn-primary {
+  padding: 11px 22px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #4040b8, #6868ee);
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.18s, transform 0.18s, box-shadow 0.18s;
+  box-shadow: 0 0 24px rgba(104,104,238,0.25);
+}
+.mgmt-btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+.mgmt-btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+.mgmt-btn-deactivate {
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,82,82,0.3);
+  background: transparent;
+  color: #ff5252;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.mgmt-btn-deactivate:hover { background: rgba(255,82,82,0.1); }
+
+.mgmt-btn-ghost {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: transparent;
+  color: rgba(255,255,255,0.55);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.18s, color 0.18s;
+}
+.mgmt-btn-ghost:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
+
+/* ---- error state ---- */
+.mgmt-error {
+  background: rgba(255,82,82,0.06);
+  border: 1px solid rgba(255,82,82,0.2);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 13px;
+  color: rgba(255,82,82,0.85);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+/* ---- empty state ---- */
+.mgmt-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 44px 24px;
+  color: rgba(255,255,255,0.25);
+}
+.mgmt-empty svg { margin-bottom: 14px; opacity: 0.4; }
+.mgmt-empty p { font-size: 13px; line-height: 1.7; max-width: 30ch; margin: 0; }
+
+/* ---- code pill ---- */
+.mgmt-code-pill {
+  display: inline-block;
+  background: rgba(255,183,77,0.12);
+  border: 1px solid rgba(255,183,77,0.28);
+  border-radius: 5px;
+  padding: 2px 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffb74d;
+  letter-spacing: 0.5px;
+}
+
+/* ================================================================
+   AGENT VIEW
+   ================================================================ */
+.mgmt-agent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.mgmt-agent-session-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 22px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.mgmt-agent-session-card:hover {
+  border-color: rgba(104,104,238,0.28);
+  transform: translateY(-2px);
+}
+.mgmt-agent-pkg  { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.mgmt-agent-dt   { font-size: 12px; font-weight: 700; color: #6868ee; margin-bottom: 14px; }
+.mgmt-agent-row  {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.mgmt-agent-row svg { width: 14px; height: 14px; color: rgba(255,255,255,0.28); flex-shrink: 0; margin-top: 1px; }
+.mgmt-agent-bknum {
+  font-size: 10px;
+  color: rgba(255,255,255,0.22);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-top: 12px;
+  margin-bottom: 14px;
+}
+.mgmt-agent-actions { display: flex; justify-content: flex-end; }
+
+/* past bookings */
+.mgmt-past-list {
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.mgmt-past-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-wrap: wrap;
+}
+.mgmt-past-row:last-child { border-bottom: none; }
+.mgmt-past-row:hover { background: rgba(255,255,255,0.02); }
+.mgmt-past-date { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.3); min-width: 96px; white-space: nowrap; }
+.mgmt-past-pkg  { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.55); flex: 1; }
+
+/* sub-label */
+.mgmt-sub-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.22);
+  margin: 28px 0 14px;
+}
+
+/* ================================================================
+   PRODUCER VIEW - weekly calendar
+   ================================================================ */
+.mgmt-week-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.mgmt-week-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  flex: 1;
+}
+.mgmt-week-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.18s, color 0.18s;
+}
+.mgmt-week-btn:hover { border-color: #6868ee; color: #fff; }
+
+.mgmt-week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 28px;
+}
+@media (max-width: 700px) { .mgmt-week-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; } }
+@media (max-width: 420px) { .mgmt-week-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.mgmt-day-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.mgmt-day-header {
+  text-align: center;
+  padding: 8px 4px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.mgmt-day-name {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  display: block;
+  margin-bottom: 3px;
+}
+.mgmt-day-num {
+  font-size: 18px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.5);
+  display: block;
+  line-height: 1;
+}
+.mgmt-day-header.today { border-color: rgba(104,104,238,0.5); background: rgba(104,104,238,0.1); }
+.mgmt-day-header.today .mgmt-day-num { color: #6868ee; }
+
+.mgmt-cal-chip {
+  background: rgba(104,104,238,0.14);
+  border: 1px solid rgba(104,104,238,0.28);
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s;
+  position: relative;
+}
+.mgmt-cal-chip:hover { border-color: #6868ee; background: rgba(104,104,238,0.22); }
+.mgmt-cal-chip.chip-cancelled { background: rgba(255,82,82,0.08); border-color: rgba(255,82,82,0.25); }
+.mgmt-cal-chip-time { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.9); display: block; }
+.mgmt-cal-chip-agent { font-size: 10px; color: rgba(255,255,255,0.5); display: block; margin-top: 2px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.mgmt-cal-chip-pkg   { font-size: 9px; color: rgba(104,104,238,0.8); display: block; margin-top: 2px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+.mgmt-cal-empty { font-size: 10px; color: rgba(255,255,255,0.12); text-align: center; padding: 12px 0; }
+
+/* Producer detail cards (expanded view below calendar) */
+.mgmt-prod-sessions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+.mgmt-prod-session-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 24px;
+  transition: border-color 0.2s;
+}
+.mgmt-prod-session-card:hover { border-color: rgba(104,104,238,0.28); }
+.mgmt-prod-sess-date  { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6868ee; margin-bottom: 4px; }
+.mgmt-prod-sess-time  { font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -0.02em; margin-bottom: 2px; }
+.mgmt-prod-sess-pkg   { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 18px; }
+.mgmt-prod-divider    { height: 1px; background: rgba(255,255,255,0.07); margin-bottom: 16px; }
+.mgmt-prod-detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.mgmt-prod-detail-row:last-child { margin-bottom: 0; }
+.mgmt-prod-detail-row svg { width: 15px; height: 15px; color: rgba(255,255,255,0.28); flex-shrink: 0; margin-top: 1px; }
+.mgmt-prod-detail-row strong { color: rgba(255,255,255,0.88); font-weight: 600; }
+.mgmt-prod-detail-row a { color: #6868ee; text-decoration: none; }
+.mgmt-prod-detail-row a:hover { text-decoration: underline; }
+.mgmt-prod-bknum { font-size: 10px; color: rgba(255,255,255,0.2); font-weight: 600; margin-top: 14px; margin-bottom: 14px; }
+.mgmt-prod-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+
+/* ================================================================
+   OPERATOR VIEW - promo codes
+   ================================================================ */
+.mgmt-promo-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.mgmt-promo-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 12px 16px;
+  flex-wrap: wrap;
+}
+.mgmt-promo-code { font-size: 14px; font-weight: 800; color: #fff; letter-spacing: 1px; }
+.mgmt-promo-pct  { font-size: 13px; font-weight: 700; color: #4caf50; }
+.mgmt-promo-meta { font-size: 12px; color: rgba(255,255,255,0.35); }
+
+/* promo form */
+.mgmt-promo-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  align-items: end;
+}
+@media (max-width: 560px) { .mgmt-promo-form { grid-template-columns: 1fr; } }
+.mgmt-form-group { display: flex; flex-direction: column; gap: 6px; }
+.mgmt-form-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+.mgmt-form-input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 11px 14px;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.18s;
+  box-sizing: border-box;
+}
+.mgmt-form-input::placeholder { color: rgba(255,255,255,0.18); }
+.mgmt-form-input:focus { border-color: #6868ee; }
+.mgmt-promo-feedback {
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 10px;
+  min-height: 16px;
+}
+.mgmt-promo-feedback.ok  { color: #4caf50; }
+.mgmt-promo-feedback.err { color: #ff5252; }
+
+/* ================================================================
+   CANCEL MODAL
+   ================================================================ */
+.mgmt-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(6px);
+  z-index: 9200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.mgmt-modal-overlay.open { opacity: 1; pointer-events: all; }
+.mgmt-modal {
+  background: #0d0d2e;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  padding: 36px 32px;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  transform: scale(0.95);
+  transition: transform 0.2s;
+}
+.mgmt-modal-overlay.open .mgmt-modal { transform: scale(1); }
+.mgmt-modal-icon {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px;
+}
+.mgmt-modal-icon.cancel-icon { background: rgba(255,82,82,0.12); border: 1px solid rgba(255,82,82,0.28); color: #ff5252; }
+.mgmt-modal-icon.reschedule-icon { background: rgba(255,183,77,0.12); border: 1px solid rgba(255,183,77,0.28); color: #ffb74d; }
+.mgmt-modal h3 { font-size: 18px; font-weight: 800; color: #fff; margin: 0 0 10px; }
+.mgmt-modal p  { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.7; margin: 0 0 18px; }
+.mgmt-modal-textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 11px 14px;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  outline: none;
+  resize: vertical;
+  min-height: 72px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  transition: border-color 0.18s;
+}
+.mgmt-modal-textarea:focus { border-color: #6868ee; }
+.mgmt-modal-textarea::placeholder { color: rgba(255,255,255,0.18); }
+.mgmt-modal-input {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 11px 14px;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  outline: none;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+  transition: border-color 0.18s;
+}
+.mgmt-modal-input:focus { border-color: #6868ee; }
+.mgmt-modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
+.mgmt-btn-confirm-cancel {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background: #ff5252;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.18s;
+}
+.mgmt-btn-confirm-cancel:hover { opacity: 0.85; }
+.mgmt-btn-confirm-cancel:disabled { opacity: 0.35; cursor: not-allowed; }
+.mgmt-btn-confirm-reschedule {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background: #ffb74d;
+  color: #0d0d2e;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: opacity 0.18s;
+}
+.mgmt-btn-confirm-reschedule:hover { opacity: 0.85; }
+.mgmt-btn-confirm-reschedule:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ================================================================
+   RESCHEDULE MODAL
+   ================================================================ */
+#mgmt-reschedule-modal { display: none; }
+#mgmt-reschedule-modal.open { display: flex; }
+
+/* ================================================================
+   DIVIDER before packages (agent view only)
+   ================================================================ */
+.mgmt-book-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 40px 24px 28px;
+}
+.mgmt-book-divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(104,104,238,0.3), transparent);
+}
+.mgmt-book-divider-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(104,104,238,0.5);
+  white-space: nowrap;
+}
+
+/* ================================================================
+   TOAST
+   ================================================================ */
+.mgmt-toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  background: #0d0d2e;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  z-index: 9999;
+  transform: translateY(10px);
+  opacity: 0;
+  transition: transform 0.25s, opacity 0.25s;
+  max-width: 320px;
+  pointer-events: none;
+}
+.mgmt-toast.show { transform: translateY(0); opacity: 1; }
+.mgmt-toast.t-success { border-color: rgba(76,175,80,0.4); color: #4caf50; }
+.mgmt-toast.t-error   { border-color: rgba(255,82,82,0.4); color: #ff5252; }
+</style>
+
+<!-- ================================================================
+     SECTION: studios-mgmt
+     ================================================================ -->
+<section id="studios-mgmt">
+
+  <!-- ============================================================
+       AGENT VIEW
+       ============================================================ -->
+  <div id="mgmt-agent-view" style="display:none;">
+    <div class="mgmt-wrap">
+      <div class="mgmt-section">
+        <p class="mgmt-section-label">Your Bookings</p>
+        <h2 class="mgmt-section-heading">My Sessions</h2>
+
+        <!-- error -->
+        <div id="mgmt-agent-error" style="display:none;">
+          <div class="mgmt-error">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+            <span id="mgmt-agent-error-msg">Unable to load your sessions.</span>
+          </div>
+        </div>
+
+        <!-- upcoming -->
+        <p class="mgmt-sub-label" id="mgmt-agent-upcoming-lbl" style="display:none;margin-top:0;">Upcoming</p>
+        <div class="mgmt-agent-grid" id="mgmt-agent-upcoming-grid">
+          <!-- skeleton -->
+          <div class="mgmt-agent-session-card mgmt-skeleton" style="height:170px;"></div>
+          <div class="mgmt-agent-session-card mgmt-skeleton" style="height:170px;"></div>
+        </div>
+
+        <!-- past -->
+        <div id="mgmt-agent-past-section" style="display:none;">
+          <p class="mgmt-sub-label">Past Sessions</p>
+          <div class="mgmt-past-list" id="mgmt-agent-past-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- divider leading into packages/booking form -->
+    <div class="mgmt-book-divider">
+      <div class="mgmt-book-divider-line"></div>
+      <span class="mgmt-book-divider-label">Book a Session</span>
+      <div class="mgmt-book-divider-line"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PRODUCER VIEW
+       ============================================================ -->
+  <div id="mgmt-producer-view" style="display:none;">
+    <div class="mgmt-wrap">
+      <div class="mgmt-section" style="padding-bottom:52px;">
+        <p class="mgmt-section-label">Studios</p>
+        <h2 class="mgmt-section-heading" id="mgmt-prod-heading">Your Schedule</h2>
+
+        <!-- error -->
+        <div id="mgmt-prod-error" style="display:none;">
+          <div class="mgmt-error">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+            <span id="mgmt-prod-error-msg">Unable to load your schedule.</span>
+          </div>
+        </div>
+
+        <!-- week navigation -->
+        <div class="mgmt-week-nav">
+          <button class="mgmt-week-btn" onclick="mgmtWeekOffset(-1)" title="Previous week">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <span class="mgmt-week-label" id="mgmt-week-label">Loading...</span>
+          <button class="mgmt-week-btn" onclick="mgmtWeekOffset(1)" title="Next week">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+          <button class="mgmt-filter-btn" onclick="mgmtResetWeek()" style="margin-left:4px;">Today</button>
+        </div>
+
+        <!-- 7-day calendar row (skeleton) -->
+        <div class="mgmt-week-grid" id="mgmt-week-grid-skel">
+          <div class="mgmt-day-col"><div class="mgmt-day-header mgmt-skeleton" style="height:56px;"></div></div>
+          <div class="mgmt-day-col"><div class="mgmt-day-header mgmt-skeleton" style="height:56px;"></div></div>
+          <div class="mgmt-day-col"><div class="mgmt-day-header mgmt-skeleton" style="height:56px;"></div></div>
+          <div class="mgmt-day-col"><div class="mgmt-day-header mgmt-skeleton" style="height:56px;"></div></div>
+          <div class="mgmt-day-col"><div class="mgmt-day-header mgmt-skeleton" style="height:56px;"></div></div>
+          <div class="mgmt-day-col"><div class="mgmt-day-header mgmt-skeleton" style="height:56px;"></div></div>
+          <div class="mgmt-day-col"><div class="mgmt-day-header mgmt-skeleton" style="height:56px;"></div></div>
+        </div>
+        <div class="mgmt-week-grid" id="mgmt-week-grid" style="display:none;"></div>
+
+        <!-- detailed session cards for the week -->
+        <div class="mgmt-card" id="mgmt-prod-sessions-card" style="display:none;">
+          <p class="mgmt-card-title" id="mgmt-prod-sessions-title">Sessions This Week</p>
+          <div class="mgmt-prod-sessions-grid" id="mgmt-prod-sessions-grid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       OPERATOR VIEW
+       ============================================================ -->
+  <div id="mgmt-operator-view" style="display:none;">
+    <div class="mgmt-wrap">
+      <div class="mgmt-section" style="padding-bottom:52px;">
+        <p class="mgmt-section-label">Studios Management</p>
+        <h2 class="mgmt-section-heading" id="mgmt-op-heading">Dashboard</h2>
+
+        <!-- error -->
+        <div id="mgmt-op-error" style="display:none;">
+          <div class="mgmt-error">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+            <span id="mgmt-op-error-msg">Unable to load dashboard.</span>
+          </div>
+        </div>
+
+        <!-- Stats skeleton -->
+        <div class="mgmt-stats-row" id="mgmt-op-stats-skel">
+          <div class="mgmt-stat-card"><div class="mgmt-skeleton" style="height:28px;width:60px;margin-bottom:8px;"></div><div class="mgmt-skeleton" style="height:10px;width:80%;"></div></div>
+          <div class="mgmt-stat-card"><div class="mgmt-skeleton" style="height:28px;width:60px;margin-bottom:8px;"></div><div class="mgmt-skeleton" style="height:10px;width:80%;"></div></div>
+          <div class="mgmt-stat-card"><div class="mgmt-skeleton" style="height:28px;width:60px;margin-bottom:8px;"></div><div class="mgmt-skeleton" style="height:10px;width:80%;"></div></div>
+          <div class="mgmt-stat-card"><div class="mgmt-skeleton" style="height:28px;width:60px;margin-bottom:8px;"></div><div class="mgmt-skeleton" style="height:10px;width:80%;"></div></div>
+          <div class="mgmt-stat-card"><div class="mgmt-skeleton" style="height:28px;width:60px;margin-bottom:8px;"></div><div class="mgmt-skeleton" style="height:10px;width:80%;"></div></div>
+        </div>
+
+        <!-- Stats row (real) -->
+        <div class="mgmt-stats-row mgmt-fadein" id="mgmt-op-stats-row" style="display:none;">
+          <div class="mgmt-stat-card">
+            <span class="mgmt-stat-value v-purple" id="op-stat-total">--</span>
+            <span class="mgmt-stat-label">Total Sessions</span>
+          </div>
+          <div class="mgmt-stat-card">
+            <span class="mgmt-stat-value v-green" id="op-stat-rev">--</span>
+            <span class="mgmt-stat-label">Revenue</span>
+          </div>
+          <div class="mgmt-stat-card">
+            <span class="mgmt-stat-value" id="op-stat-free">--</span>
+            <span class="mgmt-stat-label">Free Sessions</span>
+          </div>
+          <div class="mgmt-stat-card">
+            <span class="mgmt-stat-value v-amber" id="op-stat-paid">--</span>
+            <span class="mgmt-stat-label">Paid Sessions</span>
+          </div>
+          <div class="mgmt-stat-card">
+            <span class="mgmt-stat-value v-red" id="op-stat-cancelled">--</span>
+            <span class="mgmt-stat-label">Cancelled</span>
+          </div>
+        </div>
+
+        <!-- Producer split mini-cards -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:360px;margin-bottom:32px;" id="mgmt-op-split" style="display:none;">
+          <div class="mgmt-stat-card">
+            <span class="mgmt-stat-value v-purple" id="op-stat-danny" style="font-size:20px;">--</span>
+            <span class="mgmt-stat-label">Danny's Sessions</span>
+          </div>
+          <div class="mgmt-stat-card">
+            <span class="mgmt-stat-value v-purple" id="op-stat-hailey" style="font-size:20px;">--</span>
+            <span class="mgmt-stat-label">Hailey's Sessions</span>
+          </div>
+        </div>
+
+        <!-- Bookings card with filters + table -->
+        <div class="mgmt-card">
+          <p class="mgmt-card-title">Upcoming Sessions</p>
+
+          <div class="mgmt-filter-row">
+            <span class="mgmt-filter-label">Producer</span>
+            <button class="mgmt-filter-btn active" data-pf="all"    onclick="mgmtOpFilter('all')">All</button>
+            <button class="mgmt-filter-btn"         data-pf="danny"  onclick="mgmtOpFilter('danny')">Danny</button>
+            <button class="mgmt-filter-btn"         data-pf="hailey" onclick="mgmtOpFilter('hailey')">Hailey</button>
+          </div>
+
+          <div class="mgmt-date-filter">
+            <span class="mgmt-date-label">From</span>
+            <input type="date" class="mgmt-date-input" id="op-filter-from" onchange="mgmtOpRenderTable()">
+            <span class="mgmt-date-label">To</span>
+            <input type="date" class="mgmt-date-input" id="op-filter-to"   onchange="mgmtOpRenderTable()">
+            <button class="mgmt-filter-btn" onclick="mgmtOpClearDates()">Clear</button>
+          </div>
+
+          <div class="mgmt-table-wrap">
+            <table class="mgmt-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Agent</th>
+                  <th>Package</th>
+                  <th>Producer</th>
+                  <th>Payment</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="mgmt-op-tbody">
+                <tr><td colspan="9" style="text-align:center;padding:32px;">
+                  <div class="mgmt-skeleton" style="height:12px;width:55%;margin:0 auto 10px;"></div>
+                  <div class="mgmt-skeleton" style="height:12px;width:35%;margin:0 auto;"></div>
+                </td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Promo Code Manager -->
+        <div class="mgmt-card">
+          <p class="mgmt-card-title">Promo Codes</p>
+          <div class="mgmt-promo-list" id="mgmt-op-promo-list">
+            <div class="mgmt-skeleton" style="height:48px;border-radius:10px;"></div>
+            <div class="mgmt-skeleton" style="height:48px;border-radius:10px;margin-top:10px;"></div>
+          </div>
+          <div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:20px;">
+            <p class="mgmt-card-title" style="margin-bottom:14px;">Add New Code</p>
+            <div class="mgmt-promo-form">
+              <div class="mgmt-form-group">
+                <label class="mgmt-form-label">Code</label>
+                <input type="text" id="mgmt-op-promo-code" class="mgmt-form-input"
+                  placeholder="e.g. SUMMER25" maxlength="30"
+                  oninput="this.value = this.value.toUpperCase().replace(/\s/g,'')">
+              </div>
+              <div class="mgmt-form-group">
+                <label class="mgmt-form-label">Discount %</label>
+                <input type="number" id="mgmt-op-promo-pct" class="mgmt-form-input"
+                  placeholder="e.g. 20" min="1" max="100">
+              </div>
+              <button class="mgmt-btn-primary" onclick="mgmtOpCreatePromo()">Create</button>
+            </div>
+            <div class="mgmt-promo-feedback" id="mgmt-op-promo-feedback"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================================================
+     CANCEL MODAL (shared by all views)
+     ============================================================ -->
+<div class="mgmt-modal-overlay" id="mgmt-cancel-modal">
+  <div class="mgmt-modal">
+    <div class="mgmt-modal-icon cancel-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </div>
+    <h3>Cancel Session?</h3>
+    <p id="mgmt-cancel-desc">This will cancel the booking. This cannot be undone.</p>
+    <textarea class="mgmt-modal-textarea" id="mgmt-cancel-reason" placeholder="Reason for cancellation (optional)"></textarea>
+    <div class="mgmt-modal-actions">
+      <button class="mgmt-btn-ghost" onclick="mgmtCloseModal('mgmt-cancel-modal')">Keep It</button>
+      <button class="mgmt-btn-confirm-cancel" id="mgmt-cancel-confirm-btn" onclick="mgmtDoCancel()">Cancel Session</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     RESCHEDULE MODAL (producers / operators)
+     ============================================================ -->
+<div class="mgmt-modal-overlay" id="mgmt-reschedule-modal">
+  <div class="mgmt-modal">
+    <div class="mgmt-modal-icon reschedule-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h4v4"/></svg>
+    </div>
+    <h3>Reschedule Session</h3>
+    <p id="mgmt-reschedule-desc">Choose a new date and time for this session.</p>
+    <label class="mgmt-form-label" style="display:block;margin-bottom:6px;">New Date</label>
+    <input type="date" class="mgmt-modal-input" id="mgmt-reschedule-date">
+    <label class="mgmt-form-label" style="display:block;margin-bottom:6px;">New Time</label>
+    <input type="time" class="mgmt-modal-input" id="mgmt-reschedule-time">
+    <label class="mgmt-form-label" style="display:block;margin-bottom:6px;">Note to Agent (optional)</label>
+    <textarea class="mgmt-modal-textarea" id="mgmt-reschedule-note" placeholder="e.g. Moved due to schedule conflict" style="min-height:56px;margin-bottom:20px;"></textarea>
+    <div class="mgmt-modal-actions">
+      <button class="mgmt-btn-ghost" onclick="mgmtCloseModal('mgmt-reschedule-modal')">Cancel</button>
+      <button class="mgmt-btn-confirm-reschedule" id="mgmt-reschedule-confirm-btn" onclick="mgmtDoReschedule()">Confirm Reschedule</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="mgmt-toast" id="mgmt-toast"></div>
+
+<script>
+/* ================================================================
+   STUDIOS MANAGEMENT - IIFE, scoped to avoid global pollution
+   ================================================================ */
+(function() {
+
+  const HUB = 'https://app.serhantorlandohub.com';
+
+  /* ---- Role definitions ---- */
+  const OPERATORS  = ['mark@serhant.com', 'sarah.raumaker@serhant.com'];
+  const PRODUCERS  = ['daniel.botton@serhant.com', 'hailey@serhant.com'];
+  const STUDIOS_TEAM = [...OPERATORS, ...PRODUCERS];
+
+  const rawEmail  = localStorage.getItem('portal_user_email') || '';
+  const email     = rawEmail.toLowerCase().trim();
+  const userName  = localStorage.getItem('portal_user_name') || '';
+  const firstName = userName.split(' ')[0] || '';
+
+  const isOperator   = OPERATORS.includes(email);
+  const isProducer   = PRODUCERS.includes(email);
+  const isAgent      = !!email && !isOperator && !isProducer; // everyone else
+
+  /* ---- Shared modal state ---- */
+  let pendingCancelId    = null;
+  let pendingCancelEmail = null; // email of the booking owner (or logged-in)
+  let pendingRescheduleId = null;
+
+  /* ---- Operator booking filter state ---- */
+  let opBookings       = [];
+  let opProducerFilter = 'all';
+
+  /* ---- Producer week offset ---- */
+  let prodWeekOffset = 0;
+  let prodBookings   = [];
+
+  /* ================================================================
+     INIT
+     ================================================================ */
+  function init() {
+    if (!email) return; // not logged in, section stays hidden
+
+    document.getElementById('studios-mgmt').style.display = 'block';
+
+    if (isOperator) {
+      showOperatorView();
+    } else if (isProducer) {
+      showProducerView();
+    } else if (isAgent) {
+      showAgentView();
+    }
+  }
+
+  /* ================================================================
+     AGENT VIEW
+     ================================================================ */
+  function showAgentView() {
+    document.getElementById('mgmt-agent-view').style.display = 'block';
+    // Packages and booking form are visible (default in studios.html)
+    loadAgentSessions();
+  }
+
+  async function loadAgentSessions() {
+    try {
+      const r = await fetch(HUB + '/api/studios/my-bookings?email=' + enc(email));
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      renderAgentUpcoming(data.upcoming || []);
+      renderAgentPast(data.past || []);
+    } catch(e) {
+      el('mgmt-agent-upcoming-grid').innerHTML = '';
+      showError('mgmt-agent-error', 'mgmt-agent-error-msg', 'Could not load your sessions: ' + e.message);
+    }
+  }
+
+  function renderAgentUpcoming(bookings) {
+    const grid  = el('mgmt-agent-upcoming-grid');
+    const lbl   = el('mgmt-agent-upcoming-lbl');
+    if (!bookings.length) {
+      lbl.style.display = 'none';
+      grid.innerHTML = `
+        <div class="mgmt-empty" style="grid-column:1/-1;border:1px solid rgba(255,255,255,0.06);border-radius:16px;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h8M8 18h5"/>
+          </svg>
+          <p>No upcoming sessions yet. Book one below.</p>
+        </div>`;
+      return;
+    }
+    lbl.style.display = 'block';
+    grid.innerHTML = bookings.map(b => agentCard(b, true)).join('');
+  }
+
+  function agentCard(b, upcoming) {
+    const status  = (b.status || 'confirmed').toLowerCase();
+    const canCancel = upcoming && status !== 'cancelled' && status !== 'completed';
+    return `
+      <div class="mgmt-agent-session-card mgmt-fadein">
+        <div class="mgmt-agent-pkg">${x(b.package_name || b.package || 'Session')}</div>
+        <div class="mgmt-agent-dt">${fmtDate(b.date || b.booking_date)} at ${fmtTime(b.time || b.start_time)}</div>
+        ${b.address || b.location ? `
+        <div class="mgmt-agent-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          <span>${x(b.address || b.location)}</span>
+        </div>` : ''}
+        ${b.producer ? `
+        <div class="mgmt-agent-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          <span>Producer: ${x(b.producer)}</span>
+        </div>` : ''}
+        <div class="mgmt-agent-bknum">Booking #${x(String(b.id || b.booking_id || b.booking_number || ''))}</div>
+        ${canCancel ? `
+        <div class="mgmt-agent-actions">
+          <button class="mgmt-btn-cancel"
+            onclick="mgmtOpenCancel('${x(b.id||b.booking_id)}','${x(email)}',
+              'Cancel your ${x(b.package_name||'session')} on ${fmtDate(b.date||b.booking_date)}?')">
+            Cancel
+          </button>
+        </div>` : status === 'cancelled' ? `
+        <div style="text-align:right;font-size:10px;color:#ff5252;font-weight:700;letter-spacing:0.5px;margin-top:4px;">CANCELLED</div>` : ''}
+      </div>`;
+  }
+
+  function renderAgentPast(bookings) {
+    const section = el('mgmt-agent-past-section');
+    const list    = el('mgmt-agent-past-list');
+    if (!bookings.length) { section.style.display = 'none'; return; }
+    section.style.display = 'block';
+    list.innerHTML = bookings.map(b => {
+      const st = (b.status || 'completed').toLowerCase();
+      return `<div class="mgmt-past-row">
+        <span class="mgmt-past-date">${fmtDate(b.date || b.booking_date)}</span>
+        <span class="mgmt-past-pkg">${x(b.package_name || b.package || 'Session')}</span>
+        <span class="mgmt-badge ${st === 'cancelled' ? 'b-cancelled' : 'b-completed'}">
+          <span class="mgmt-badge-dot"></span>${st}
+        </span>
+      </div>`;
+    }).join('');
+  }
+
+  /* ================================================================
+     PRODUCER VIEW
+     ================================================================ */
+  function showProducerView() {
+    document.getElementById('mgmt-producer-view').style.display = 'block';
+    el('mgmt-prod-heading').textContent = (firstName ? firstName + "'s" : 'Your') + ' Schedule';
+
+    // Hide packages and booking form (not for producers)
+    hideBookingUI();
+
+    loadProducerSchedule();
+  }
+
+  async function loadProducerSchedule() {
+    try {
+      const r = await fetch(HUB + '/api/studios/admin?email=' + enc(email) + '&view=upcoming');
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      prodBookings = data.bookings || [];
+      el('mgmt-week-grid-skel').style.display = 'none';
+      el('mgmt-week-grid').style.display = 'grid';
+      renderWeek();
+    } catch(e) {
+      el('mgmt-week-grid-skel').style.display = 'none';
+      showError('mgmt-prod-error', 'mgmt-prod-error-msg', 'Could not load schedule: ' + e.message);
+    }
+  }
+
+  function renderWeek() {
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    // Start of current week (Sunday)
+    const weekStart = new Date(today);
+    weekStart.setDate(today.getDate() - today.getDay() + (prodWeekOffset * 7));
+
+    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    // Update week label
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6);
+    el('mgmt-week-label').textContent =
+      months[weekStart.getMonth()] + ' ' + weekStart.getDate() +
+      ' - ' +
+      months[weekEnd.getMonth()] + ' ' + weekEnd.getDate() + ', ' + weekEnd.getFullYear();
+
+    // Map bookings by date string (YYYY-MM-DD)
+    const byDay = {};
+    prodBookings.forEach(b => {
+      const rawDate = b.date || b.booking_date || '';
+      if (!rawDate) return;
+      const key = rawDate.substring(0, 10);
+      if (!byDay[key]) byDay[key] = [];
+      byDay[key].push(b);
+    });
+
+    // Build 7 day columns
+    const grid = el('mgmt-week-grid');
+    grid.innerHTML = '';
+
+    const weekBookings = [];
+
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(weekStart);
+      d.setDate(weekStart.getDate() + i);
+      const key = d.toISOString().substring(0, 10);
+      const isToday = d.getTime() === today.getTime();
+      const dayBookings = byDay[key] || [];
+
+      if (dayBookings.length) weekBookings.push(...dayBookings);
+
+      const chips = dayBookings.map(b => {
+        const cancelled = (b.status || '').toLowerCase() === 'cancelled';
+        return `<div class="mgmt-cal-chip ${cancelled ? 'chip-cancelled' : ''}"
+          onclick="mgmtScrollToCard('card-${x(b.id||b.booking_id)}')">
+          <span class="mgmt-cal-chip-time">${fmtTime(b.time || b.start_time)}</span>
+          <span class="mgmt-cal-chip-agent">${x(b.agent_name || b.agent || 'Agent')}</span>
+          <span class="mgmt-cal-chip-pkg">${x(b.package_name || b.package || '')}</span>
+        </div>`;
+      }).join('');
+
+      const col = document.createElement('div');
+      col.className = 'mgmt-day-col';
+      col.innerHTML = `
+        <div class="mgmt-day-header${isToday ? ' today' : ''}">
+          <span class="mgmt-day-name">${days[d.getDay()]}</span>
+          <span class="mgmt-day-num">${d.getDate()}</span>
+        </div>
+        ${chips || '<span class="mgmt-cal-empty">-</span>'}`;
+      grid.appendChild(col);
+    }
+
+    // Render detail cards for this week
+    renderProdSessionCards(weekBookings);
+  }
+
+  function renderProdSessionCards(bookings) {
+    const card  = el('mgmt-prod-sessions-card');
+    const grid  = el('mgmt-prod-sessions-grid');
+    const title = el('mgmt-prod-sessions-title');
+
+    if (!bookings.length) {
+      card.style.display = 'block';
+      grid.innerHTML = `<div class="mgmt-empty" style="grid-column:1/-1;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+        </svg>
+        <p>No sessions scheduled this week.</p>
+      </div>`;
+      title.textContent = 'This Week';
+      return;
+    }
+
+    card.style.display = 'block';
+    title.textContent = bookings.length + ' Session' + (bookings.length !== 1 ? 's' : '') + ' This Week';
+
+    // Sort by date then time
+    bookings.sort((a, b) => {
+      const da = (a.date || a.booking_date || '') + (a.time || a.start_time || '');
+      const db = (b.date || b.booking_date || '') + (b.time || b.start_time || '');
+      return da.localeCompare(db);
+    });
+
+    grid.innerHTML = bookings.map(b => prodSessionCard(b)).join('');
+  }
+
+  function prodSessionCard(b) {
+    const bId     = b.id || b.booking_id;
+    const status  = (b.status || 'confirmed').toLowerCase();
+    const badgeCls = { confirmed:'b-confirmed', pending:'b-pending', cancelled:'b-cancelled', completed:'b-completed' }[status] || 'b-confirmed';
+    const canAct  = status !== 'cancelled' && status !== 'completed';
+
+    return `
+      <div class="mgmt-prod-session-card mgmt-fadein" id="card-${x(bId)}">
+        <div class="mgmt-prod-sess-date">${fmtDate(b.date || b.booking_date)}</div>
+        <div class="mgmt-prod-sess-time">${fmtTime(b.time || b.start_time)}</div>
+        <div class="mgmt-prod-sess-pkg">${x(b.package_name || b.package || '')}</div>
+        <div class="mgmt-prod-divider"></div>
+
+        <div class="mgmt-prod-detail-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span><strong>${x(b.agent_name || b.agent || 'Agent')}</strong></span>
+        </div>
+
+        ${b.agent_email ? `
+        <div class="mgmt-prod-detail-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          <span><a href="mailto:${x(b.agent_email)}">${x(b.agent_email)}</a></span>
+        </div>` : ''}
+
+        ${b.agent_phone || b.phone ? `
+        <div class="mgmt-prod-detail-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.64 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.98-.98a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span>${x(b.agent_phone || b.phone)}</span>
+        </div>` : ''}
+
+        ${b.address || b.location ? `
+        <div class="mgmt-prod-detail-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          <span>${x(b.address || b.location)}</span>
+        </div>` : ''}
+
+        ${b.sq_ft || b.sqft || b.square_feet ? `
+        <div class="mgmt-prod-detail-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <span>${x(b.sq_ft || b.sqft || b.square_feet)} sq ft</span>
+        </div>` : ''}
+
+        ${b.gate_code || b.gate ? `
+        <div class="mgmt-prod-detail-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>Gate code: <span class="mgmt-code-pill">${x(b.gate_code || b.gate)}</span></span>
+        </div>` : ''}
+
+        ${b.lockbox_code || b.lockbox ? `
+        <div class="mgmt-prod-detail-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="14" r="2"/><path d="M12 6v4"/></svg>
+          <span>Lockbox: <span class="mgmt-code-pill">${x(b.lockbox_code || b.lockbox)}</span></span>
+        </div>` : ''}
+
+        ${b.notes || b.special_notes ? `
+        <div class="mgmt-prod-detail-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+          <span>${x(b.notes || b.special_notes)}</span>
+        </div>` : ''}
+
+        <div class="mgmt-prod-bknum">Booking #${x(String(bId || ''))}</div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+          <span class="mgmt-badge ${badgeCls}"><span class="mgmt-badge-dot"></span>${status}</span>
+          ${canAct ? `
+          <div class="mgmt-prod-actions">
+            <button class="mgmt-btn-reschedule"
+              onclick="mgmtOpenReschedule('${x(bId)}',
+                'Reschedule ${x(b.agent_name||'booking')} on ${fmtDate(b.date||b.booking_date)}?')">
+              Reschedule
+            </button>
+            <button class="mgmt-btn-cancel"
+              onclick="mgmtOpenCancel('${x(bId)}','${x(b.agent_email||email)}',
+                'Cancel ${x(b.agent_name||'booking')}\'s session on ${fmtDate(b.date||b.booking_date)}?')">
+              Cancel
+            </button>
+          </div>` : ''}
+        </div>
+      </div>`;
+  }
+
+  /* ---- week navigation ---- */
+  window.mgmtWeekOffset = function(delta) {
+    prodWeekOffset += delta;
+    renderWeek();
+  };
+  window.mgmtResetWeek = function() {
+    prodWeekOffset = 0;
+    renderWeek();
+  };
+  window.mgmtScrollToCard = function(cardId) {
+    const card = document.getElementById(cardId);
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  /* ================================================================
+     OPERATOR VIEW
+     ================================================================ */
+  function showOperatorView() {
+    document.getElementById('mgmt-operator-view').style.display = 'block';
+    el('mgmt-op-heading').textContent = 'Dashboard' + (firstName ? ': ' + firstName : '');
+
+    // Hide packages and booking form (operators oversee, don't book)
+    hideBookingUI();
+
+    loadOperatorData();
+  }
+
+  async function loadOperatorData() {
+    try {
+      const r = await fetch(HUB + '/api/studios/admin?email=' + enc(email) + '&view=upcoming');
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+
+      renderOpStats(data.stats || {});
+      opBookings = data.bookings || [];
+      mgmtOpRenderTable();
+      renderOpPromos(data.promo_codes || []);
+    } catch(e) {
+      el('mgmt-op-stats-skel').style.display = 'none';
+      showError('mgmt-op-error', 'mgmt-op-error-msg', 'Failed to load dashboard: ' + e.message);
+    }
+  }
+
+  function renderOpStats(stats) {
+    el('mgmt-op-stats-skel').style.display = 'none';
+    el('mgmt-op-stats-row').style.display = 'grid';
+    el('mgmt-op-split').style.display    = 'grid';
+
+    const rev = stats.total_revenue_cents != null
+      ? '$' + (stats.total_revenue_cents / 100).toLocaleString('en-US', {maximumFractionDigits:0})
+      : (stats.total_revenue != null ? '$' + Number(stats.total_revenue).toLocaleString('en-US', {maximumFractionDigits:0}) : '--');
+
+    el('op-stat-total').textContent     = stats.total_bookings  ?? '--';
+    el('op-stat-rev').textContent       = rev;
+    el('op-stat-free').textContent      = stats.free_sessions   ?? '--';
+    el('op-stat-paid').textContent      = stats.paid_sessions   ?? '--';
+    el('op-stat-cancelled').textContent = stats.cancelled       ?? '--';
+    el('op-stat-danny').textContent     = stats.danny_sessions  ?? '--';
+    el('op-stat-hailey').textContent    = stats.hailey_sessions ?? '--';
+  }
+
+  window.mgmtOpFilter = function(producer) {
+    opProducerFilter = producer;
+    document.querySelectorAll('[data-pf]').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.pf === producer);
+    });
+    mgmtOpRenderTable();
+  };
+
+  window.mgmtOpClearDates = function() {
+    el('op-filter-from').value = '';
+    el('op-filter-to').value   = '';
+    mgmtOpRenderTable();
+  };
+
+  window.mgmtOpRenderTable = function() {
+    const tbody    = el('mgmt-op-tbody');
+    const fromVal  = el('op-filter-from').value;
+    const toVal    = el('op-filter-to').value;
+    const from     = fromVal ? new Date(fromVal + 'T00:00:00') : null;
+    const to       = toVal   ? new Date(toVal   + 'T23:59:59') : null;
+
+    let filtered = opProducerFilter === 'all'
+      ? opBookings
+      : opBookings.filter(b => (b.producer || '').toLowerCase().includes(opProducerFilter));
+
+    if (from || to) {
+      filtered = filtered.filter(b => {
+        const raw = b.date || b.booking_date || '';
+        if (!raw) return true;
+        const d = new Date(raw.substring(0,10) + 'T00:00:00');
+        if (from && d < from) return false;
+        if (to   && d > to)   return false;
+        return true;
+      });
+    }
+
+    if (!filtered.length) {
+      tbody.innerHTML = '<tr class="mgmt-table-empty"><td colspan="9">No sessions match the current filters.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(b => {
+      const status     = (b.status || 'confirmed').toLowerCase();
+      const badgeCls   = { confirmed:'b-confirmed', pending:'b-pending', cancelled:'b-cancelled', completed:'b-completed' }[status] || 'b-confirmed';
+      const payStatus  = (b.payment_status || b.pay_status || '').toLowerCase();
+      const payBadge   = payStatus === 'free' ? 'b-free' : payStatus === 'paid' ? 'b-paid' : 'b-pending';
+      const payLabel   = payStatus || (b.price_cents === 0 || b.price === 0 ? 'free' : 'pending');
+      const price      = b.price_cents != null
+        ? '$' + (b.price_cents / 100).toLocaleString('en-US', {maximumFractionDigits:0})
+        : (b.price != null ? '$' + Number(b.price).toLocaleString('en-US', {maximumFractionDigits:0}) : '--');
+      const canCancel  = status !== 'cancelled' && status !== 'completed';
+
+      return `<tr>
+        <td data-label="Date">${fmtDate(b.date || b.booking_date)}</td>
+        <td data-label="Time">${fmtTime(b.time || b.start_time)}</td>
+        <td data-label="Agent">${x(b.agent_name || b.agent || '')}</td>
+        <td data-label="Package">${x(b.package_name || b.package || '')}</td>
+        <td data-label="Producer">${x(b.producer || '')}</td>
+        <td data-label="Payment">
+          <span class="mgmt-badge ${payBadge}">
+            <span class="mgmt-badge-dot"></span>${payLabel}
+          </span>
+        </td>
+        <td data-label="Price" style="font-weight:700;">${price}</td>
+        <td data-label="Status">
+          <span class="mgmt-badge ${badgeCls}">
+            <span class="mgmt-badge-dot"></span>${status}
+          </span>
+        </td>
+        <td data-label="">
+          ${canCancel ? `
+          <button class="mgmt-btn-cancel"
+            onclick="mgmtOpenCancel('${x(b.id||b.booking_id)}','${x(b.agent_email||email)}',
+              'Cancel ${x(b.agent_name||'this')}\'s session on ${fmtDate(b.date||b.booking_date)}?')">
+            Cancel
+          </button>` : ''}
+        </td>
+      </tr>`;
+    }).join('');
+  };
+
+  function renderOpPromos(codes) {
+    const list = el('mgmt-op-promo-list');
+    if (!codes.length) {
+      list.innerHTML = '<div class="mgmt-empty" style="padding:20px 0;"><p>No active promo codes.</p></div>';
+      return;
+    }
+    list.innerHTML = codes.map(c => `
+      <div class="mgmt-promo-row" id="promo-${x(c.code)}">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+          <span class="mgmt-promo-code">${x(c.code)}</span>
+          <span class="mgmt-promo-pct">${c.discount_percent}% off</span>
+          ${c.uses != null ? `<span class="mgmt-promo-meta">${c.uses} use${c.uses !== 1 ? 's' : ''}</span>` : ''}
+          ${c.created ? `<span class="mgmt-promo-meta">Created ${fmtDate(c.created)}</span>` : ''}
+        </div>
+        <button class="mgmt-btn-deactivate" onclick="mgmtOpDeactivate('${x(c.code)}',this)">Deactivate</button>
+      </div>`
+    ).join('');
+  }
+
+  window.mgmtOpCreatePromo = async function() {
+    const codeEl = el('mgmt-op-promo-code');
+    const pctEl  = el('mgmt-op-promo-pct');
+    const fb     = el('mgmt-op-promo-feedback');
+    const code   = codeEl.value.trim().toUpperCase();
+    const pct    = parseInt(pctEl.value.trim(), 10);
+
+    if (!code) { fb.className = 'mgmt-promo-feedback err'; fb.textContent = 'Enter a code.'; return; }
+    if (isNaN(pct) || pct < 1 || pct > 100) { fb.className = 'mgmt-promo-feedback err'; fb.textContent = 'Discount must be 1-100.'; return; }
+
+    fb.className = 'mgmt-promo-feedback'; fb.textContent = 'Creating...';
+    try {
+      const r = await fetch(HUB + '/api/studios/promo/manage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code, discount_percent: pct })
+      });
+      if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || d.message || 'HTTP ' + r.status); }
+      codeEl.value = ''; pctEl.value = '';
+      fb.className = 'mgmt-promo-feedback ok'; fb.textContent = 'Code "' + code + '" created.';
+      showToast('Promo code ' + code + ' created.', 'success');
+      loadOperatorData();
+    } catch(e) {
+      fb.className = 'mgmt-promo-feedback err'; fb.textContent = 'Error: ' + e.message;
+    }
+  };
+
+  window.mgmtOpDeactivate = async function(code, btn) {
+    if (!confirm('Deactivate promo code "' + code + '"?')) return;
+    btn.disabled = true; btn.textContent = '...';
+    try {
+      const r = await fetch(HUB + '/api/studios/promo/manage', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code })
+      });
+      if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || d.message || 'HTTP ' + r.status); }
+      showToast('"' + code + '" deactivated.', 'success');
+      const row = el('promo-' + code);
+      if (row) { row.style.opacity = '0'; row.style.transition = 'opacity 0.3s'; setTimeout(() => row.remove(), 320); }
+    } catch(e) {
+      btn.disabled = false; btn.textContent = 'Deactivate';
+      showToast('Error: ' + e.message, 'error');
+    }
+  };
+
+  /* ================================================================
+     HIDE BOOKING UI (producers + operators)
+     Hides the packages section, booking form, and bottom CTA
+     in studios.html so they can't book a session for themselves.
+     ================================================================ */
+  function hideBookingUI() {
+    // IDs used in studios.html
+    const idsToHide = ['packages', 'booking-form'];
+    // Classes used in studios.html
+    const classesToHide = ['studios-hero', 'packages-section', 'booking-section', 'studios-bottom-cta', 'ig-section'];
+
+    function applyHide() {
+      idsToHide.forEach(id => {
+        const el2 = document.getElementById(id);
+        if (el2) el2.style.display = 'none';
+      });
+      classesToHide.forEach(cls => {
+        document.querySelectorAll('.' + cls).forEach(node => {
+          node.style.display = 'none';
+        });
+      });
+      // Also hide any section whose id contains "package" or "booking-form"
+      document.querySelectorAll('section[id], div[id]').forEach(node => {
+        const id = (node.id || '').toLowerCase();
+        if (id.includes('package') || id === 'booking-form') {
+          node.style.display = 'none';
+        }
+      });
+    }
+
+    // Apply immediately + after DOM settles
+    applyHide();
+    requestAnimationFrame(applyHide);
+    setTimeout(applyHide, 300);
+  }
+
+  /* ================================================================
+     CANCEL MODAL
+     ================================================================ */
+  window.mgmtOpenCancel = function(bookingId, bookingEmail, desc) {
+    pendingCancelId    = bookingId;
+    pendingCancelEmail = bookingEmail;
+    el('mgmt-cancel-desc').textContent    = desc || 'Cancel this session?';
+    el('mgmt-cancel-reason').value        = '';
+    el('mgmt-cancel-confirm-btn').disabled = false;
+    el('mgmt-cancel-confirm-btn').textContent = 'Cancel Session';
+    el('mgmt-cancel-modal').classList.add('open');
+  };
+
+  window.mgmtDoCancel = async function() {
+    if (!pendingCancelId) return;
+    const btn    = el('mgmt-cancel-confirm-btn');
+    const reason = el('mgmt-cancel-reason').value.trim();
+    btn.disabled = true; btn.textContent = 'Cancelling...';
+    try {
+      const r = await fetch(HUB + '/api/studios/cancel', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ booking_id: pendingCancelId, reason: reason || null, email: pendingCancelEmail || email })
+      });
+      if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || d.message || 'HTTP ' + r.status); }
+      mgmtCloseModal('mgmt-cancel-modal');
+      showToast('Session cancelled.', 'success');
+      refreshAll();
+    } catch(e) {
+      showToast('Could not cancel: ' + e.message, 'error');
+      btn.disabled = false; btn.textContent = 'Cancel Session';
+    }
+  };
+
+  /* ================================================================
+     RESCHEDULE MODAL
+     ================================================================ */
+  window.mgmtOpenReschedule = function(bookingId, desc) {
+    pendingRescheduleId = bookingId;
+    el('mgmt-reschedule-desc').textContent = desc || 'Choose a new date and time.';
+    el('mgmt-reschedule-date').value  = '';
+    el('mgmt-reschedule-time').value  = '';
+    el('mgmt-reschedule-note').value  = '';
+    el('mgmt-reschedule-confirm-btn').disabled = false;
+    el('mgmt-reschedule-confirm-btn').textContent = 'Confirm Reschedule';
+    el('mgmt-reschedule-modal').classList.add('open');
+  };
+
+  window.mgmtDoReschedule = async function() {
+    if (!pendingRescheduleId) return;
+    const btn  = el('mgmt-reschedule-confirm-btn');
+    const date = el('mgmt-reschedule-date').value;
+    const time = el('mgmt-reschedule-time').value;
+    const note = el('mgmt-reschedule-note').value.trim();
+    if (!date || !time) { showToast('Please select a new date and time.', 'error'); return; }
+    btn.disabled = true; btn.textContent = 'Saving...';
+    try {
+      const r = await fetch(HUB + '/api/studios/reschedule', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ booking_id: pendingRescheduleId, new_date: date, new_time: time, note: note || null, email })
+      });
+      if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || d.message || 'HTTP ' + r.status); }
+      mgmtCloseModal('mgmt-reschedule-modal');
+      showToast('Session rescheduled.', 'success');
+      refreshAll();
+    } catch(e) {
+      showToast('Could not reschedule: ' + e.message, 'error');
+      btn.disabled = false; btn.textContent = 'Confirm Reschedule';
+    }
+  };
+
+  window.mgmtCloseModal = function(id) {
+    const m = el(id);
+    if (m) m.classList.remove('open');
+  };
+
+  // Close on overlay click
+  ['mgmt-cancel-modal','mgmt-reschedule-modal'].forEach(id => {
+    const overlay = el(id);
+    if (overlay) overlay.addEventListener('click', e => { if (e.target === overlay) mgmtCloseModal(id); });
+  });
+
+  /* ================================================================
+     REFRESH after mutations
+     ================================================================ */
+  function refreshAll() {
+    if (isOperator)  loadOperatorData();
+    if (isProducer)  loadProducerSchedule();
+    if (isAgent)     loadAgentSessions();
+  }
+
+  /* ================================================================
+     HELPERS
+     ================================================================ */
+  function el(id) { return document.getElementById(id); }
+
+  function enc(s) { return encodeURIComponent(s); }
+
+  function x(str) {
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  function fmtDate(raw) {
+    if (!raw) return '';
+    try {
+      const d = new Date(String(raw).includes('T') ? raw : raw.substring(0,10) + 'T00:00:00');
+      return d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' });
+    } catch { return raw; }
+  }
+
+  function fmtTime(raw) {
+    if (!raw) return '';
+    try {
+      if (String(raw).includes('T')) return new Date(raw).toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+      const [h, m] = String(raw).split(':').map(Number);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      return (h % 12 || 12) + ':' + String(m || 0).padStart(2,'0') + ' ' + ampm;
+    } catch { return raw; }
+  }
+
+  function showError(panelId, msgId, msg) {
+    const p = el(panelId); if (p) p.style.display = 'block';
+    const m = el(msgId);   if (m) m.textContent = msg;
+  }
+
+  let toastTimer = null;
+  function showToast(msg, type) {
+    const t = el('mgmt-toast');
+    t.textContent = msg;
+    t.className   = 'mgmt-toast t-' + (type||'success') + ' show';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3800);
+  }
+
+  /* ================================================================
+     BOOT - wait for auth to settle, then init
+     ================================================================ */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => setTimeout(init, 150));
+  } else {
+    setTimeout(init, 150);
+  }
+
+})();
+</script>
+
+
   <!-- ==================== HERO ==================== -->
   <section class="studios-hero">
     <div class="studios-hero-inner">
