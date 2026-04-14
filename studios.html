@@ -223,6 +223,16 @@
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
     .form-hint { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 4px; }
+    .time-slots-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .time-slot {
+      padding: 10px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.7); font-size: 13px;
+      font-weight: 600; font-family: 'Montserrat', sans-serif; cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .time-slot:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); }
+    .time-slot.selected { border-color: #6868ee; background: rgba(104,104,238,0.15); color: white; }
+    .time-slot.unavailable { opacity: 0.25; cursor: not-allowed; text-decoration: line-through; }
 
     /* Extra reels stepper */
     .stepper {
@@ -603,14 +613,20 @@
           <div class="form-hint">Travel fees may apply for locations 45+ miles from Orlando.</div>
         </div>
 
-        <!-- Date / Time -->
+        <!-- Date -->
         <div class="form-group">
-          <label class="form-label">Preferred Date and Time</label>
-          <div class="datetime-row">
-            <input type="date" class="form-input" id="booking-date" min="">
-            <input type="time" class="form-input" id="booking-time" min="09:00" max="17:00" step="1800" value="10:00">
-          </div>
+          <label class="form-label">Preferred Date</label>
+          <input type="date" class="form-input" id="booking-date" min="">
           <div class="form-hint">Sessions available Monday through Friday, 9:00 AM to 5:00 PM.</div>
+        </div>
+
+        <!-- Time Slots (populated by availability API) -->
+        <div class="form-group">
+          <label class="form-label">Available Times</label>
+          <div class="time-slots-grid" id="time-slots">
+            <div style="color:rgba(255,255,255,0.4);font-size:13px;padding:8px 0;">Select a date to see available times.</div>
+          </div>
+          <input type="hidden" id="booking-time" value="10:00">
         </div>
 
         <!-- Access Info -->
@@ -757,9 +773,13 @@
         if (place?.geometry?.location) {
           const lat = place.geometry.location.lat();
           const lng = place.geometry.location.lng();
+          selectedLat = lat;
+          selectedLng = lng;
           // Orlando office: 28.5383, -81.3792
           const dist = haversine(28.5383, -81.3792, lat, lng);
           setTravelFee(dist);
+          // Re-check availability with location for drivetime
+          loadAvailability();
         }
       });
     }
@@ -772,32 +792,38 @@
     }
   </script>
   <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxxxxxxxxxxxxxxxxxxxxxxxxxx&libraries=places&callback=initPlaces">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBs60nBBh5hV_VpGmwZO77sRY0F1Hd4dFc&libraries=places&callback=initPlaces">
   </script>
 
   <script src="shared.js"></script>
   <script>
     /* ============================================================
-       STUDIOS BOOKING ENGINE
+       STUDIOS BOOKING ENGINE (wired to Hub API)
        ============================================================ */
+
+    const HUB = 'https://app.serhantorlandohub.com';
+    const SB  = 'https://lqothpzxhxvhvyikmphx.supabase.co/rest/v1';
+    const SK  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxb3RocHp4aHh2aHZ5aWttcGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5ODkzNjgsImV4cCI6MjA5MDU2NTM2OH0.zDE-lniLRF3TdYZmMMSQL20vF_H74_qiMlJM2tX_nKo';
 
     // ---- State ----
     let selectedPkg   = null;
     let extraReels    = 0;
     let travelFee     = 0;
-    let promoDiscount = 0; // percentage (0-100)
+    let travelMiles   = 0;
+    let promoDiscount = 0;
     let promoCode     = '';
+    let selectedLat   = null;
+    let selectedLng   = null;
+    let selectedSlot  = null;
+    let isSubmitting  = false;
 
-    // ---- Promo codes (100% off = free) ----
-    const PROMO_CODES = {
-      '500K':       100, 'MARK':       100, 'HOMESQUAD': 100,
-      'SERHANT':    100, 'VIP':        100, 'ORLANDO':   100,
-      'STUDIOS':    100, 'LAUNCH':     100, 'WELCOME':   100,
-      'REELSDEAL':  100, 'CONTENT':    100,
-    };
+    // Agent info from auth
+    const agentEmail = (localStorage.getItem('portal_user_email') || '').toLowerCase();
+    const agentName  = localStorage.getItem('portal_user_name') || '';
 
     // ---- Travel fee tiers ----
     function setTravelFee(miles) {
+      travelMiles = miles;
       if (miles <= 44)       travelFee = 0;
       else if (miles <= 70)  travelFee = 100;
       else if (miles <= 100) travelFee = 200;
@@ -808,7 +834,6 @@
     // ---- Package selection ----
     document.querySelectorAll('.package-card').forEach(card => {
       card.addEventListener('click', () => {
-        // Deselect all
         document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
         card.classList.add('selected');
 
@@ -820,11 +845,9 @@
           producer: card.dataset.producer,
         };
 
-        // Update booking form
         document.getElementById('booking-pkg-name').textContent = selectedPkg.name;
         document.getElementById('price-pkg-name').textContent   = selectedPkg.name;
 
-        // Hide extra reels stepper if the selected package IS extra reel
         const reelGroup = document.getElementById('extra-reels-group');
         if (selectedPkg.id === 'extra-reel') {
           reelGroup.style.display = 'none';
@@ -833,12 +856,17 @@
           reelGroup.style.display = '';
         }
 
+        // Reset slot selection
+        selectedSlot = null;
         updatePrice();
 
         // Open booking form
         const form = document.getElementById('booking-form');
         form.classList.add('open');
         setTimeout(() => form.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+
+        // Load availability for the selected date
+        loadAvailability();
       });
     });
 
@@ -849,20 +877,32 @@
       updatePrice();
     }
 
-    // ---- Promo code ----
-    function applyPromo() {
+    // ---- Promo code (API validated) ----
+    async function applyPromo() {
       const input = document.getElementById('booking-promo');
       const status = document.getElementById('promo-status');
       const code = input.value.trim().toUpperCase();
+      if (!code) return;
 
-      if (PROMO_CODES[code] !== undefined) {
-        promoDiscount = PROMO_CODES[code];
-        promoCode = code;
-        status.textContent = promoDiscount === 100 ? 'Code applied. Session is complimentary.' : `Code applied. ${promoDiscount}% off.`;
-        status.style.color = '#4caf50';
-      } else {
+      status.textContent = 'Checking...';
+      status.style.color = 'rgba(255,255,255,0.4)';
+
+      try {
+        const r = await fetch(HUB + '/api/studios/promo/validate?code=' + encodeURIComponent(code));
+        const d = await r.json();
+        if (d.valid) {
+          promoDiscount = d.discount_percent;
+          promoCode = code;
+          status.textContent = promoDiscount === 100 ? 'Code applied. Session is complimentary.' : `Code applied. ${promoDiscount}% off.`;
+          status.style.color = '#4caf50';
+        } else {
+          promoDiscount = 0; promoCode = '';
+          status.textContent = 'Invalid code.';
+          status.style.color = '#ff5252';
+        }
+      } catch(e) {
         promoDiscount = 0; promoCode = '';
-        status.textContent = 'Invalid code.';
+        status.textContent = 'Could not validate. Try again.';
         status.style.color = '#ff5252';
       }
       updatePrice();
@@ -880,21 +920,18 @@
 
       document.getElementById('price-pkg-val').textContent = pkgPrice === 0 ? 'Free' : `$${pkgPrice}`;
 
-      // Reels row
       const reelsRow = document.getElementById('price-reels-row');
       if (extraReels > 0) {
-        reelsRow.style.display = ''; 
+        reelsRow.style.display = '';
         document.getElementById('price-reels-val').textContent = `$${reelsPrice}`;
       } else { reelsRow.style.display = 'none'; }
 
-      // Travel row
       const travelRow = document.getElementById('price-travel-row');
       if (travelFee > 0) {
         travelRow.style.display = '';
         document.getElementById('price-travel-val').textContent = `$${travelFee}`;
       } else { travelRow.style.display = 'none'; }
 
-      // Promo row
       const promoRow = document.getElementById('price-promo-row');
       if (discount > 0) {
         promoRow.style.display = '';
@@ -904,11 +941,59 @@
       document.getElementById('price-total').textContent = total === 0 ? 'Free' : `$${total}`;
     }
 
+    // ---- Availability ----
+    async function loadAvailability() {
+      if (!selectedPkg) return;
+      const date = document.getElementById('booking-date').value;
+      if (!date) return;
+
+      const slotsContainer = document.getElementById('time-slots');
+      if (!slotsContainer) return;
+      slotsContainer.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:13px;padding:8px 0;">Loading availability...</div>';
+
+      try {
+        let url = HUB + '/api/studios/availability?date=' + date + '&package_id=' + selectedPkg.id;
+        if (selectedLat && selectedLng) url += '&lat=' + selectedLat + '&lng=' + selectedLng;
+
+        const r = await fetch(url);
+        const d = await r.json();
+
+        if (d.slots && d.slots.length > 0) {
+          slotsContainer.innerHTML = '';
+          d.slots.forEach(slot => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'time-slot' + (slot.available ? '' : ' unavailable');
+            btn.textContent = formatTime(slot.time);
+            if (slot.available) {
+              btn.onclick = () => selectSlot(slot.time, slot.producer, btn);
+            } else {
+              btn.disabled = true;
+            }
+            slotsContainer.appendChild(btn);
+          });
+        } else {
+          slotsContainer.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:13px;padding:8px 0;">No availability for this date. Try another day.</div>';
+        }
+      } catch(e) {
+        slotsContainer.innerHTML = '<div style="color:#ff5252;font-size:13px;padding:8px 0;">Could not load availability. The time picker below is still available.</div>';
+      }
+    }
+
+    function selectSlot(time, producer, btn) {
+      document.querySelectorAll('.time-slot').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedSlot = { time, producer };
+      document.getElementById('booking-time').value = time;
+    }
+
+    // Re-check availability when date changes
+    document.getElementById('booking-date').addEventListener('change', loadAvailability);
+
     // ---- Set min date to tomorrow ----
     (function() {
       const d = new Date();
       d.setDate(d.getDate() + 1);
-      // Skip to Monday if Saturday/Sunday
       const dow = d.getDay();
       if (dow === 0) d.setDate(d.getDate() + 1);
       if (dow === 6) d.setDate(d.getDate() + 2);
@@ -916,22 +1001,71 @@
       document.getElementById('booking-date').value = d.toISOString().split('T')[0];
     })();
 
-    // ---- Submit booking ----
-    function submitBooking() {
-      if (!selectedPkg) return;
-      const addr = document.getElementById('booking-address').value.trim();
-      const date = document.getElementById('booking-date').value;
-      const time = document.getElementById('booking-time').value;
+    // ---- Submit booking (real API call) ----
+    async function submitBooking() {
+      if (!selectedPkg || isSubmitting) return;
+      const addr  = document.getElementById('booking-address').value.trim();
+      const date  = document.getElementById('booking-date').value;
+      const time  = document.getElementById('booking-time').value;
+      const gate  = document.getElementById('booking-gate').value.trim();
+      const lock  = document.getElementById('booking-lockbox').value.trim();
+      const sqft  = document.getElementById('booking-sqft').value.trim();
+      const cam   = document.getElementById('booking-agents-cam').value;
+      const mls   = document.getElementById('booking-mls-date').value;
+      const notes = document.getElementById('booking-notes').value.trim();
 
       if (!addr) { document.getElementById('booking-address').focus(); return; }
       if (!date) { document.getElementById('booking-date').focus(); return; }
 
-      // Show confirmation modal
-      const msg = document.getElementById('modal-msg');
-      const detail = document.getElementById('modal-detail');
-      msg.textContent = `Your ${selectedPkg.name} has been booked for ${formatDate(date)} at ${formatTime(time)}.`;
-      detail.textContent = `Location: ${addr}. A confirmation email will be sent to you and the studiosorlando@serhant.com calendar.`;
-      document.getElementById('booking-modal').classList.add('active');
+      const btn = document.getElementById('book-btn');
+      btn.textContent = 'Booking...';
+      btn.disabled = true;
+      isSubmitting = true;
+
+      try {
+        const body = {
+          package_id:       selectedPkg.id,
+          session_date:     date,
+          start_time:       time,
+          address:          addr,
+          lat:              selectedLat,
+          lng:              selectedLng,
+          gate_code:        gate || null,
+          lockbox_code:     lock || null,
+          square_footage:   sqft || null,
+          agents_on_camera: parseInt(cam) || 1,
+          mls_live_date:    mls || null,
+          extra_reels:      extraReels,
+          promo_code:       promoCode || null,
+          notes:            notes || null,
+          agent_email:      agentEmail,
+          agent_name:       agentName,
+        };
+
+        const r = await fetch(HUB + '/api/studios/book', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+
+        const d = await r.json();
+
+        if (r.ok && d.booking) {
+          const msg = document.getElementById('modal-msg');
+          const detail = document.getElementById('modal-detail');
+          msg.textContent = `Your ${selectedPkg.name} has been booked for ${formatDate(date)} at ${formatTime(time)}.`;
+          detail.textContent = `Booking #${d.booking.booking_number}. Location: ${addr}. Calendar invites have been sent.`;
+          document.getElementById('booking-modal').classList.add('active');
+        } else {
+          alert(d.error || 'Booking failed. Please try again.');
+        }
+      } catch(e) {
+        alert('Something went wrong. Please try again.');
+      } finally {
+        btn.textContent = 'Book Session';
+        btn.disabled = false;
+        isSubmitting = false;
+      }
     }
 
     function formatDate(d) {
@@ -951,8 +1085,6 @@
     }
 
     // ---- Instagram stats from Supabase ----
-    const SB = 'https://lqothpzxhxvhvyikmphx.supabase.co/rest/v1';
-    const SK = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxxb3RocHp4aHh2aHZ5aWttcGh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5ODkzNjgsImV4cCI6MjA5MDU2NTM2OH0.zDE-lniLRF3TdYZmMMSQL20vF_H74_qiMlJM2tX_nKo';
     function fmtK(n) {
       if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
       if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
