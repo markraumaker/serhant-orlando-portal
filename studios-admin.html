@@ -306,6 +306,14 @@
       background: rgba(255,82,82,0.08);
       border: 1px solid rgba(255,82,82,0.25);
     }
+    .cal-chip.chip-outlook {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.12);
+      cursor: default;
+      opacity: 0.6;
+    }
+    .cal-chip.chip-outlook .chip-time { color: rgba(255,255,255,0.4); }
+    .cal-chip.chip-outlook .chip-agent { color: rgba(255,255,255,0.35); font-size: 10px; }
     .chip-time  { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.9); display: block; }
     .chip-agent { font-size: 10px; color: rgba(255,255,255,0.5); display: block; margin-top: 2px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
     .chip-prod  { font-size: 9px; display: block; margin-top: 2px; font-weight: 700; }
@@ -1206,20 +1214,43 @@
       loadAdminData();
     }
 
-    /* ---- load admin data ---- */
+    /* ---- load admin data (Supabase + Outlook merged) ---- */
+    let outlookEvents = { danny: [], hailey: [] };
+
     async function loadAdminData() {
       try {
+        // Load admin stats + promo codes
         const res  = await fetch(HUB + '/api/studios/admin?email=' + enc(email) + '&view=upcoming');
         const data = await res.json();
-
         if (!res.ok) throw new Error(data.error || 'Request failed');
 
-        allBookings = data.bookings || [];
         promos      = data.promo_codes || [];
         const stats = data.stats || {};
-
         renderStats(stats);
         renderPromos(promos);
+
+        // Load calendar data (Outlook + Supabase bookings for this week)
+        const today = new Date(); today.setHours(0,0,0,0);
+        const dow = today.getDay();
+        const diff = dow === 0 ? -6 : 1 - dow;
+        const ws = new Date(today); ws.setDate(today.getDate() + diff + (weekOff * 7));
+        const wsStr = ws.toISOString().split('T')[0];
+
+        try {
+          const calRes = await fetch(HUB + '/api/studios/calendar?email=' + enc(email) + '&week_start=' + wsStr);
+          if (calRes.ok) {
+            const calData = await calRes.json();
+            allBookings = calData.bookings || [];
+            outlookEvents = calData.events || { danny: [], hailey: [] };
+          } else {
+            allBookings = data.bookings || [];
+            outlookEvents = { danny: [], hailey: [] };
+          }
+        } catch(calErr) {
+          allBookings = data.bookings || [];
+          outlookEvents = { danny: [], hailey: [] };
+        }
+
         renderWeek();
 
       } catch(err) {
@@ -1227,7 +1258,7 @@
         el('error-banner').style.display = 'flex';
         el('error-msg').textContent = err.message || 'Unable to load admin data.';
         hideSkeleton();
-        renderWeek(); // render empty calendar
+        renderWeek();
       }
     }
 
@@ -1286,11 +1317,11 @@
 
     function weekOffset(n) {
       weekOff += n;
-      renderWeek();
+      loadAdminData(); // Reload from API for the new week
     }
     function resetWeek() {
       weekOff = 0;
-      renderWeek();
+      loadAdminData();
     }
 
     /* ---- calendar render ---- */
@@ -1335,9 +1366,26 @@
         calHtml += '<span class="day-name">' + dayNames[d.getDay()] + '</span>';
         calHtml += '<span class="day-num">' + d.getDate() + '</span>';
         calHtml += '</div>';
-        if (books.length === 0) {
+        // Add Outlook events for this day (both producers)
+        const dannyOutlook = (outlookEvents.danny || []).filter(e => e.type === 'outlook' && (e.date||'').substring(0,10) === ds);
+        const haileyOutlook = (outlookEvents.hailey || []).filter(e => e.type === 'outlook' && (e.date||'').substring(0,10) === ds);
+        const dayOutlook = [...dannyOutlook, ...haileyOutlook];
+
+        if (books.length === 0 && dayOutlook.length === 0) {
           calHtml += '<div class="cal-empty">Open</div>';
         } else {
+          // Outlook events first (muted)
+          dayOutlook.forEach(ev => {
+            const prod = ev.producer || 'unknown';
+            const prodLabel = prod === 'danny' ? 'D' : 'H';
+            calHtml += '<div class="cal-chip chip-outlook" title="' + x(ev.subject || 'Busy') + ' (' + prod + ')">';
+            calHtml += '<span class="chip-time">' + x(fmtTime(ev.start_time)) + '</span>';
+            calHtml += '<span class="chip-agent">' + x(ev.subject || 'Busy') + '</span>';
+            calHtml += '<span class="chip-prod" style="opacity:0.4;">' + prodLabel + '</span>';
+            calHtml += '</div>';
+          });
+
+          // Booking events
           books.forEach(b => {
             const cancelled = String(b.status||'').toLowerCase() === 'cancelled';
             const chipCls = cancelled ? 'chip-cancelled' : producerChipClass(b.producer);

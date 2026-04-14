@@ -275,6 +275,9 @@
     }
     .cal-chip:hover { border-color: #6868ee; background: rgba(104,104,238,0.22); }
     .cal-chip.chip-cancelled { background: rgba(255,82,82,0.08); border-color: rgba(255,82,82,0.25); }
+    .cal-chip.chip-outlook { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.12); cursor: default; opacity: 0.6; }
+    .cal-chip.chip-outlook .chip-time { color: rgba(255,255,255,0.4); }
+    .cal-chip.chip-outlook .chip-agent { color: rgba(255,255,255,0.35); font-size: 10px; }
     .chip-time  { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.9); display: block; }
     .chip-agent { font-size: 10px; color: rgba(255,255,255,0.5); display: block; margin-top: 2px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
     .chip-pkg   { font-size: 9px; color: rgba(104,104,238,0.8); display: block; margin-top: 2px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
@@ -843,13 +846,43 @@
       loadSchedule();
     }
 
-    /* ---- load data ---- */
+    /* ---- load data (Outlook + Supabase merged) ---- */
+    let outlookEvents = []; // Outlook events (editing blocks, meetings, etc.)
+
     async function loadSchedule() {
       try {
-        const r = await fetch(HUB + '/api/studios/admin?email=' + enc(email) + '&view=upcoming');
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        const data = await r.json();
-        allBookings = data.bookings || [];
+        // Calculate current week's Monday
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const dayOfWeek = today.getDay();
+        const diffToMon = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+        const weekStart = new Date(today);
+        weekStart.setDate(today.getDate() + diffToMon + (weekOff * 7));
+        const wsStr = weekStart.toISOString().split('T')[0];
+
+        // Try the calendar endpoint first (has Outlook events)
+        let data;
+        try {
+          const r = await fetch(HUB + '/api/studios/calendar?email=' + enc(email) + '&week_start=' + wsStr);
+          if (r.ok) {
+            data = await r.json();
+            allBookings = data.bookings || [];
+            // Collect Outlook-only events for this producer
+            const myProducer = email === 'daniel.botton@serhant.com' ? 'danny' : 'hailey';
+            const myEvents = (data.events && data.events[myProducer]) || [];
+            outlookEvents = myEvents.filter(e => e.type === 'outlook');
+          } else {
+            throw new Error('Calendar endpoint returned ' + r.status);
+          }
+        } catch(calErr) {
+          // Fallback to admin endpoint
+          const r2 = await fetch(HUB + '/api/studios/admin?email=' + enc(email) + '&view=upcoming');
+          if (!r2.ok) throw new Error('HTTP ' + r2.status);
+          data = await r2.json();
+          allBookings = data.bookings || [];
+          outlookEvents = [];
+        }
+
         el('cal-skeleton').style.display = 'none';
         el('cal-grid').style.display = 'grid';
         renderWeek();
@@ -906,7 +939,17 @@
         const dayBks  = byDay[key] || [];
         if (dayBks.length) weekBookings.push(...dayBks);
 
-        const chips = dayBks.map(b => {
+        // Outlook events for this day
+        const dayOutlook = outlookEvents.filter(e => (e.date || '').substring(0,10) === key);
+
+        const outlookChips = dayOutlook.map(e => {
+          return `<div class="cal-chip chip-outlook" title="${x(e.subject || 'Busy')}">
+            <span class="chip-time">${fmtTime(e.start_time)}</span>
+            <span class="chip-agent">${x(e.subject || 'Busy')}</span>
+          </div>`;
+        }).join('');
+
+        const bookingChips = dayBks.map(b => {
           const cancelled = (b.status || '').toLowerCase() === 'cancelled';
           const bId = b.id || b.booking_id || '';
           return `<div class="cal-chip ${cancelled ? 'chip-cancelled' : ''}"
@@ -916,6 +959,8 @@
             <span class="chip-pkg">${x(b.package_name || b.package || '')}</span>
           </div>`;
         }).join('');
+
+        const chips = outlookChips + bookingChips;
 
         const col = document.createElement('div');
         col.className = 'day-col';
@@ -1036,11 +1081,11 @@
     /* ---- week navigation ---- */
     window.weekOffset = function(delta) {
       weekOff += delta;
-      renderWeek();
+      loadSchedule(); // Reload from API for the new week
     };
     window.resetWeek = function() {
       weekOff = 0;
-      renderWeek();
+      loadSchedule();
     };
     window.scrollToCard = function(cardId) {
       const c = document.getElementById(cardId);
