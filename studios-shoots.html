@@ -1148,6 +1148,17 @@
 
             <div class="sc-bknum">${x(String(bkNum))}</div>
 
+            ${b.delivery_url ? `
+            <a href="${x(b.delivery_url)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;background:rgba(76,175,80,0.12);border:1px solid rgba(76,175,80,0.3);color:#4caf50;font-size:12px;font-weight:700;text-decoration:none;margin-bottom:12px;transition:all 0.2s;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              Download Your Content
+            </a>` : ''}
+
+            ${(b.payment_status === 'pending' && b.total > 0 && b.booking_number) ? `
+            <a href="https://app.serhantorlandohub.com/studios/pay/${x(b.booking_number)}" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;background:rgba(255,183,77,0.12);border:1px solid rgba(255,183,77,0.3);color:#ffb74d;font-size:12px;font-weight:700;text-decoration:none;margin-bottom:12px;">
+              Complete Payment
+            </a>` : ''}
+
             <div class="sc-actions">
               <span class="badge ${badgeClass(status)}"><span class="badge-dot"></span>${status}</span>
               <div style="display:flex;gap:16px;align-items:center;">
