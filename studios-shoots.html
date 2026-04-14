@@ -876,9 +876,9 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
         Back to Studios
       </a>
-      <div style="margin-bottom:14px;">
-        <img src="assets/logos/SERHANT-White-4000px.png" alt="SERHANT." style="height:16px;opacity:0.7;display:block;margin-bottom:3px;">
-        <span style="font-size:9px;font-weight:700;letter-spacing:5px;color:rgba(255,255,255,0.45);text-transform:uppercase;">Studios</span>
+      <div style="margin-bottom:20px;display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <img src="assets/logos/SERHANT-White-4000px.png" alt="SERHANT." style="height:22px;opacity:0.85;">
+        <span style="font-size:10px;font-weight:700;letter-spacing:6px;color:rgba(255,255,255,0.5);text-transform:uppercase;">Studios</span>
       </div>
       <h1 class="hero-title" id="page-main-title">Your Media</h1>
       <p class="hero-subtitle">Upcoming shoots, edits, and creative sessions. All in one place.</p>
@@ -1077,7 +1077,8 @@
     function sessionCard(b, idx) {
       const status    = (b.status || 'confirmed').toLowerCase();
       const canCancel = status !== 'cancelled' && status !== 'completed';
-      const bId       = b.id || b.booking_id || b.booking_number || '';
+      const bId       = b.id || b.booking_id || '';
+      const bkNum     = b.booking_number || bId;
       const endTime   = b.end_time ? ' - ' + fmtTime(b.end_time) : '';
       const producer  = b.producer ? capitalize(b.producer) : null;
       const delayClass = ['fadein-1','fadein-2','fadein-3','fadein-4','fadein-5','fadein-6'][Math.min(idx, 5)];
@@ -1109,7 +1110,7 @@
               <span>with ${x(producer)}</span>
             </div>` : ''}
 
-            <div class="sc-bknum">${x(String(bId))}</div>
+            <div class="sc-bknum">${x(String(bkNum))}</div>
 
             <div class="sc-actions">
               <span class="badge ${badgeClass(status)}"><span class="badge-dot"></span>${status}</span>
