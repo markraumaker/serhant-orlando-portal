@@ -65,7 +65,18 @@
       } else {
         sessionStorage.setItem('portal_preview_email', val);
       }
-      window.location.reload();
+
+      // Navigate to the right page for this persona
+      var PROD = ['daniel.botton@serhant.com', 'hailey@serhant.com'];
+      var OPS  = ['mark@serhant.com', 'sarah.raumaker@serhant.com'];
+
+      if (OPS.indexOf(val) !== -1) {
+        window.location.href = 'studios-admin.html';
+      } else if (PROD.indexOf(val) !== -1) {
+        window.location.href = 'studios-schedule.html';
+      } else {
+        window.location.href = 'studios-shoots.html';
+      }
     };
 
     var exitBtn = document.createElement('button');
@@ -73,7 +84,7 @@
     exitBtn.style.cssText = 'background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:8px;padding:6px 14px;color:white;font-family:Montserrat,sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;cursor:pointer;display:' + (activeEmail !== realEmail ? 'block' : 'none') + ';';
     exitBtn.onclick = function() {
       sessionStorage.removeItem('portal_preview_email');
-      window.location.reload();
+      window.location.href = 'studios-admin.html';
     };
 
     container.appendChild(label);
