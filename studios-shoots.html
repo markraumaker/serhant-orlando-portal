@@ -891,7 +891,7 @@
         Back to Studios
       </a>
       <div style="margin:0 auto 20px;display:inline-flex;flex-direction:column;align-items:center;gap:4px;">
-        <img src="assets/logos/SERHANT-White-4000px.png" alt="SERHANT." style="height:22px;opacity:0.85;">
+        <img src="assets/logos/SERHANT-White.svg" alt="SERHANT." style="height:22px;opacity:0.85;">
         <span style="font-size:10px;font-weight:700;letter-spacing:6px;color:rgba(255,255,255,0.5);text-transform:uppercase;">Studios</span>
       </div>
       <h1 class="hero-title" id="page-main-title">Your Media</h1>
@@ -976,8 +976,11 @@
       <h3>Reschedule Session</h3>
       <p id="reschedule-desc">Pick a new date and time.</p>
       <div style="display:flex;flex-direction:column;gap:12px;margin:16px 0;">
-        <input type="date" id="reschedule-date" class="modal-textarea" style="height:auto;padding:12px;min-height:0;resize:none;">
-        <input type="time" id="reschedule-time" class="modal-textarea" style="height:auto;padding:12px;min-height:0;resize:none;" min="09:00" max="17:00" step="1800" value="10:00">
+        <input type="date" id="reschedule-date" class="modal-textarea" style="height:auto;padding:12px;min-height:0;resize:none;" onchange="loadRescheduleSlots()">
+        <div id="reschedule-slots" style="display:flex;flex-wrap:wrap;gap:8px;min-height:40px;">
+          <span style="font-size:12px;color:rgba(255,255,255,0.3);">Select a date first</span>
+        </div>
+        <input type="hidden" id="reschedule-time" value="">
       </div>
       <div class="modal-actions">
         <button class="btn-ghost" onclick="closeRescheduleModal()">Never Mind</button>
@@ -1150,7 +1153,7 @@
               <div style="display:flex;gap:16px;align-items:center;">
                 ${canCancel ? `
                 <button class="btn-reschedule"
-                  onclick="openReschedule('${x(String(bId))}', '${x(b.package_name || 'session')}')">
+                  onclick="openReschedule('${x(String(bId))}', '${x(b.package_name || 'session')}', '${x(b.package_id || 'standard-listing')}')">
                   Reschedule
                 </button>
                 <button class="btn-cancel"
@@ -1230,9 +1233,40 @@
 
     /* ---- reschedule ---- */
     let pendingRescheduleId = null;
+    let pendingReschedulePkg = null;
 
-    window.openReschedule = function(bookingId, pkgName) {
+    window.loadRescheduleSlots = async function() {
+      const date = el('reschedule-date').value;
+      const container = el('reschedule-slots');
+      if (!date) { container.innerHTML = '<span style="font-size:12px;color:rgba(255,255,255,0.3);">Select a date first</span>'; return; }
+      container.innerHTML = '<span style="font-size:12px;color:rgba(255,255,255,0.3);">Loading...</span>';
+      el('reschedule-time').value = '';
+      try {
+        const pkgId = pendingReschedulePkg || 'standard-listing';
+        const r = await fetch(HUB + '/api/studios/availability?date=' + date + '&package_id=' + encodeURIComponent(pkgId));
+        const d = await r.json();
+        if (d.slots && d.slots.length > 0) {
+          container.innerHTML = d.slots.map(s => {
+            if (!s.available) return `<button type="button" disabled style="padding:8px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);color:rgba(255,255,255,0.15);font-family:Montserrat,sans-serif;font-size:12px;font-weight:600;cursor:not-allowed;text-decoration:line-through;">${fmtTime(s.time)}</button>`;
+            return `<button type="button" onclick="pickRescheduleSlot(this,'${s.time}')" style="padding:8px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.7);font-family:Montserrat,sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;">${fmtTime(s.time)}</button>`;
+          }).join('');
+        } else {
+          container.innerHTML = '<span style="font-size:12px;color:rgba(255,255,255,0.3);">No availability this day</span>';
+        }
+      } catch(e) {
+        container.innerHTML = '<span style="font-size:12px;color:#ff5252;">Could not load times</span>';
+      }
+    };
+
+    window.pickRescheduleSlot = function(btn, time) {
+      el('reschedule-slots').querySelectorAll('button').forEach(b => { b.style.borderColor = 'rgba(255,255,255,0.15)'; b.style.background = 'rgba(255,255,255,0.04)'; b.style.color = 'rgba(255,255,255,0.7)'; });
+      btn.style.borderColor = '#6868ee'; btn.style.background = 'rgba(104,104,238,0.15)'; btn.style.color = 'white';
+      el('reschedule-time').value = time;
+    };
+
+    window.openReschedule = function(bookingId, pkgName, pkgId) {
       pendingRescheduleId = bookingId;
+      pendingReschedulePkg = pkgId || 'standard-listing';
       el('reschedule-desc').textContent = 'Pick a new date and time for your ' + pkgName + '.';
       // Set min date to tomorrow
       const tmrw = new Date(); tmrw.setDate(tmrw.getDate() + 1);
@@ -1244,6 +1278,7 @@
       el('reschedule-confirm-btn').disabled = false;
       el('reschedule-confirm-btn').textContent = 'Reschedule';
       el('reschedule-modal').classList.add('open');
+      loadRescheduleSlots(); // Auto-load slots for pre-filled date
     };
 
     window.closeRescheduleModal = function() {
