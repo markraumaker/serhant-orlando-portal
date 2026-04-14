@@ -49,7 +49,7 @@
     .page-header-inner {
       position: relative;
       z-index: 1;
-      max-width: 1140px;
+      max-width: 1200px;
       margin: 0 auto;
     }
     .page-back {
@@ -77,45 +77,25 @@
       margin-bottom: 8px;
     }
     .page-title {
-      font-size: clamp(26px, 4vw, 40px);
+      font-size: clamp(28px, 4vw, 44px);
       font-weight: 800;
       color: #fff;
       letter-spacing: -0.02em;
       line-height: 1.1;
-      margin: 0 0 12px;
+      margin: 0;
     }
-    .page-header-actions {
-      margin-top: 20px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .operator-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(104,104,238,0.12);
-      border: 1px solid rgba(104,104,238,0.25);
-      border-radius: 30px;
-      padding: 5px 12px;
-      font-size: 11px;
-      font-weight: 700;
-      color: #6868ee;
-      letter-spacing: 0.5px;
-    }
-    .operator-badge span { width: 6px; height: 6px; border-radius: 50%; background: #6868ee; }
 
     /* ----------------------------------------------------------------
        MAIN
        ---------------------------------------------------------------- */
     .page-main {
-      max-width: 1140px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 48px 24px 80px;
     }
 
     /* ----------------------------------------------------------------
-       SECTION
+       SECTION HEADINGS
        ---------------------------------------------------------------- */
     .sec-label {
       font-size: 11px;
@@ -126,12 +106,68 @@
       margin: 0 0 6px;
     }
     .sec-heading {
-      font-size: clamp(20px, 2.5vw, 28px);
+      font-size: clamp(18px, 2.5vw, 24px);
       font-weight: 800;
       color: #fff;
       letter-spacing: -0.02em;
-      margin: 0 0 28px;
+      margin: 0 0 24px;
     }
+
+    /* ----------------------------------------------------------------
+       STATS ROW
+       ---------------------------------------------------------------- */
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .stat-card {
+      flex: 1 1 140px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 20px 20px 18px;
+    }
+    .stat-val {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+    .producer-stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+    .producer-stat-card {
+      flex: 1 1 180px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .producer-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .producer-info { flex: 1; min-width: 0; }
+    .producer-val  { font-size: 22px; font-weight: 800; color: #fff; line-height: 1; margin-bottom: 4px; }
+    .producer-lbl  { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.4); }
 
     /* ----------------------------------------------------------------
        SKELETON
@@ -149,73 +185,145 @@
       animation: shimmer 1.5s ease-in-out infinite;
       border-radius: 8px;
     }
-    @media (prefers-reduced-motion: reduce) {
-      .skeleton { animation: none; background: rgba(255,255,255,0.05); }
-    }
-
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .fadein { animation: fadein 0.3s ease both; }
 
     /* ----------------------------------------------------------------
-       STATS ROW
+       WEEK NAVIGATION
        ---------------------------------------------------------------- */
-    .stats-row {
+    .week-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .week-label {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      flex: 1;
+    }
+    .week-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.6);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.18s, color 0.18s;
+    }
+    .week-btn:hover { border-color: #6868ee; color: #fff; }
+    .week-today-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.55);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 0.18s, color 0.18s;
+    }
+    .week-today-btn:hover { border-color: #6868ee; color: #fff; }
+
+    /* ----------------------------------------------------------------
+       CALENDAR GRID
+       ---------------------------------------------------------------- */
+    .cal-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-    .stats-split {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      max-width: 360px;
+      gap: 8px;
       margin-bottom: 32px;
     }
-    @media (max-width: 900px) { .stats-row { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 520px)  { .stats-row { grid-template-columns: repeat(2, 1fr); } }
-
-    .stat-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 20px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+    .cal-grid-skel {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 32px;
     }
-    .stat-label {
-      font-size: 10px;
+    @media (max-width: 700px) {
+      .cal-grid, .cal-grid-skel { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    }
+    @media (max-width: 420px) {
+      .cal-grid, .cal-grid-skel { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .day-col { display: flex; flex-direction: column; gap: 6px; }
+    .day-header {
+      text-align: center;
+      padding: 8px 4px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .day-header.today {
+      border-color: rgba(104,104,238,0.5);
+      background: rgba(104,104,238,0.1);
+    }
+    .day-name {
+      font-size: 9px;
       font-weight: 700;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.35);
+      color: rgba(255,255,255,0.3);
+      display: block;
+      margin-bottom: 3px;
     }
-    .stat-value {
-      font-size: 26px;
+    .day-num {
+      font-size: 18px;
       font-weight: 800;
-      color: #fff;
+      color: rgba(255,255,255,0.5);
+      display: block;
       line-height: 1;
     }
-    .stat-value.v-green  { color: #4caf50; }
-    .stat-value.v-red    { color: #ff5252; }
-    .stat-value.v-amber  { color: #ffb74d; }
-    .stat-value.v-purple { color: #6868ee; }
+    .day-header.today .day-num { color: #6868ee; }
+
+    /* Chip base */
+    .cal-chip {
+      border-radius: 8px;
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: border-color 0.18s, background 0.18s;
+    }
+    /* Danny */
+    .cal-chip.chip-danny {
+      background: rgba(104,104,238,0.15);
+      border: 1px solid #6868ee;
+    }
+    .cal-chip.chip-danny:hover { background: rgba(104,104,238,0.26); }
+    /* Hailey */
+    .cal-chip.chip-hailey {
+      background: rgba(236,72,153,0.15);
+      border: 1px solid #ec4899;
+    }
+    .cal-chip.chip-hailey:hover { background: rgba(236,72,153,0.26); }
+    /* Cancelled */
+    .cal-chip.chip-cancelled {
+      background: rgba(255,82,82,0.08);
+      border: 1px solid rgba(255,82,82,0.25);
+    }
+    .chip-time  { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.9); display: block; }
+    .chip-agent { font-size: 10px; color: rgba(255,255,255,0.5); display: block; margin-top: 2px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .chip-prod  { font-size: 9px; display: block; margin-top: 2px; font-weight: 700; }
+    .chip-prod.prod-danny  { color: #6868ee; }
+    .chip-prod.prod-hailey { color: #ec4899; }
+    .cal-empty  { font-size: 10px; color: rgba(255,255,255,0.12); text-align: center; padding: 12px 0; }
 
     /* ----------------------------------------------------------------
-       CARD
+       DETAIL CARDS
        ---------------------------------------------------------------- */
-    .card {
+    .sessions-card {
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 16px;
       padding: 28px;
-      margin-bottom: 20px;
+      margin-bottom: 48px;
     }
-    .card-title {
+    .sessions-card-title {
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 2px;
@@ -223,140 +331,84 @@
       color: rgba(255,255,255,0.4);
       margin: 0 0 20px;
     }
-
-    /* ----------------------------------------------------------------
-       FILTER ROW
-       ---------------------------------------------------------------- */
-    .filter-row {
+    .sessions-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+    .detail-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 24px;
+      transition: border-color 0.2s;
+    }
+    .detail-card:hover { border-color: rgba(104,104,238,0.28); }
+    .dc-date { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6868ee; margin-bottom: 4px; }
+    .dc-time { font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -0.02em; margin-bottom: 2px; }
+    .dc-pkg  { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 18px; }
+    .dc-divider { height: 1px; background: rgba(255,255,255,0.07); margin-bottom: 16px; }
+    .dc-row {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-    .filter-label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
-      margin-right: 4px;
-    }
-    .filter-btn {
-      padding: 7px 16px;
-      border-radius: 40px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: transparent;
-      color: rgba(255,255,255,0.5);
-      font-family: 'Montserrat', sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: border-color 0.18s, background 0.18s, color 0.18s;
-    }
-    .filter-btn:hover { border-color: rgba(104,104,238,0.5); color: #fff; }
-    .filter-btn.active {
-      background: rgba(104,104,238,0.18);
-      border-color: #6868ee;
-      color: #fff;
-    }
-
-    /* ----------------------------------------------------------------
-       DATE FILTER
-       ---------------------------------------------------------------- */
-    .date-filter {
-      display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-    .date-label {
-      font-size: 11px;
-      color: rgba(255,255,255,0.3);
-      font-weight: 600;
-    }
-    .date-input {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px;
-      padding: 8px 12px;
-      color: #fff;
-      font-family: 'Montserrat', sans-serif;
       font-size: 12px;
-      outline: none;
-      cursor: pointer;
-      transition: border-color 0.18s;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 10px;
+      line-height: 1.5;
     }
-    .date-input:focus { border-color: #6868ee; }
-    input[type="date"].date-input::-webkit-calendar-picker-indicator {
-      filter: invert(0.5) sepia(1) hue-rotate(200deg);
-      cursor: pointer;
+    .dc-row:last-child { margin-bottom: 0; }
+    .dc-row svg { width: 15px; height: 15px; color: rgba(255,255,255,0.28); flex-shrink: 0; margin-top: 1px; }
+    .dc-row strong { color: rgba(255,255,255,0.88); font-weight: 600; }
+    .dc-row a { color: #6868ee; text-decoration: none; }
+    .dc-row a:hover { text-decoration: underline; }
+    .dc-bknum { font-size: 10px; color: rgba(255,255,255,0.2); font-weight: 600; margin: 14px 0 10px; }
+    .dc-code-pill {
+      display: inline-block;
+      background: rgba(255,183,77,0.12);
+      border: 1px solid rgba(255,183,77,0.28);
+      border-radius: 5px;
+      padding: 2px 7px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffb74d;
+      letter-spacing: 0.5px;
     }
 
-    /* ----------------------------------------------------------------
-       TABLE
-       ---------------------------------------------------------------- */
-    .table-wrap { width: 100%; overflow-x: auto; }
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
+    /* Financial section within card */
+    .dc-finance {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin: 14px 0 12px;
+    }
+    .dc-finance-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 7px;
+    }
+    .dc-finance-row:last-child { margin-bottom: 0; }
+    .dc-finance-row.total {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 8px;
+      margin-top: 4px;
+      font-weight: 800;
+      color: #fff;
       font-size: 13px;
     }
-    .data-table th {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
-      padding: 10px 14px;
-      text-align: left;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      white-space: nowrap;
+    .dc-finance-row.discount { color: #4caf50; }
+    .dc-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 14px;
     }
-    .data-table td {
-      padding: 13px 14px;
-      color: rgba(255,255,255,0.75);
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-      vertical-align: middle;
-    }
-    .data-table tr:last-child td { border-bottom: none; }
-    .data-table tr:hover td { background: rgba(255,255,255,0.02); }
-    .table-empty td {
-      text-align: center;
-      padding: 36px;
-      color: rgba(255,255,255,0.22);
-      font-size: 13px;
-    }
-    @media (max-width: 700px) {
-      .data-table thead { display: none; }
-      .data-table tbody tr {
-        display: block;
-        border: 1px solid rgba(255,255,255,0.07);
-        border-radius: 12px;
-        margin-bottom: 12px;
-        padding: 12px 16px;
-      }
-      .data-table td {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 6px 0;
-        border-bottom: none;
-        font-size: 12px;
-        gap: 12px;
-      }
-      .data-table td::before {
-        content: attr(data-label);
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        color: rgba(255,255,255,0.28);
-        flex-shrink: 0;
-      }
-      .data-table tr:hover td { background: none; }
-    }
+    .dc-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
     /* ----------------------------------------------------------------
        BADGES
@@ -373,19 +425,13 @@
       text-transform: uppercase;
       white-space: nowrap;
     }
-    .badge-dot {
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: currentColor;
-      display: inline-block;
-      flex-shrink: 0;
-    }
+    .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; display: inline-block; flex-shrink: 0; }
     .b-confirmed { background: rgba(76,175,80,0.14);  border: 1px solid rgba(76,175,80,0.35);  color: #4caf50; }
     .b-pending   { background: rgba(255,183,77,0.14); border: 1px solid rgba(255,183,77,0.35); color: #ffb74d; }
     .b-cancelled { background: rgba(255,82,82,0.12);  border: 1px solid rgba(255,82,82,0.3);   color: #ff5252; }
     .b-completed { background: rgba(255,255,255,0.06);border: 1px solid rgba(255,255,255,0.12);color: rgba(255,255,255,0.4); }
-    .b-free      { background: rgba(76,175,80,0.1);   border: 1px solid rgba(76,175,80,0.25);  color: #4caf50; }
-    .b-paid      { background: rgba(104,104,238,0.12);border: 1px solid rgba(104,104,238,0.3); color: #6868ee; }
+    .b-free      { background: rgba(104,104,238,0.12);border: 1px solid rgba(104,104,238,0.3); color: #6868ee; }
+    .b-paid      { background: rgba(76,175,80,0.14);  border: 1px solid rgba(76,175,80,0.35);  color: #4caf50; }
 
     /* ----------------------------------------------------------------
        BUTTONS
@@ -406,42 +452,20 @@
     .btn-cancel:hover { background: rgba(255,82,82,0.1); }
     .btn-cancel:disabled { opacity: 0.3; cursor: not-allowed; }
 
-    .btn-deactivate {
-      padding: 5px 12px;
-      border-radius: 6px;
-      border: 1px solid rgba(255,82,82,0.3);
+    .btn-reschedule {
+      padding: 6px 13px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,183,77,0.4);
       background: transparent;
-      color: #ff5252;
+      color: #ffb74d;
       font-family: 'Montserrat', sans-serif;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 700;
       cursor: pointer;
       transition: background 0.18s;
+      white-space: nowrap;
     }
-    .btn-deactivate:hover { background: rgba(255,82,82,0.1); }
-    .btn-deactivate:disabled { opacity: 0.35; cursor: not-allowed; }
-
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 11px 22px;
-      border-radius: 10px;
-      border: none;
-      background: linear-gradient(135deg, #4040b8, #6868ee);
-      color: #fff;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      cursor: pointer;
-      text-decoration: none;
-      transition: opacity 0.18s, transform 0.18s;
-      box-shadow: 0 0 24px rgba(104,104,238,0.25);
-    }
-    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
-    .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+    .btn-reschedule:hover { background: rgba(255,183,77,0.1); }
 
     .btn-ghost {
       padding: 10px 20px;
@@ -458,66 +482,180 @@
     .btn-ghost:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
 
     /* ----------------------------------------------------------------
-       PROMO CODES
+       PROMO CODE MANAGER
        ---------------------------------------------------------------- */
-    .promo-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .promo-section {
+      margin-top: 48px;
+    }
+    .promo-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
     .promo-row {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 10px;
-      padding: 12px 16px;
-      flex-wrap: wrap;
+      gap: 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 10px 14px;
+      transition: border-color 0.18s;
     }
-    .promo-code { font-size: 14px; font-weight: 800; color: #fff; letter-spacing: 1px; }
-    .promo-pct  { font-size: 13px; font-weight: 700; color: #4caf50; }
-    .promo-meta { font-size: 12px; color: rgba(255,255,255,0.35); }
-
-    .promo-form {
-      display: grid;
-      grid-template-columns: 1fr 180px auto;
-      gap: 12px;
-      align-items: end;
-    }
-    @media (max-width: 560px) { .promo-form { grid-template-columns: 1fr; } }
-
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-label {
-      font-size: 10px;
+    .promo-row:focus-within { border-color: rgba(104,104,238,0.4); }
+    .promo-row-code {
+      flex: 1 1 120px;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      color: #6868ee;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
       font-weight: 700;
-      letter-spacing: 1.5px;
+      letter-spacing: 1px;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.35);
+      padding: 2px 4px;
+      outline: none;
+      min-width: 0;
+      transition: border-color 0.18s;
     }
-    .form-input, .form-select {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 11px 14px;
+    .promo-row-code:focus { border-bottom-color: #6868ee; }
+    .promo-row-pct-wrap {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .promo-row-pct {
+      width: 54px;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
       color: #fff;
       font-family: 'Montserrat', sans-serif;
       font-size: 13px;
+      font-weight: 700;
+      text-align: right;
+      padding: 2px 4px;
       outline: none;
       transition: border-color 0.18s;
     }
-    .form-input::placeholder { color: rgba(255,255,255,0.18); }
-    .form-input:focus, .form-select:focus { border-color: #6868ee; }
-    .form-select option { background: #0d0d2e; color: #fff; }
-
-    .promo-feedback {
-      font-size: 12px;
+    .promo-row-pct:focus { border-bottom-color: #6868ee; }
+    .promo-row-pct-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
       font-weight: 600;
-      margin-top: 10px;
-      min-height: 16px;
+      flex-shrink: 0;
     }
-    .promo-feedback.ok  { color: #4caf50; }
-    .promo-feedback.err { color: #ff5252; }
+    .btn-promo-save {
+      padding: 5px 12px;
+      border-radius: 7px;
+      border: 1px solid rgba(104,104,238,0.5);
+      background: rgba(104,104,238,0.1);
+      color: #6868ee;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-promo-save:hover { background: rgba(104,104,238,0.22); }
+    .btn-promo-save:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-promo-remove {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: transparent;
+      border: 1px solid rgba(255,82,82,0.25);
+      cursor: pointer;
+      color: rgba(255,82,82,0.7);
+      padding: 0;
+      transition: background 0.18s, color 0.18s;
+      flex-shrink: 0;
+    }
+    .btn-promo-remove:hover { background: rgba(255,82,82,0.12); color: #ff5252; border-color: rgba(255,82,82,0.5); }
+    .promo-add-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      background: rgba(255,255,255,0.03);
+      border: 1px dashed rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+    .promo-input {
+      flex: 1 1 140px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      outline: none;
+      transition: border-color 0.18s;
+      min-width: 0;
+    }
+    .promo-input:focus { border-color: #6868ee; }
+    .promo-input::placeholder { color: rgba(255,255,255,0.2); }
+    .promo-pct-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .promo-pct-input {
+      width: 64px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 8px 10px;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.18s;
+    }
+    .promo-pct-input:focus { border-color: #6868ee; }
+    .promo-pct-suffix {
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .btn-add-promo {
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(135deg, #4040b8, #6868ee);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.18s;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-add-promo:hover { opacity: 0.85; }
+    .btn-add-promo:disabled { opacity: 0.35; cursor: not-allowed; }
+    .promo-empty { font-size: 12px; color: rgba(255,255,255,0.25); font-style: italic; padding: 8px 0; }
 
     /* ----------------------------------------------------------------
-       ERROR + EMPTY
+       ERROR / EMPTY STATES
        ---------------------------------------------------------------- */
     .error-banner {
       background: rgba(255,82,82,0.06);
@@ -536,40 +674,14 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      padding: 36px 24px;
+      padding: 44px 24px;
       color: rgba(255,255,255,0.25);
     }
     .empty-state svg { margin-bottom: 14px; opacity: 0.4; }
-    .empty-state p { font-size: 13px; margin: 0; }
+    .empty-state p { font-size: 13px; line-height: 1.7; max-width: 30ch; margin: 0; }
 
     /* ----------------------------------------------------------------
-       ACCESS DENIED
-       ---------------------------------------------------------------- */
-    .access-denied {
-      max-width: 480px;
-      margin: 80px auto;
-      text-align: center;
-      padding: 0 24px;
-    }
-    .access-denied h2 { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 12px; }
-    .access-denied p { font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.7; margin-bottom: 24px; }
-    .access-denied a {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 11px 22px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #4040b8, #6868ee);
-      color: #fff;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-    }
-
-    /* ----------------------------------------------------------------
-       MODAL
+       MODALS
        ---------------------------------------------------------------- */
     .modal-overlay {
       position: fixed;
@@ -603,13 +715,12 @@
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       margin-bottom: 20px;
-      background: rgba(255,82,82,0.12);
-      border: 1px solid rgba(255,82,82,0.28);
-      color: #ff5252;
     }
+    .modal-icon.cancel-icon { background: rgba(255,82,82,0.12); border: 1px solid rgba(255,82,82,0.28); color: #ff5252; }
+    .modal-icon.reschedule-icon { background: rgba(255,183,77,0.12); border: 1px solid rgba(255,183,77,0.28); color: #ffb74d; }
     .modal h3 { font-size: 18px; font-weight: 800; color: #fff; margin: 0 0 10px; }
     .modal p  { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.7; margin: 0 0 18px; }
-    .modal-textarea {
+    .modal-textarea, .modal-input {
       width: 100%;
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
@@ -619,15 +730,24 @@
       font-family: 'Montserrat', sans-serif;
       font-size: 13px;
       outline: none;
-      resize: vertical;
-      min-height: 72px;
-      margin-bottom: 20px;
       box-sizing: border-box;
       transition: border-color 0.18s;
     }
-    .modal-textarea:focus { border-color: #6868ee; }
-    .modal-textarea::placeholder { color: rgba(255,255,255,0.18); }
+    .modal-textarea { resize: vertical; min-height: 72px; margin-bottom: 20px; }
+    .modal-input { margin-bottom: 12px; }
+    .modal-textarea:focus, .modal-input:focus { border-color: #6868ee; }
+    .modal-textarea::placeholder, .modal-input::placeholder { color: rgba(255,255,255,0.18); }
+    .modal-form-label {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 6px;
+    }
     .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
+
     .btn-confirm-cancel {
       padding: 10px 20px;
       border-radius: 10px;
@@ -642,6 +762,21 @@
     }
     .btn-confirm-cancel:hover { opacity: 0.85; }
     .btn-confirm-cancel:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .btn-confirm-reschedule {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      background: #ffb74d;
+      color: #0d0d2e;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: opacity 0.18s;
+    }
+    .btn-confirm-reschedule:hover { opacity: 0.85; }
+    .btn-confirm-reschedule:disabled { opacity: 0.35; cursor: not-allowed; }
 
     /* ----------------------------------------------------------------
        TOAST
@@ -679,9 +814,44 @@
       margin: 0;
     }
 
+    /* ----------------------------------------------------------------
+       ACCESS DENIED
+       ---------------------------------------------------------------- */
+    .access-denied {
+      max-width: 480px;
+      margin: 80px auto;
+      text-align: center;
+      padding: 0 24px;
+    }
+    .access-denied h2 { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+    .access-denied p  { font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.7; margin-bottom: 24px; }
+    .access-denied a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #4040b8, #6868ee);
+      color: #fff;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    /* ----------------------------------------------------------------
+       RESPONSIVE
+       ---------------------------------------------------------------- */
     @media (max-width: 600px) {
       .page-header { padding: 90px 16px 40px; }
-      .page-main { padding: 32px 16px 60px; }
+      .page-main   { padding: 32px 16px 60px; }
+      .sessions-card { padding: 18px; }
+      .detail-card   { padding: 18px; }
+      .modal { padding: 28px 20px; }
+    }
+    @media (max-width: 480px) {
+      .stats-row .stat-card { flex: 1 1 120px; }
     }
   </style>
 </head>
@@ -711,7 +881,7 @@
   <div id="access-denied" style="display:none;">
     <div class="access-denied">
       <h2>Access Restricted</h2>
-      <p>This page is only available to Studios administrators.</p>
+      <p>This page is for Studios administrators only. If you need to book a session, head back to Studios.</p>
       <a href="studios.html">Back to Studios</a>
     </div>
   </div>
@@ -727,14 +897,7 @@
           Back to Studios
         </a>
         <div class="page-eyebrow">SERHANT. STUDIOS</div>
-        <h1 class="page-title" id="page-title">Studios Admin</h1>
-        <div class="page-header-actions">
-          <div class="operator-badge"><span></span><span id="operator-badge-name">Operator</span></div>
-          <a href="studios.html" class="btn-primary" style="margin-top:0;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Book a Session
-          </a>
-        </div>
+        <h1 class="page-title">Studios Admin</h1>
       </div>
     </div>
 
@@ -743,131 +906,149 @@
     <!-- MAIN CONTENT -->
     <main class="page-main">
 
-      <!-- Error -->
+      <!-- Error Banner -->
       <div id="error-banner" style="display:none;" class="error-banner">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
-        <span id="error-msg">Unable to load dashboard.</span>
+        <span id="error-msg">Unable to load admin data.</span>
       </div>
 
-      <!-- Stats skeleton -->
+      <!-- ============================================================
+           STATS ROW
+           ============================================================ -->
+      <p class="sec-label">Overview</p>
+      <h2 class="sec-heading">Studio Metrics</h2>
+
+      <!-- Primary stats skeleton -->
       <div class="stats-row" id="stats-skeleton">
-        <div class="stat-card"><div class="skeleton" style="height:28px;width:60px;margin-bottom:8px;"></div><div class="skeleton" style="height:10px;width:80%;"></div></div>
-        <div class="stat-card"><div class="skeleton" style="height:28px;width:60px;margin-bottom:8px;"></div><div class="skeleton" style="height:10px;width:80%;"></div></div>
-        <div class="stat-card"><div class="skeleton" style="height:28px;width:60px;margin-bottom:8px;"></div><div class="skeleton" style="height:10px;width:80%;"></div></div>
-        <div class="stat-card"><div class="skeleton" style="height:28px;width:60px;margin-bottom:8px;"></div><div class="skeleton" style="height:10px;width:80%;"></div></div>
-        <div class="stat-card"><div class="skeleton" style="height:28px;width:60px;margin-bottom:8px;"></div><div class="skeleton" style="height:10px;width:80%;"></div></div>
+        <div class="stat-card skeleton" style="height:82px; flex:1 1 140px;"></div>
+        <div class="stat-card skeleton" style="height:82px; flex:1 1 140px;"></div>
+        <div class="stat-card skeleton" style="height:82px; flex:1 1 140px;"></div>
+        <div class="stat-card skeleton" style="height:82px; flex:1 1 140px;"></div>
+        <div class="stat-card skeleton" style="height:82px; flex:1 1 140px;"></div>
       </div>
 
-      <!-- Stats (real) -->
-      <div class="stats-row fadein" id="stats-row" style="display:none;">
+      <!-- Primary stats (real) -->
+      <div class="stats-row" id="stats-row" style="display:none;">
         <div class="stat-card">
-          <span class="stat-value v-purple" id="stat-total">--</span>
-          <span class="stat-label">Total Sessions</span>
+          <div class="stat-val" id="s-total">--</div>
+          <div class="stat-lbl">Total Sessions</div>
         </div>
         <div class="stat-card">
-          <span class="stat-value v-green" id="stat-rev">--</span>
-          <span class="stat-label">Revenue</span>
+          <div class="stat-val" id="s-revenue">--</div>
+          <div class="stat-lbl">Revenue</div>
         </div>
         <div class="stat-card">
-          <span class="stat-value" id="stat-free">--</span>
-          <span class="stat-label">Free Sessions</span>
+          <div class="stat-val" id="s-free">--</div>
+          <div class="stat-lbl">Free Sessions</div>
         </div>
         <div class="stat-card">
-          <span class="stat-value v-amber" id="stat-paid">--</span>
-          <span class="stat-label">Paid Sessions</span>
+          <div class="stat-val" id="s-paid">--</div>
+          <div class="stat-lbl">Paid Sessions</div>
         </div>
         <div class="stat-card">
-          <span class="stat-value v-red" id="stat-cancelled">--</span>
-          <span class="stat-label">Cancelled</span>
-        </div>
-      </div>
-
-      <!-- Producer split -->
-      <div class="stats-split fadein" id="stats-split" style="display:none;">
-        <div class="stat-card">
-          <span class="stat-value v-purple" id="stat-danny" style="font-size:20px;">--</span>
-          <span class="stat-label">Danny's Sessions</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-value v-purple" id="stat-hailey" style="font-size:20px;">--</span>
-          <span class="stat-label">Hailey's Sessions</span>
+          <div class="stat-val" id="s-cancelled">--</div>
+          <div class="stat-lbl">Cancelled</div>
         </div>
       </div>
 
-      <!-- Bookings Table -->
-      <div class="card">
-        <p class="card-title">Upcoming Sessions</p>
+      <!-- Producer stats skeleton -->
+      <div class="producer-stats-row" id="producer-stats-skeleton">
+        <div class="producer-stat-card skeleton" style="height:62px; flex:1 1 180px;"></div>
+        <div class="producer-stat-card skeleton" style="height:62px; flex:1 1 180px;"></div>
+      </div>
 
-        <div class="filter-row">
-          <span class="filter-label">Producer</span>
-          <button class="filter-btn active" data-pf="all"    onclick="applyFilter('all')">All</button>
-          <button class="filter-btn"         data-pf="danny"  onclick="applyFilter('danny')">Danny</button>
-          <button class="filter-btn"         data-pf="hailey" onclick="applyFilter('hailey')">Hailey</button>
+      <!-- Producer stats (real) -->
+      <div class="producer-stats-row" id="producer-stats-row" style="display:none;">
+        <div class="producer-stat-card">
+          <div class="producer-dot" style="background:#6868ee;"></div>
+          <div class="producer-info">
+            <div class="producer-val" id="s-danny">--</div>
+            <div class="producer-lbl">Danny Sessions</div>
+          </div>
         </div>
-
-        <div class="date-filter">
-          <span class="date-label">From</span>
-          <input type="date" class="date-input" id="filter-from" onchange="renderTable()">
-          <span class="date-label">To</span>
-          <input type="date" class="date-input" id="filter-to"   onchange="renderTable()">
-          <button class="filter-btn" onclick="clearDates()">Clear</button>
-        </div>
-
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Agent</th>
-                <th>Package</th>
-                <th>Producer</th>
-                <th>Payment</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="bookings-tbody">
-              <tr><td colspan="9" style="text-align:center;padding:32px;">
-                <div class="skeleton" style="height:12px;width:55%;margin:0 auto 10px;"></div>
-                <div class="skeleton" style="height:12px;width:35%;margin:0 auto;"></div>
-              </td></tr>
-            </tbody>
-          </table>
+        <div class="producer-stat-card">
+          <div class="producer-dot" style="background:#ec4899;"></div>
+          <div class="producer-info">
+            <div class="producer-val" id="s-hailey">--</div>
+            <div class="producer-lbl">Hailey Sessions</div>
+          </div>
         </div>
       </div>
 
-      <!-- Promo Code Manager -->
-      <div class="card">
-        <p class="card-title">Promo Codes</p>
+      <!-- ============================================================
+           WEEKLY CALENDAR
+           ============================================================ -->
+      <p class="sec-label">Calendar</p>
+      <h2 class="sec-heading" id="schedule-heading">This Week</h2>
+
+      <!-- Week navigation -->
+      <div class="week-nav">
+        <button class="week-btn" onclick="weekOffset(-1)" title="Previous week">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span class="week-label" id="week-label">Loading...</span>
+        <button class="week-btn" onclick="weekOffset(1)" title="Next week">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <button class="week-today-btn" onclick="resetWeek()">Today</button>
+      </div>
+
+      <!-- Calendar skeleton -->
+      <div class="cal-grid-skel" id="cal-skeleton">
+        <div class="day-col"><div class="day-header skeleton" style="height:56px;"></div></div>
+        <div class="day-col"><div class="day-header skeleton" style="height:56px;"></div></div>
+        <div class="day-col"><div class="day-header skeleton" style="height:56px;"></div></div>
+        <div class="day-col"><div class="day-header skeleton" style="height:56px;"></div></div>
+        <div class="day-col"><div class="day-header skeleton" style="height:56px;"></div></div>
+      </div>
+
+      <!-- Calendar (real) -->
+      <div class="cal-grid" id="cal-grid" style="display:none;"></div>
+
+      <!-- ============================================================
+           SESSION DETAIL CARDS
+           ============================================================ -->
+      <div class="sessions-card" id="sessions-card" style="display:none;">
+        <p class="sessions-card-title" id="sessions-card-title">Sessions This Week</p>
+        <div class="sessions-detail-grid" id="sessions-detail-grid"></div>
+      </div>
+
+      <!-- ============================================================
+           PROMO CODES
+           ============================================================ -->
+      <hr class="sec-divider" style="margin-bottom:48px;">
+
+      <div class="promo-section">
+        <p class="sec-label">Management</p>
+        <h2 class="sec-heading">Promo Codes</h2>
 
         <div class="promo-list" id="promo-list">
-          <div class="skeleton" style="height:48px;border-radius:10px;"></div>
-          <div class="skeleton" style="height:48px;border-radius:10px;margin-top:10px;"></div>
+          <div class="skeleton" style="height:48px; border-radius:12px;" id="promo-skel"></div>
         </div>
+        <p class="promo-empty" id="promo-empty" style="display:none;">No active promo codes yet.</p>
 
-        <div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:20px;">
-          <p class="card-title" style="margin-bottom:14px;">Add New Code</p>
-          <div class="promo-form">
-            <div class="form-group">
-              <label class="form-label">Code</label>
-              <input type="text" id="promo-code-input" class="form-input"
-                placeholder="e.g. SUMMER25" maxlength="30"
-                oninput="this.value = this.value.toUpperCase().replace(/\s/g,'')">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Discount</label>
-              <select id="promo-pct-select" class="form-select">
-                <option value="">Select %</option>
-                <option value="100">100% off (Free)</option>
-                <option value="50">50% off</option>
-                <option value="25">25% off</option>
-              </select>
-            </div>
-            <button class="btn-primary" onclick="createPromo()" style="height:fit-content;align-self:end;">Add Code</button>
+        <div class="promo-add-form">
+          <input
+            type="text"
+            class="promo-input"
+            id="promo-code-input"
+            placeholder="NEW CODE"
+            maxlength="32"
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <div class="promo-pct-wrap">
+            <input
+              type="number"
+              class="promo-pct-input"
+              id="promo-discount-input"
+              value="100"
+              min="1"
+              max="100"
+            >
+            <span class="promo-pct-suffix">% off</span>
           </div>
-          <div class="promo-feedback" id="promo-feedback"></div>
+          <button class="btn-add-promo" id="promo-add-btn" onclick="addPromo()">Add Code</button>
         </div>
       </div>
 
@@ -888,15 +1069,36 @@
   <!-- CANCEL MODAL -->
   <div class="modal-overlay" id="cancel-modal">
     <div class="modal">
-      <div class="modal-icon">
+      <div class="modal-icon cancel-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </div>
       <h3>Cancel Session?</h3>
-      <p id="cancel-desc">This will cancel the booking. This cannot be undone.</p>
+      <p id="cancel-desc">This will cancel the booking. This action cannot be undone.</p>
       <textarea class="modal-textarea" id="cancel-reason" placeholder="Reason for cancellation (optional)"></textarea>
       <div class="modal-actions">
-        <button class="btn-ghost" onclick="closeModal()">Keep It</button>
+        <button class="btn-ghost" onclick="closeModal('cancel-modal')">Keep It</button>
         <button class="btn-confirm-cancel" id="cancel-confirm-btn" onclick="doCancel()">Cancel Session</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESCHEDULE MODAL -->
+  <div class="modal-overlay" id="reschedule-modal">
+    <div class="modal">
+      <div class="modal-icon reschedule-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h4v4"/></svg>
+      </div>
+      <h3>Reschedule Session</h3>
+      <p id="reschedule-desc">Choose a new date and time for this session.</p>
+      <label class="modal-form-label">New Date</label>
+      <input type="date" class="modal-input" id="reschedule-date">
+      <label class="modal-form-label">New Start Time</label>
+      <input type="time" class="modal-input" id="reschedule-time">
+      <label class="modal-form-label">Note to Agent (optional)</label>
+      <textarea class="modal-textarea" id="reschedule-note" placeholder="e.g. Moved due to schedule conflict" style="min-height:56px;"></textarea>
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="closeModal('reschedule-modal')">Cancel</button>
+        <button class="btn-confirm-reschedule" id="reschedule-confirm-btn" onclick="doReschedule()">Confirm Reschedule</button>
       </div>
     </div>
   </div>
@@ -907,18 +1109,17 @@
   <script src="shared.js"></script>
   <script>
   (function() {
-    const HUB       = 'https://app.serhantorlandohub.com';
-    const OPERATORS = ['mark@serhant.com', 'sarah.raumaker@serhant.com'];
+    const HUB    = 'https://app.serhantorlandohub.com';
+    const ADMINS = ['mark@serhant.com', 'sarah.raumaker@serhant.com'];
 
-    const rawEmail  = localStorage.getItem('portal_user_email') || '';
-    const email     = rawEmail.toLowerCase().trim();
-    const userName  = localStorage.getItem('portal_user_name') || '';
-    const firstName = userName.split(' ')[0] || '';
+    const rawEmail = localStorage.getItem('portal_user_email') || '';
+    const email    = rawEmail.toLowerCase().trim();
 
-    let allBookings      = [];
-    let producerFilter   = 'all';
-    let pendingCancelId  = null;
-    let pendingCancelEmail = null;
+    let allBookings = [];
+    let promos      = [];
+    let weekOff     = 0;
+    let pendingCancelId      = null;
+    let pendingRescheduleId  = null;
 
     /* ---- helpers ---- */
     function el(id) { return document.getElementById(id); }
@@ -933,7 +1134,7 @@
       try {
         const d = new Date(String(raw).includes('T') ? raw : raw.substring(0,10) + 'T00:00:00');
         return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
-      } catch { return raw; }
+      } catch(e) { return raw; }
     }
     function fmtTime(raw) {
       if (!raw) return '';
@@ -942,14 +1143,43 @@
         const [h, m] = String(raw).split(':').map(Number);
         const ampm = h >= 12 ? 'PM' : 'AM';
         return (h % 12 || 12) + ':' + String(m || 0).padStart(2,'0') + ' ' + ampm;
-      } catch { return raw; }
+      } catch(e) { return raw; }
     }
-    function fmtCents(cents) {
-      if (cents == null) return '--';
-      return '$' + (cents / 100).toLocaleString('en-US', { maximumFractionDigits: 0 });
+    function fmtCurrency(cents) {
+      if (cents == null || cents === '') return '--';
+      return '$' + Math.round(Number(cents) / 100);
+    }
+    function fmtCurrencyDollars(dollars) {
+      if (dollars == null || dollars === '') return '--';
+      return '$' + Math.round(Number(dollars));
     }
     function badgeClass(status) {
-      return { confirmed:'b-confirmed', pending:'b-pending', cancelled:'b-cancelled', completed:'b-completed' }[status] || 'b-confirmed';
+      const map = { confirmed:'b-confirmed', pending:'b-pending', cancelled:'b-cancelled', completed:'b-completed' };
+      return map[String(status).toLowerCase()] || 'b-confirmed';
+    }
+    function paymentBadgeClass(ps) {
+      const s = String(ps || '').toLowerCase();
+      if (s === 'free') return 'b-free';
+      if (s === 'paid') return 'b-paid';
+      return 'b-pending';
+    }
+    function producerChipClass(producer) {
+      const p = String(producer || '').toLowerCase();
+      if (p.includes('danny') || p.includes('daniel') || p.includes('botton')) return 'chip-danny';
+      if (p.includes('hailey')) return 'chip-hailey';
+      return 'chip-danny';
+    }
+    function producerLabelClass(producer) {
+      const p = String(producer || '').toLowerCase();
+      if (p.includes('hailey')) return 'prod-hailey';
+      return 'prod-danny';
+    }
+    function producerFirstName(producer) {
+      if (!producer) return '';
+      const p = String(producer).toLowerCase();
+      if (p.includes('hailey')) return 'Hailey';
+      if (p.includes('danny') || p.includes('daniel') || p.includes('botton')) return 'Danny';
+      return producer.split(' ')[0] || producer;
     }
 
     let toastTimer = null;
@@ -963,248 +1193,558 @@
 
     /* ---- gate check ---- */
     function init() {
-      if (!email) return;
-      if (!OPERATORS.includes(email)) {
+      if (!email) return; // auth-check.js handles redirect
+
+      if (!ADMINS.includes(email)) {
         el('access-denied').style.display = 'block';
+        // Redirect after brief moment
+        setTimeout(() => { window.location.href = 'studios.html'; }, 1500);
         return;
       }
+
       el('authorized-content').style.display = 'block';
-      if (firstName) {
-        el('page-title').textContent = 'Studios Admin';
-        el('operator-badge-name').textContent = firstName + ' - Operator';
-      }
-      loadData();
+      loadAdminData();
     }
 
-    /* ---- load data ---- */
-    async function loadData() {
+    /* ---- load admin data ---- */
+    async function loadAdminData() {
       try {
-        const r = await fetch(HUB + '/api/studios/admin?email=' + enc(email) + '&view=upcoming');
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        const data = await r.json();
+        const res  = await fetch(HUB + '/api/studios/admin?email=' + enc(email) + '&view=upcoming');
+        const data = await res.json();
 
-        renderStats(data.stats || {});
+        if (!res.ok) throw new Error(data.error || 'Request failed');
+
         allBookings = data.bookings || [];
-        renderTable();
-        renderPromos(data.promo_codes || []);
-      } catch(e) {
-        el('stats-skeleton').style.display = 'none';
+        promos      = data.promo_codes || [];
+        const stats = data.stats || {};
+
+        renderStats(stats);
+        renderPromos(promos);
+        renderWeek();
+
+      } catch(err) {
+        console.error('Admin load error:', err);
         el('error-banner').style.display = 'flex';
-        el('error-msg').textContent = 'Failed to load dashboard: ' + e.message;
+        el('error-msg').textContent = err.message || 'Unable to load admin data.';
+        hideSkeleton();
+        renderWeek(); // render empty calendar
       }
     }
 
     /* ---- stats ---- */
     function renderStats(stats) {
-      el('stats-skeleton').style.display = 'none';
-      el('stats-row').style.display = 'grid';
-      el('stats-split').style.display = 'grid';
+      el('s-total').textContent     = stats.total_bookings ?? 0;
+      el('s-revenue').textContent   = fmtCurrency(stats.total_revenue_cents);
+      el('s-free').textContent      = stats.free_sessions  ?? 0;
+      el('s-paid').textContent      = stats.paid_sessions  ?? 0;
+      el('s-cancelled').textContent = stats.cancelled      ?? 0;
+      el('s-danny').textContent     = stats.danny_sessions ?? 0;
+      el('s-hailey').textContent    = stats.hailey_sessions ?? 0;
 
-      const rev = stats.total_revenue_cents != null
-        ? '$' + (stats.total_revenue_cents / 100).toLocaleString('en-US', { maximumFractionDigits: 0 })
-        : (stats.total_revenue != null ? '$' + Number(stats.total_revenue).toLocaleString('en-US', { maximumFractionDigits: 0 }) : '--');
-
-      el('stat-total').textContent     = stats.total_bookings  ?? '--';
-      el('stat-rev').textContent       = rev;
-      el('stat-free').textContent      = stats.free_sessions   ?? '--';
-      el('stat-paid').textContent      = stats.paid_sessions   ?? '--';
-      el('stat-cancelled').textContent = stats.cancelled       ?? '--';
-      el('stat-danny').textContent     = stats.danny_sessions  ?? '--';
-      el('stat-hailey').textContent    = stats.hailey_sessions ?? '--';
+      el('stats-skeleton').style.display         = 'none';
+      el('stats-row').style.display              = 'flex';
+      el('producer-stats-skeleton').style.display = 'none';
+      el('producer-stats-row').style.display      = 'flex';
     }
 
-    /* ---- table ---- */
-    window.applyFilter = function(producer) {
-      producerFilter = producer;
-      document.querySelectorAll('[data-pf]').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.pf === producer);
+    function hideSkeleton() {
+      el('stats-skeleton').style.display          = 'none';
+      el('stats-row').style.display               = 'flex';
+      el('producer-stats-skeleton').style.display = 'none';
+      el('producer-stats-row').style.display      = 'flex';
+    }
+
+    /* ---- week helpers ---- */
+    function getMondayOf(date) {
+      const d = new Date(date);
+      const day = d.getDay(); // 0=Sun
+      const diff = (day === 0) ? -6 : 1 - day;
+      d.setDate(d.getDate() + diff);
+      d.setHours(0,0,0,0);
+      return d;
+    }
+    function addDays(date, n) {
+      const d = new Date(date);
+      d.setDate(d.getDate() + n);
+      return d;
+    }
+    function dateStr(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,'0');
+      const day = String(d.getDate()).padStart(2,'0');
+      return y + '-' + m + '-' + day;
+    }
+    function isToday(d) {
+      const t = new Date();
+      return d.getFullYear() === t.getFullYear() && d.getMonth() === t.getMonth() && d.getDate() === t.getDate();
+    }
+    function fmtDayHeader(d) {
+      const names = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return names[d.getDay()] + ' ' + months[d.getMonth()] + ' ' + d.getDate();
+    }
+
+    function weekOffset(n) {
+      weekOff += n;
+      renderWeek();
+    }
+    function resetWeek() {
+      weekOff = 0;
+      renderWeek();
+    }
+
+    /* ---- calendar render ---- */
+    function renderWeek() {
+      const today  = new Date();
+      const monday = getMondayOf(addDays(today, weekOff * 7));
+      const days   = [0,1,2,3,4].map(i => addDays(monday, i));
+
+      // Week label
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const startLbl = months[monday.getMonth()] + ' ' + monday.getDate();
+      const fri = addDays(monday, 4);
+      const endLbl = months[fri.getMonth()] + ' ' + fri.getDate() + ', ' + fri.getFullYear();
+      el('week-label').textContent = startLbl + ' - ' + endLbl;
+
+      const isThisWeek = weekOff === 0;
+      el('schedule-heading').textContent = isThisWeek ? 'This Week' : fmtDayHeader(monday).replace(/\w+ /,'') + ' Week';
+
+      // Build booking index by date string
+      const byDay = {};
+      days.forEach(d => { byDay[dateStr(d)] = []; });
+
+      allBookings.forEach(b => {
+        const ds = String(b.session_date || '').substring(0, 10);
+        if (byDay[ds]) byDay[ds].push(b);
       });
-      renderTable();
-    };
+      // Sort each day by start_time
+      Object.values(byDay).forEach(arr => arr.sort((a,b) => (a.start_time||'') < (b.start_time||'') ? -1 : 1));
 
-    window.clearDates = function() {
-      el('filter-from').value = '';
-      el('filter-to').value   = '';
-      renderTable();
-    };
+      // Week bookings for this view
+      const weekBookings = days.flatMap(d => byDay[dateStr(d)]);
 
-    window.renderTable = function() {
-      const tbody   = el('bookings-tbody');
-      const fromVal = el('filter-from').value;
-      const toVal   = el('filter-to').value;
-      const from    = fromVal ? new Date(fromVal + 'T00:00:00') : null;
-      const to      = toVal   ? new Date(toVal   + 'T23:59:59') : null;
+      // Render calendar grid
+      let calHtml = '';
+      days.forEach(d => {
+        const ds    = dateStr(d);
+        const books = byDay[ds];
+        const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+        const todayCls = isToday(d) ? ' today' : '';
+        calHtml += '<div class="day-col">';
+        calHtml += '<div class="day-header' + todayCls + '">';
+        calHtml += '<span class="day-name">' + dayNames[d.getDay()] + '</span>';
+        calHtml += '<span class="day-num">' + d.getDate() + '</span>';
+        calHtml += '</div>';
+        if (books.length === 0) {
+          calHtml += '<div class="cal-empty">Open</div>';
+        } else {
+          books.forEach(b => {
+            const cancelled = String(b.status||'').toLowerCase() === 'cancelled';
+            const chipCls = cancelled ? 'chip-cancelled' : producerChipClass(b.producer);
+            const prodCls = producerLabelClass(b.producer);
+            const timeStr = fmtTime(b.start_time) + (b.end_time ? ' - ' + fmtTime(b.end_time) : '');
+            const agentFirst = (b.agent_name || '').split(' ')[0] || '';
+            const prodFirst  = producerFirstName(b.producer);
+            calHtml += '<div class="cal-chip ' + chipCls + '" onclick="scrollToCard(' + JSON.stringify(String(b.id)) + ')" title="' + x(b.agent_name||'') + '">';
+            calHtml += '<span class="chip-time">' + x(timeStr) + '</span>';
+            calHtml += '<span class="chip-agent">' + x(agentFirst) + '</span>';
+            calHtml += '<span class="chip-prod ' + prodCls + '">' + x(prodFirst) + '</span>';
+            calHtml += '</div>';
+          });
+        }
+        calHtml += '</div>';
+      });
 
-      let filtered = producerFilter === 'all'
-        ? allBookings
-        : allBookings.filter(b => (b.producer || '').toLowerCase().includes(producerFilter));
+      el('cal-skeleton').style.display = 'none';
+      el('cal-grid').innerHTML = calHtml;
+      el('cal-grid').style.display = 'grid';
 
-      if (from || to) {
-        filtered = filtered.filter(b => {
-          const raw = b.session_date || b.date || b.booking_date || '';
-          if (!raw) return true;
-          const d = new Date(raw.substring(0,10) + 'T00:00:00');
-          if (from && d < from) return false;
-          if (to   && d > to)   return false;
-          return true;
-        });
-      }
-
-      if (!filtered.length) {
-        tbody.innerHTML = '<tr class="table-empty"><td colspan="9">No sessions match the current filters.</td></tr>';
-        return;
-      }
-
-      tbody.innerHTML = filtered.map(b => {
-        const status    = (b.status || 'confirmed').toLowerCase();
-        const badgeCls  = badgeClass(status);
-        const payStatus = (b.payment_status || b.pay_status || '').toLowerCase();
-        const payBadge  = payStatus === 'free' ? 'b-free' : payStatus === 'paid' ? 'b-paid' : 'b-pending';
-        const payLabel  = payStatus || (b.price_cents === 0 || b.price === 0 ? 'free' : 'pending');
-        const total     = b.price_cents != null
-          ? fmtCents(b.price_cents)
-          : (b.price != null ? '$' + Number(b.price).toLocaleString('en-US', { maximumFractionDigits: 0 }) : '--');
-        const canCancel = status !== 'cancelled' && status !== 'completed';
-        const bId       = b.id || b.booking_id || '';
-
-        return `<tr>
-          <td data-label="Date">${fmtDate(b.session_date || b.date || b.booking_date)}</td>
-          <td data-label="Time">${fmtTime(b.start_time || b.time)}</td>
-          <td data-label="Agent">${x(b.agent_name || b.agent || '')}</td>
-          <td data-label="Package">${x(b.package_name || b.package || '')}</td>
-          <td data-label="Producer">${x(b.producer || '')}</td>
-          <td data-label="Payment">
-            <span class="badge ${payBadge}"><span class="badge-dot"></span>${payLabel}</span>
-          </td>
-          <td data-label="Total" style="font-weight:700;">${total}</td>
-          <td data-label="Status">
-            <span class="badge ${badgeCls}"><span class="badge-dot"></span>${status}</span>
-          </td>
-          <td data-label="">
-            ${canCancel ? `<button class="btn-cancel"
-              onclick="openCancel('${x(String(bId))}','${x(b.agent_email || email)}',
-                'Cancel ${x(b.agent_name || 'this')}\\'s session on ${fmtDate(b.session_date || b.date || b.booking_date)}?')">
-              Cancel
-            </button>` : ''}
-          </td>
-        </tr>`;
-      }).join('');
-    };
-
-    /* ---- promos ---- */
-    function renderPromos(codes) {
-      const list = el('promo-list');
-      if (!codes.length) {
-        list.innerHTML = '<div class="empty-state" style="padding:20px 0;"><p>No active promo codes.</p></div>';
-        return;
-      }
-      list.innerHTML = codes.map(c => `
-        <div class="promo-row" id="promo-${x(c.code)}">
-          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
-            <span class="promo-code">${x(c.code)}</span>
-            <span class="promo-pct">${c.discount_percent}% off</span>
-            ${c.uses != null ? `<span class="promo-meta">${c.uses} use${c.uses !== 1 ? 's' : ''}</span>` : ''}
-            ${c.created ? `<span class="promo-meta">Created ${fmtDate(c.created)}</span>` : ''}
-          </div>
-          <button class="btn-deactivate" onclick="deactivatePromo('${x(c.code)}',this)">Deactivate</button>
-        </div>`
-      ).join('');
+      renderDetailCards(weekBookings);
     }
 
-    window.createPromo = async function() {
-      const codeEl = el('promo-code-input');
-      const pctEl  = el('promo-pct-select');
-      const fb     = el('promo-feedback');
-      const code   = codeEl.value.trim().toUpperCase();
-      const pct    = parseInt(pctEl.value, 10);
+    function scrollToCard(id) {
+      const card = document.getElementById('card-' + id);
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 
-      if (!code) { fb.className = 'promo-feedback err'; fb.textContent = 'Enter a code.'; return; }
-      if (isNaN(pct) || pct < 1 || pct > 100) { fb.className = 'promo-feedback err'; fb.textContent = 'Select a discount percentage.'; return; }
+    /* ---- detail cards ---- */
+    function renderDetailCards(bookings) {
+      const grid = el('sessions-detail-grid');
+      const card = el('sessions-card');
+      const title = el('sessions-card-title');
 
-      fb.className = 'promo-feedback'; fb.textContent = 'Creating...';
-      try {
-        const r = await fetch(HUB + '/api/studios/promo/manage', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, code, discount_percent: pct })
-        });
-        if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || d.message || 'HTTP ' + r.status); }
-        codeEl.value = ''; pctEl.value = '';
-        fb.className = 'promo-feedback ok'; fb.textContent = 'Code "' + code + '" created.';
-        showToast('Promo code ' + code + ' created.', 'success');
-        loadData();
-      } catch(e) {
-        fb.className = 'promo-feedback err'; fb.textContent = 'Error: ' + e.message;
+      if (bookings.length === 0) {
+        card.style.display = 'none';
+        return;
       }
-    };
 
-    window.deactivatePromo = async function(code, btn) {
-      if (!confirm('Deactivate promo code "' + code + '"?')) return;
-      btn.disabled = true; btn.textContent = '...';
-      try {
-        const r = await fetch(HUB + '/api/studios/promo/manage', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, code })
-        });
-        if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || d.message || 'HTTP ' + r.status); }
-        showToast('"' + code + '" deactivated.', 'success');
-        const row = el('promo-' + code);
-        if (row) { row.style.opacity = '0'; row.style.transition = 'opacity 0.3s'; setTimeout(() => row.remove(), 320); }
-      } catch(e) {
-        btn.disabled = false; btn.textContent = 'Deactivate';
-        showToast('Error: ' + e.message, 'error');
-      }
-    };
+      const count = bookings.length;
+      title.textContent = count + ' Session' + (count !== 1 ? 's' : '') + ' This Week';
 
-    /* ---- cancel modal ---- */
-    window.openCancel = function(bookingId, bookingEmail, desc) {
-      pendingCancelId    = bookingId;
-      pendingCancelEmail = bookingEmail;
-      el('cancel-desc').textContent = desc || 'Cancel this session?';
+      let html = '';
+      bookings.forEach(b => {
+        const statusCls = badgeClass(b.status);
+        const pymtCls   = paymentBadgeClass(b.payment_status);
+        const dateStr   = fmtDate(b.session_date);
+        const timeRange = fmtTime(b.start_time) + (b.end_time ? ' - ' + fmtTime(b.end_time) : '');
+        const cancelled = String(b.status||'').toLowerCase() === 'cancelled';
+
+        // Price breakdown
+        const pkgPrice  = b.package_price  != null ? fmtCurrency(b.package_price)  : null;
+        const travel    = b.travel_fee     != null ? fmtCurrency(b.travel_fee)     : null;
+        const discount  = b.discount_amount != null ? fmtCurrency(b.discount_amount) : null;
+        const total     = b.total           != null ? fmtCurrency(b.total)          : null;
+
+        html += '<div class="detail-card" id="card-' + x(String(b.id)) + '">';
+
+        // Header
+        html += '<div class="dc-date">' + x(dateStr) + '</div>';
+        html += '<div class="dc-time">' + x(timeRange) + '</div>';
+        html += '<div class="dc-pkg">' + x(b.package_name || b.package_id || 'Package') + '</div>';
+
+        html += '<div class="dc-divider"></div>';
+
+        // Agent info
+        html += '<div class="dc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><div><strong>' + x(b.agent_name || '') + '</strong><br>' + x(b.agent_email || '') + '</div></div>';
+
+        // Producer
+        if (b.producer) {
+          const prodFirst = producerFirstName(b.producer);
+          const prodCls   = prodFirst === 'Hailey' ? 'color:#ec4899;' : 'color:#6868ee;';
+          html += '<div class="dc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M22 8l-4 4 4 4V8z"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg><div>Producer: <strong style="' + prodCls + '">' + x(prodFirst) + '</strong></div></div>';
+        }
+
+        // Address
+        if (b.address) {
+          html += '<div class="dc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg><div>' + x(b.address) + '</div></div>';
+        }
+
+        // Gate + lockbox
+        if (b.gate_code || b.lockbox_code) {
+          const gateStr = b.gate_code   ? 'Gate: <strong>' + x(b.gate_code) + '</strong>' : '';
+          const lbStr   = b.lockbox_code ? (gateStr ? ' &nbsp;|&nbsp; ' : '') + 'Lockbox: <strong>' + x(b.lockbox_code) + '</strong>' : '';
+          html += '<div class="dc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><div>' + gateStr + lbStr + '</div></div>';
+        }
+
+        // Sq ft
+        if (b.square_footage) {
+          html += '<div class="dc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg><div><strong>' + x(String(b.square_footage)) + '</strong> sq ft</div></div>';
+        }
+
+        // Notes
+        if (b.notes) {
+          html += '<div class="dc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div>' + x(b.notes) + '</div></div>';
+        }
+
+        // Promo code used
+        if (b.promo_code) {
+          html += '<div class="dc-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg><div>Promo: <span class="dc-code-pill">' + x(b.promo_code) + (b.promo_discount ? ' &minus;' + b.promo_discount + '%' : '') + '</span></div></div>';
+        }
+
+        // Booking number
+        if (b.booking_number) {
+          html += '<div class="dc-bknum">Booking #' + x(String(b.booking_number)) + '</div>';
+        }
+
+        // Financial breakdown (operator-only section)
+        if (pkgPrice || travel || total) {
+          html += '<div class="dc-finance">';
+          if (pkgPrice) {
+            html += '<div class="dc-finance-row"><span>Package price</span><span>' + x(pkgPrice) + '</span></div>';
+          }
+          if (travel && travel !== '$0') {
+            html += '<div class="dc-finance-row"><span>Travel fee</span><span>' + x(travel) + '</span></div>';
+          }
+          if (discount && discount !== '$0') {
+            html += '<div class="dc-finance-row discount"><span>Promo discount</span><span>-' + x(discount) + '</span></div>';
+          }
+          if (total) {
+            html += '<div class="dc-finance-row total"><span>Total</span><span>' + x(total) + '</span></div>';
+          }
+          html += '</div>';
+        }
+
+        // Footer: status badges + actions
+        html += '<div class="dc-footer">';
+        html += '<div style="display:flex;gap:8px;flex-wrap:wrap;">';
+        html += '<span class="badge ' + x(statusCls) + '"><span class="badge-dot"></span>' + x(String(b.status||'confirmed').charAt(0).toUpperCase() + String(b.status||'confirmed').slice(1)) + '</span>';
+        if (b.payment_status) {
+          html += '<span class="badge ' + x(pymtCls) + '"><span class="badge-dot"></span>' + x(String(b.payment_status).charAt(0).toUpperCase() + String(b.payment_status).slice(1)) + '</span>';
+        }
+        html += '</div>';
+
+        if (!cancelled) {
+          html += '<div class="dc-actions">';
+          html += '<button class="btn-reschedule" onclick="openReschedule(' + JSON.stringify(String(b.id)) + ',' + JSON.stringify(b.agent_name||'') + ')">Reschedule</button>';
+          html += '<button class="btn-cancel" onclick="openCancel(' + JSON.stringify(String(b.id)) + ',' + JSON.stringify(b.agent_name||'') + ')">Cancel</button>';
+          html += '</div>';
+        }
+        html += '</div>';
+
+        html += '</div>'; // .detail-card
+      });
+
+      grid.innerHTML = html;
+      card.style.display = 'block';
+    }
+
+    /* ---- cancel ---- */
+    function openCancel(id, name) {
+      pendingCancelId = id;
+      el('cancel-desc').textContent = 'This will cancel the booking for ' + (name || 'this agent') + '. This action cannot be undone.';
       el('cancel-reason').value = '';
-      el('cancel-confirm-btn').disabled = false;
-      el('cancel-confirm-btn').textContent = 'Cancel Session';
-      el('cancel-modal').classList.add('open');
-    };
-
-    window.closeModal = function() {
-      el('cancel-modal').classList.remove('open');
-    };
-
-    el('cancel-modal').addEventListener('click', e => {
-      if (e.target === el('cancel-modal')) closeModal();
-    });
-
-    window.doCancel = async function() {
+      openModal('cancel-modal');
+    }
+    async function doCancel() {
       if (!pendingCancelId) return;
       const btn    = el('cancel-confirm-btn');
       const reason = el('cancel-reason').value.trim();
-      btn.disabled = true; btn.textContent = 'Cancelling...';
+      btn.disabled = true;
+      btn.textContent = 'Cancelling...';
       try {
-        const r = await fetch(HUB + '/api/studios/cancel', {
+        const res  = await fetch(HUB + '/api/studios/cancel', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ booking_id: pendingCancelId, reason: reason || null, email: pendingCancelEmail || email })
+          body: JSON.stringify({ booking_id: pendingCancelId, reason, email })
         });
-        if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || d.message || 'HTTP ' + r.status); }
-        closeModal();
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Cancel failed');
         showToast('Session cancelled.', 'success');
-        loadData();
-      } catch(e) {
-        showToast('Could not cancel: ' + e.message, 'error');
-        btn.disabled = false; btn.textContent = 'Cancel Session';
+        closeModal('cancel-modal');
+        // Update local state
+        const b = allBookings.find(b => String(b.id) === String(pendingCancelId));
+        if (b) b.status = 'cancelled';
+        pendingCancelId = null;
+        renderWeek();
+      } catch(err) {
+        showToast(err.message || 'Failed to cancel.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Cancel Session';
       }
-    };
-
-    /* ---- boot ---- */
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => setTimeout(init, 150));
-    } else {
-      setTimeout(init, 150);
     }
 
+    /* ---- reschedule ---- */
+    function openReschedule(id, name) {
+      pendingRescheduleId = id;
+      el('reschedule-desc').textContent = 'Choose a new date and time for ' + (name || "this agent's") + ' session.';
+      el('reschedule-date').value = '';
+      el('reschedule-time').value = '';
+      el('reschedule-note').value = '';
+      openModal('reschedule-modal');
+    }
+    async function doReschedule() {
+      if (!pendingRescheduleId) return;
+      const newDate = el('reschedule-date').value;
+      const newTime = el('reschedule-time').value;
+      if (!newDate || !newTime) { showToast('Please enter a date and time.', 'error'); return; }
+      const btn  = el('reschedule-confirm-btn');
+      const note = el('reschedule-note').value.trim();
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+      try {
+        const res = await fetch(HUB + '/api/studios/reschedule', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ booking_id: pendingRescheduleId, new_date: newDate, new_time: newTime, note, email })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Reschedule failed');
+        showToast('Session rescheduled.', 'success');
+        closeModal('reschedule-modal');
+        // Update local state
+        const b = allBookings.find(b => String(b.id) === String(pendingRescheduleId));
+        if (b) { b.session_date = newDate; b.start_time = newTime; }
+        pendingRescheduleId = null;
+        renderWeek();
+      } catch(err) {
+        showToast(err.message || 'Failed to reschedule.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Confirm Reschedule';
+      }
+    }
+
+    /* ---- promos ---- */
+    function renderPromos(list) {
+      el('promo-skel').style.display = 'none';
+      const container = el('promo-list');
+      // Remove existing rows (keep skeleton)
+      container.querySelectorAll('.promo-row').forEach(r => r.remove());
+
+      if (!list || list.length === 0) {
+        el('promo-empty').style.display = 'block';
+        return;
+      }
+      el('promo-empty').style.display = 'none';
+
+      list.forEach(p => {
+        const code     = p.code || p.promo_code || '';
+        const discount = p.discount_percent != null ? p.discount_percent : (p.discount != null ? p.discount : 100);
+
+        const row = document.createElement('div');
+        row.className = 'promo-row';
+        row.dataset.origCode = code;
+        row.dataset.origDiscount = String(discount);
+        row.innerHTML =
+          '<input type="text" class="promo-row-code" value="' + x(code) + '" maxlength="32" spellcheck="false" autocomplete="off">' +
+          '<div class="promo-row-pct-wrap">' +
+            '<input type="number" class="promo-row-pct" value="' + x(String(discount)) + '" min="1" max="100">' +
+            '<span class="promo-row-pct-label">% off</span>' +
+          '</div>' +
+          '<button class="btn-promo-save" style="display:none;">Save</button>' +
+          '<button class="btn-promo-remove" title="Deactivate">' +
+            '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>' +
+          '</button>';
+
+        const codeInput = row.querySelector('.promo-row-code');
+        const pctInput  = row.querySelector('.promo-row-pct');
+        const saveBtn   = row.querySelector('.btn-promo-save');
+        const removeBtn = row.querySelector('.btn-promo-remove');
+
+        function checkDirty() {
+          const dirty = codeInput.value.trim().toUpperCase() !== row.dataset.origCode ||
+                        String(pctInput.value) !== row.dataset.origDiscount;
+          saveBtn.style.display = dirty ? 'inline-flex' : 'none';
+        }
+
+        codeInput.addEventListener('input', function() {
+          this.value = this.value.toUpperCase();
+          checkDirty();
+        });
+        pctInput.addEventListener('input', checkDirty);
+
+        saveBtn.addEventListener('click', async function() {
+          const newCode     = codeInput.value.trim().toUpperCase();
+          const newDiscount = parseInt(pctInput.value, 10);
+          if (!newCode) { showToast('Code cannot be empty.', 'error'); codeInput.focus(); return; }
+          if (isNaN(newDiscount) || newDiscount < 1 || newDiscount > 100) { showToast('Discount must be 1-100.', 'error'); pctInput.focus(); return; }
+          saveBtn.disabled = true;
+          saveBtn.textContent = 'Saving...';
+          try {
+            // If code was renamed, delete old first
+            if (newCode !== row.dataset.origCode) {
+              await fetch(HUB + '/api/studios/promo/manage', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, code: row.dataset.origCode })
+              });
+            }
+            const res = await fetch(HUB + '/api/studios/promo/manage', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, code: newCode, discount_percent: newDiscount })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Save failed');
+            // Update local state
+            const idx = promos.findIndex(p => (p.code || p.promo_code) === row.dataset.origCode);
+            if (idx !== -1) promos[idx] = { code: newCode, discount_percent: newDiscount };
+            row.dataset.origCode     = newCode;
+            row.dataset.origDiscount = String(newDiscount);
+            saveBtn.style.display = 'none';
+            showToast('Promo code ' + newCode + ' saved.', 'success');
+          } catch(err) {
+            showToast(err.message || 'Failed to save.', 'error');
+          } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save';
+          }
+        });
+
+        removeBtn.addEventListener('click', async function() {
+          if (!confirm('Deactivate promo code "' + row.dataset.origCode + '"?')) return;
+          try {
+            const res = await fetch(HUB + '/api/studios/promo/manage', {
+              method: 'DELETE',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, code: row.dataset.origCode })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to deactivate');
+            promos = promos.filter(p => (p.code || p.promo_code) !== row.dataset.origCode);
+            row.remove();
+            if (el('promo-list').querySelectorAll('.promo-row').length === 0) {
+              el('promo-empty').style.display = 'block';
+            }
+            showToast('Promo code ' + row.dataset.origCode + ' deactivated.', 'success');
+          } catch(err) {
+            showToast(err.message || 'Failed to deactivate.', 'error');
+          }
+        });
+
+        container.appendChild(row);
+      });
+    }
+
+    async function addPromo() {
+      const codeInput = el('promo-code-input');
+      const pctInput  = el('promo-discount-input');
+      const btn       = el('promo-add-btn');
+      const code      = codeInput.value.trim().toUpperCase();
+      const discount  = parseInt(pctInput.value, 10);
+      if (!code) { showToast('Enter a promo code.', 'error'); codeInput.focus(); return; }
+      if (isNaN(discount) || discount < 1 || discount > 100) { showToast('Discount must be between 1 and 100.', 'error'); pctInput.focus(); return; }
+      btn.disabled = true;
+      btn.textContent = 'Adding...';
+      try {
+        const res = await fetch(HUB + '/api/studios/promo/manage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, code, discount_percent: discount })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to add promo');
+        promos.push({ code, discount_percent: discount });
+        renderPromos(promos);
+        codeInput.value = '';
+        pctInput.value  = '100';
+        showToast('Promo code ' + code + ' added.', 'success');
+      } catch(err) {
+        showToast(err.message || 'Failed to add promo.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Add Code';
+      }
+    }
+
+    /* ---- modals ---- */
+    function openModal(id) {
+      el(id).classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal(id) {
+      el(id).classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    // Close on overlay click
+    document.querySelectorAll('.modal-overlay').forEach(ov => {
+      ov.addEventListener('click', function(e) {
+        if (e.target === this) closeModal(this.id);
+      });
+    });
+    // Close on Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(ov => closeModal(ov.id));
+      }
+    });
+
+    // Expose to inline handlers
+    window.weekOffset    = weekOffset;
+    window.resetWeek     = resetWeek;
+    window.scrollToCard  = scrollToCard;
+    window.openCancel    = openCancel;
+    window.doCancel      = doCancel;
+    window.openReschedule = openReschedule;
+    window.doReschedule  = doReschedule;
+    window.addPromo      = addPromo;
+    window.closeModal    = closeModal;
+
+    // Boot
+    init();
   })();
   </script>
+
 </body>
 </html>
