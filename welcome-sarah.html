@@ -3,75 +3,326 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome Sarah | SERHANT. ORLANDO</title>
+  <title>Welcome Sarah | SERHANT. Orlando</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    html{scroll-behavior:smooth;}
-    body{min-height:100vh;font-family:'Montserrat',sans-serif;background:#1a3a8f;color:white;overflow-x:hidden;}
-    :root{.accent:#121275;.glow:rgba(18,18,117,0.35);}
-    .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 24px;position:relative;background:#1a3a8f;}
-    .hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(transparent,#1a3a8f);pointer-events:none;}
-    .logo-wrap{margin-bottom:40px;}
-    .logo-wrap img{height:72px;opacity:1;}
-    .hero h1{font-size:clamp(28px,6vw,48px);font-weight:900;line-height:1.1;margin-bottom:14px;max-width:600px;}
-    .hero-sub{font-size:clamp(13px,2vw,15px);color:rgba(255,255,255,0.4);line-height:1.7;max-width:480px;margin-bottom:40px;}
-    .cta{display:inline-flex;align-items:center;gap:12px;padding:18px 40px;border-radius:100px;background:white;color:#06061a;font-size:15px;font-weight:700;font-family:'Montserrat',sans-serif;text-decoration:none;transition:all 0.3s;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(255,255,255,0.1);}
-    .cta:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(255,255,255,0.15);}
-    .cta svg{width:18px;height:18px;flex-shrink:0;}
-    .scroll-hint{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:2px;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px;}
-    .scroll-hint svg{animation:bd 1.5s ease-in-out infinite;}
-    @keyframes bd{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
-    .section{padding:80px 24px;max-width:800px;margin:0 auto;}
-    .sec-label{font-size:10px;font-weight:700;letter-spacing:4px;color:rgba(255,255,255,0.5);text-transform:uppercase;text-align:center;margin-bottom:12px;}
-    .section h2{font-size:clamp(22px,5vw,32px);font-weight:900;text-align:center;margin-bottom:40px;}
-    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;}
-    .card{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:18px;padding:24px;transition:border-color 0.3s;}
-    .card:hover{border-color:rgba(18,18,117,0.4);}
-    .card-icon{font-size:24px;margin-bottom:10px;}
-    .card-title{font-size:14px;font-weight:800;margin-bottom:4px;}
-    .card-desc{font-size:11px;color:rgba(255,255,255,0.35);line-height:1.7;}
-    .cta-section{padding:80px 24px;text-align:center;background:radial-gradient(ellipse at 50% 100%,var(.glow) 0%,transparent 60%);}
-    .cta-section h2{font-size:clamp(20px,4vw,28px);font-weight:900;margin-bottom:10px;}
-    .cta-section p{font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:28px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.7;}
-    .cta2{display:inline-flex;align-items:center;gap:12px;padding:18px 40px;border-radius:100px;background:var(.accent);color:white;font-size:15px;font-weight:700;font-family:'Montserrat',sans-serif;text-decoration:none;transition:all 0.3s;border:none;cursor:pointer;box-shadow:0 4px 20px var(.glow);}
-    .cta2:hover{transform:translateY(-3px);box-shadow:0 8px 32px var(.glow);}
-    .cta2 svg{width:18px;height:18px;}
-    .note{font-size:11px;color:rgba(255,255,255,0.2);margin-top:14px;}
-    .footer{padding:24px;text-align:center;font-size:11px;color:rgba(255,255,255,0.12);border-top:1px solid rgba(255,255,255,0.15);}
-    @media(max-width:480px){.cards{grid-template-columns:1fr;}.hero{padding:40px 20px;min-height:90vh;}}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #1a3a8f;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 24px 100px;
+      position: relative;
+      background: #1a3a8f;
+    }
+
+    .logo-wrap {
+      margin-bottom: 36px;
+    }
+    .logo-wrap img {
+      height: 88px;
+      width: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: clamp(30px, 5.5vw, 48px);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+      max-width: 620px;
+      color: #fff;
+    }
+
+    .hero-sub {
+      font-size: clamp(13px, 1.8vw, 15px);
+      color: rgba(255,255,255,0.6);
+      line-height: 1.65;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .scroll-indicator span {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+    .scroll-indicator svg {
+      color: rgba(255,255,255,0.35);
+      animation: bounce 1.8s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    /* ─── FEATURES ─── */
+    .features {
+      background: #1a3a8f;
+      padding: 64px 24px 72px;
+    }
+    .features-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .sec-label {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .features h2 {
+      font-size: clamp(22px, 4vw, 32px);
+      font-weight: 900;
+      text-align: center;
+      color: #fff;
+      margin-bottom: 36px;
+      letter-spacing: -0.3px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 720px) {
+      .card-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .card-grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 16px;
+      padding: 22px 20px;
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .card:hover {
+      background: rgba(255,255,255,0.13);
+      border-color: rgba(255,255,255,0.35);
+    }
+
+    .card-icon {
+      width: 28px;
+      height: 28px;
+      margin-bottom: 12px;
+      color: rgba(255,255,255,0.75);
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+      letter-spacing: 0.1px;
+    }
+    .card-desc {
+      font-size: 11.5px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.6;
+    }
+
+    /* ─── SIGN IN ─── */
+    .signin-section {
+      background: #1a3a8f;
+      padding: 64px 24px 72px;
+      text-align: center;
+    }
+    .signin-section h2 {
+      font-size: clamp(22px, 4vw, 30px);
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .signin-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 28px;
+      max-width: 360px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+
+    .ms-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 36px;
+      border-radius: 6px;
+      background: #fff;
+      color: #111;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      text-decoration: none;
+      transition: box-shadow 0.2s, transform 0.2s;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      border: none;
+      cursor: pointer;
+    }
+    .ms-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+    }
+    .ms-logo {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .signin-note {
+      margin-top: 14px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.2px;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #1a3a8f;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      padding: 20px 24px;
+      text-align: center;
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 0.3px;
+    }
   </style>
 </head>
 <body>
+
+  <!-- HERO -->
   <section class="hero">
-    <div class="logo-wrap"><img src="assets/logos/SERHANT-Orlando-White.svg" alt="SERHANT. Orlando"></div>
-    <h1>Hey Sarah. This is your command center.</h1>
-    <p class="hero-sub">Rankings, studios, financials, agent activity. All in one place. Built for you.</p>
-    <div class="scroll-prompt" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">See what you get<br><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:bd 1.5s ease-in-out infinite"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
-    
+    <div class="logo-wrap">
+      <img src="assets/logos/SERHANT-Orlando-White.svg" alt="SERHANT. Orlando">
+    </div>
+    <h1>Hey Sarah. Welcome to your command center.</h1>
+    <p class="hero-sub">Rankings, studios, financials, agent activity. All in one place.</p>
+
+    <a class="scroll-indicator" href="#features">
+      <span>See what's inside</span>
+      <svg class="scroll-indicator-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </a>
   </section>
 
-  <section class="section">
-    <div class="sec-label">Your access</div>
-    <h2>Full operator view.</h2>
-    <div class="cards">
-      <div class="card"><div class="card-icon">📊</div><div class="card-title">Rankings + Leadership</div><div class="card-desc">Live leaderboard for all agents. Leadership view with GCI rollups, team performance, and office-wide metrics.</div></div>
-      <div class="card"><div class="card-icon">🎬</div><div class="card-title">Studios Admin</div><div class="card-desc">Revenue, booking management, promo codes, producer schedules, and every session across the office.</div></div>
-      <div class="card"><div class="card-icon">📦</div><div class="card-title">Content Delivery</div><div class="card-desc">Track what's been delivered, what's pending, and what's awaiting payment. Full pipeline visibility.</div></div>
-      <div class="card"><div class="card-icon">👥</div><div class="card-title">Home Squad</div><div class="card-desc">Team tools, shared resources, and internal coordination for the Home Squad.</div></div>
-      <div class="card"><div class="card-icon">🧠</div><div class="card-title">The Brain</div><div class="card-desc">AI assistant with access to office data, market reports, and SERHANT. Orlando intelligence.</div></div>
-      <div class="card"><div class="card-icon">📚</div><div class="card-title">Resources</div><div class="card-desc">Brand guidelines, logo kits, templates, and everything the agents need.</div></div>
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="features-inner">
+      <span class="sec-label">Your access</span>
+      <h2>Full operator view.</h2>
+
+      <div class="card-grid">
+
+        <div class="card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+          <div class="card-title">Rankings + Leadership</div>
+          <div class="card-desc">Live leaderboard. GCI rollups, team performance, office metrics.</div>
+        </div>
+
+        <div class="card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+          </svg>
+          <div class="card-title">Studios Admin</div>
+          <div class="card-desc">Revenue, booking management, promo codes, producer schedules.</div>
+        </div>
+
+        <div class="card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          </svg>
+          <div class="card-title">Content Delivery</div>
+          <div class="card-desc">Track deliveries, pending payments, full pipeline visibility.</div>
+        </div>
+
+        <div class="card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <div class="card-title">Home Squad</div>
+          <div class="card-desc">Team tools, shared resources, internal coordination.</div>
+        </div>
+
+        <div class="card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-1.14"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-1.14"/>
+          </svg>
+          <div class="card-title">The Brain</div>
+          <div class="card-desc">AI assistant with office data and market intelligence.</div>
+        </div>
+
+        <div class="card">
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+          <div class="card-title">Resources</div>
+          <div class="card-desc">Brand guidelines, logo kits, templates.</div>
+        </div>
+
+      </div>
     </div>
   </section>
 
-  <section class="cta-section">
-    <h2>One sign-in. Full access.</h2>
-    <p>Use your SERHANT. Microsoft account. Takes 5 seconds.</p>
-    <a href="login.html" class="cta2"><svg viewBox="0 0 21 21"><rect x="1" y="1" width="9" height="9" fill="#f25022"/><rect x="11" y="1" width="9" height="9" fill="#7fba00"/><rect x="1" y="11" width="9" height="9" fill="#00a4ef"/><rect x="11" y="11" width="9" height="9" fill="#ffb900"/></svg>Sign in with Microsoft</a>
-    <div class="note">One sign-in per device. You won't be asked again.</div>
+  <!-- SIGN IN -->
+  <section class="signin-section">
+    <h2>Ready?</h2>
+    <p class="signin-sub">Sign in with your SERHANT. Microsoft account. One time and you're set.</p>
+    <a href="login.html" class="ms-btn">
+      <svg class="ms-logo" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+        <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+        <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+        <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+      </svg>
+      Sign in with Microsoft
+    </a>
+    <p class="signin-note">One sign-in per device. You won't be asked again.</p>
   </section>
 
-  <footer class="footer">SERHANT. Orlando / 37 N. Orange Ave #900B, Orlando FL 32801</footer>
+  <!-- FOOTER -->
+  <footer>
+    SERHANT. Orlando &nbsp;&middot;&nbsp; 37 N. Orange Ave #900B, Orlando FL 32801
+  </footer>
+
 </body>
 </html>
