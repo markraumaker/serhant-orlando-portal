@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Sessions | SERHANT. STUDIOS</title>
+  <title>My Productions | SERHANT. STUDIOS</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="auth-check.js"></script>
 
   <style>
     /* ================================================================
-       PAGE BASE
+       RESET & BASE
        ================================================================ */
     *, *::before, *::after { box-sizing: border-box; }
 
@@ -26,110 +26,236 @@
       font-family: 'Montserrat', sans-serif;
       margin: 0;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    /* ----------------------------------------------------------------
-       PAGE HERO HEADER
-       ---------------------------------------------------------------- */
-    .page-header {
-      background: linear-gradient(135deg, #08082a 0%, #0d0d3a 50%, #111150 100%);
+    /* ================================================================
+       CINEMATIC HERO
+       ================================================================ */
+    .page-hero {
       position: relative;
       overflow: hidden;
-      padding: 100px 24px 52px;
-      text-align: left;
+      padding: 120px 24px 72px;
+      background: linear-gradient(160deg, #04041a 0%, #0a0825 35%, #0d0533 65%, #110740 100%);
+      min-height: 340px;
+      display: flex;
+      align-items: flex-end;
     }
-    .page-header::before {
-      content: '';
+
+    /* Animated gradient orbs — CSS only */
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+    }
+    .hero-orb-1 {
+      width: 600px; height: 600px;
+      top: -180px; left: -80px;
+      background: radial-gradient(circle, rgba(104,68,238,0.28) 0%, rgba(104,68,238,0.06) 60%, transparent 100%);
+      animation: orbFloat1 14s ease-in-out infinite;
+    }
+    .hero-orb-2 {
+      width: 480px; height: 480px;
+      top: -60px; right: -120px;
+      background: radial-gradient(circle, rgba(147,68,238,0.18) 0%, rgba(80,40,200,0.06) 60%, transparent 100%);
+      animation: orbFloat2 18s ease-in-out infinite;
+    }
+    .hero-orb-3 {
+      width: 340px; height: 340px;
+      bottom: -80px; left: 40%;
+      background: radial-gradient(circle, rgba(68,68,238,0.14) 0%, transparent 70%);
+      animation: orbFloat3 22s ease-in-out infinite;
+    }
+
+    @keyframes orbFloat1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%       { transform: translate(30px, 20px) scale(1.04); }
+      66%       { transform: translate(-20px, 30px) scale(0.97); }
+    }
+    @keyframes orbFloat2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      40%       { transform: translate(-40px, -20px) scale(1.06); }
+      70%       { transform: translate(20px, 30px) scale(0.96); }
+    }
+    @keyframes orbFloat3 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50%       { transform: translate(30px, -20px) scale(1.08); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-orb { animation: none; }
+    }
+
+    /* Subtle noise texture overlay */
+    .hero-noise {
       position: absolute;
       inset: 0;
+      opacity: 0.03;
       pointer-events: none;
-      background:
-        radial-gradient(ellipse 60% 80% at 0% 50%, rgba(104,104,238,0.12) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 60% at 100% 30%, rgba(60,60,200,0.08) 0%, transparent 55%);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
     }
-    .page-header-inner {
+
+    /* Horizontal shimmer line at bottom of hero */
+    .hero-line {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(104,104,238,0.25) 20%,
+        rgba(180,140,255,0.5) 50%,
+        rgba(104,104,238,0.25) 80%,
+        transparent 100%);
+    }
+
+    .page-hero-inner {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       max-width: 1140px;
       margin: 0 auto;
+      width: 100%;
     }
+
     .page-back {
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
-      letter-spacing: 1.5px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.35);
+      color: rgba(255,255,255,0.28);
       text-decoration: none;
-      margin-bottom: 20px;
-      transition: color 0.18s;
+      margin-bottom: 28px;
+      transition: color 0.2s;
     }
-    .page-back:hover { color: rgba(255,255,255,0.7); }
-    .page-back svg { transition: transform 0.18s; }
+    .page-back:hover { color: rgba(255,255,255,0.6); }
     .page-back:hover svg { transform: translateX(-3px); }
-    .page-eyebrow {
-      font-size: 11px;
+    .page-back svg { transition: transform 0.2s; }
+
+    .hero-eyebrow {
+      font-size: 10px;
       font-weight: 700;
-      letter-spacing: 3px;
+      letter-spacing: 4px;
       text-transform: uppercase;
       color: #6868ee;
-      margin-bottom: 8px;
-    }
-    .page-title {
-      font-size: clamp(26px, 4vw, 40px);
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      margin: 0 0 12px;
-    }
-    .page-subtitle {
-      font-size: 14px;
-      color: rgba(255,255,255,0.4);
-      font-weight: 400;
-      max-width: 480px;
-    }
-    .page-header-actions {
-      margin-top: 24px;
+      margin-bottom: 12px;
       display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
       align-items: center;
+      gap: 10px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background: #6868ee;
+      opacity: 0.7;
     }
 
-    /* ----------------------------------------------------------------
+    .hero-title {
+      font-size: clamp(34px, 6vw, 64px);
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.03em;
+      line-height: 1.0;
+      margin: 0 0 16px;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: rgba(255,255,255,0.38);
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      max-width: 420px;
+      line-height: 1.7;
+      margin: 0 0 32px;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      border-radius: 60px;
+      border: none;
+      background: #fff;
+      color: #06061a;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: box-shadow 0.25s, transform 0.2s;
+      box-shadow: 0 0 0 0 rgba(255,255,255,0);
+    }
+    .hero-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba(180,160,255,0.35), 0 0 0 1px rgba(255,255,255,0.12);
+    }
+    .hero-cta svg { width: 14px; height: 14px; }
+
+    /* ================================================================
        MAIN CONTENT
-       ---------------------------------------------------------------- */
+       ================================================================ */
     .page-main {
       max-width: 1140px;
       margin: 0 auto;
-      padding: 48px 24px 80px;
+      padding: 56px 24px 100px;
     }
 
-    /* ----------------------------------------------------------------
-       SECTION LABELS
-       ---------------------------------------------------------------- */
+    /* ================================================================
+       ERROR BANNER
+       ================================================================ */
+    .error-banner {
+      background: rgba(255,82,82,0.06);
+      border: 1px solid rgba(255,82,82,0.2);
+      border-radius: 14px;
+      padding: 16px 20px;
+      font-size: 13px;
+      color: rgba(255,82,82,0.85);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+
+    /* ================================================================
+       SECTION HEADERS
+       ================================================================ */
+    .sec-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      gap: 16px;
+    }
     .sec-label {
       font-size: 10px;
       font-weight: 700;
-      letter-spacing: 2.5px;
+      letter-spacing: 3px;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.22);
-      margin: 0 0 14px;
+      color: rgba(255,255,255,0.2);
     }
-    .sec-heading {
-      font-size: clamp(18px, 2.5vw, 24px);
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: -0.02em;
-      margin: 0 0 24px;
+    .sec-count {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(104,104,238,0.6);
+      background: rgba(104,104,238,0.08);
+      border: 1px solid rgba(104,104,238,0.15);
+      padding: 3px 10px;
+      border-radius: 20px;
     }
 
-    /* ----------------------------------------------------------------
-       SKELETON
-       ---------------------------------------------------------------- */
+    /* ================================================================
+       SKELETON LOADER
+       ================================================================ */
     @keyframes shimmer {
       0%   { background-position: -200% 0; }
       100% { background-position:  200% 0; }
@@ -141,107 +267,209 @@
         rgba(255,255,255,0.04) 75%);
       background-size: 200% 100%;
       animation: shimmer 1.5s ease-in-out infinite;
-      border-radius: 8px;
+      border-radius: 20px;
     }
     @media (prefers-reduced-motion: reduce) {
       .skeleton { animation: none; background: rgba(255,255,255,0.05); }
     }
 
-    /* ----------------------------------------------------------------
-       FADE IN
-       ---------------------------------------------------------------- */
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(6px); }
+    /* ================================================================
+       FADE IN STAGGER
+       ================================================================ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    .fadein { animation: fadein 0.3s ease both; }
+    .fadein { animation: fadeUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+    .fadein-1 { animation-delay: 0.05s; }
+    .fadein-2 { animation-delay: 0.12s; }
+    .fadein-3 { animation-delay: 0.19s; }
+    .fadein-4 { animation-delay: 0.26s; }
+    .fadein-5 { animation-delay: 0.33s; }
+    .fadein-6 { animation-delay: 0.40s; }
 
-    /* ----------------------------------------------------------------
-       CARD
-       ---------------------------------------------------------------- */
-    .card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 28px;
-      margin-bottom: 20px;
-    }
-
-    /* ----------------------------------------------------------------
-       SESSION CARDS GRID
-       ---------------------------------------------------------------- */
+    /* ================================================================
+       SESSIONS GRID
+       ================================================================ */
     .sessions-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 16px;
-      margin-bottom: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 16px;
     }
+
+    /* ================================================================
+       SESSION CARD
+       ================================================================ */
     .session-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 22px;
-      transition: border-color 0.2s, transform 0.2s;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+                  border-color 0.25s;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
     .session-card:hover {
-      border-color: rgba(104,104,238,0.28);
-      transform: translateY(-2px);
+      transform: translateY(-4px);
+      border-color: rgba(104,104,238,0.3);
+      box-shadow:
+        0 20px 60px rgba(0,0,0,0.4),
+        0 0 0 1px rgba(104,104,238,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.06);
     }
-    .sc-pkg  { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
-    .sc-dt   { font-size: 12px; font-weight: 700; color: #6868ee; margin-bottom: 14px; }
-    .sc-row  {
+
+    /* Left accent bar */
+    .sc-accent {
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, #6868ee 0%, rgba(104,104,238,0.3) 100%);
+      border-radius: 20px 0 0 20px;
+    }
+    .sc-accent.past-accent {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .sc-body {
+      padding: 26px 26px 26px 32px;
+    }
+
+    /* Package name */
+    .sc-pkg {
+      font-size: 17px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    /* Date/time */
+    .sc-dt {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #7b7bf0;
+      letter-spacing: 0.3px;
+      margin-bottom: 20px;
+    }
+    .sc-dt-dot {
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: rgba(104,104,238,0.4);
+      flex-shrink: 0;
+    }
+
+    /* Info rows */
+    .sc-row {
       display: flex;
       gap: 9px;
       align-items: flex-start;
       font-size: 12px;
-      color: rgba(255,255,255,0.55);
+      color: rgba(255,255,255,0.45);
       margin-bottom: 8px;
       line-height: 1.5;
+      font-weight: 500;
     }
-    .sc-row svg { width: 14px; height: 14px; color: rgba(255,255,255,0.28); flex-shrink: 0; margin-top: 1px; }
+    .sc-row svg {
+      width: 13px; height: 13px;
+      color: rgba(255,255,255,0.2);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Producer dot */
+    .producer-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .dot-danny { background: #6868ee; box-shadow: 0 0 6px rgba(104,104,238,0.5); }
+    .dot-hailey { background: #ec4899; box-shadow: 0 0 6px rgba(236,72,153,0.5); }
+    .dot-default { background: rgba(255,255,255,0.25); }
+
+    /* Booking number tag */
     .sc-bknum {
-      font-size: 10px;
-      color: rgba(255,255,255,0.22);
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      margin-top: 12px;
-      margin-bottom: 14px;
-    }
-    .sc-actions { display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
-
-    /* ----------------------------------------------------------------
-       PAST SESSIONS LIST
-       ---------------------------------------------------------------- */
-    .past-list {
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    .past-row {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 16px;
-      padding: 12px 18px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      flex-wrap: wrap;
+      gap: 5px;
+      font-size: 10px;
+      color: rgba(255,255,255,0.18);
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px;
+      padding: 3px 9px;
+      margin-top: 16px;
+      margin-bottom: 18px;
     }
-    .past-row:last-child { border-bottom: none; }
-    .past-row:hover { background: rgba(255,255,255,0.02); }
-    .past-date { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.3); min-width: 110px; white-space: nowrap; }
-    .past-pkg  { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.55); flex: 1; }
+    .sc-bknum::before {
+      content: '#';
+      opacity: 0.5;
+    }
 
-    /* ----------------------------------------------------------------
+    /* Card actions */
+    .sc-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* Cancel button — text only with hover underline */
+    .btn-cancel {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      color: rgba(255,82,82,0.55);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.18s;
+      position: relative;
+    }
+    .btn-cancel::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 1px;
+      background: rgba(255,82,82,0.55);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.2s;
+    }
+    .btn-cancel:hover { color: #ff5252; }
+    .btn-cancel:hover::after { transform: scaleX(1); }
+    .btn-cancel:disabled { opacity: 0.25; cursor: not-allowed; }
+    .btn-cancel:disabled::after { display: none; }
+
+    /* ================================================================
        BADGES
-       ---------------------------------------------------------------- */
+       ================================================================ */
     .badge {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      padding: 4px 10px;
+      padding: 4px 11px;
       border-radius: 40px;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
       white-space: nowrap;
     }
@@ -249,110 +477,231 @@
       width: 5px; height: 5px;
       border-radius: 50%;
       background: currentColor;
-      display: inline-block;
       flex-shrink: 0;
     }
-    .b-confirmed { background: rgba(76,175,80,0.14);  border: 1px solid rgba(76,175,80,0.35);  color: #4caf50; }
-    .b-pending   { background: rgba(255,183,77,0.14); border: 1px solid rgba(255,183,77,0.35); color: #ffb74d; }
-    .b-cancelled { background: rgba(255,82,82,0.12);  border: 1px solid rgba(255,82,82,0.3);   color: #ff5252; }
-    .b-completed { background: rgba(255,255,255,0.06);border: 1px solid rgba(255,255,255,0.12);color: rgba(255,255,255,0.4); }
-
-    /* ----------------------------------------------------------------
-       BUTTONS
-       ---------------------------------------------------------------- */
-    .btn-cancel {
-      padding: 7px 14px;
-      border-radius: 8px;
-      border: 1px solid rgba(255,82,82,0.4);
-      background: transparent;
+    .b-confirmed {
+      background: rgba(76,175,80,0.12);
+      border: 1px solid rgba(76,175,80,0.3);
+      color: #4caf50;
+      box-shadow: 0 0 10px rgba(76,175,80,0.1);
+    }
+    .b-pending {
+      background: rgba(255,183,77,0.12);
+      border: 1px solid rgba(255,183,77,0.3);
+      color: #ffb74d;
+    }
+    .b-cancelled {
+      background: rgba(255,82,82,0.1);
+      border: 1px solid rgba(255,82,82,0.25);
       color: #ff5252;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.18s;
-      white-space: nowrap;
     }
-    .btn-cancel:hover { background: rgba(255,82,82,0.1); }
-    .btn-cancel:disabled { opacity: 0.3; cursor: not-allowed; }
-
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 11px 22px;
-      border-radius: 10px;
-      border: none;
-      background: linear-gradient(135deg, #4040b8, #6868ee);
-      color: #fff;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      cursor: pointer;
-      text-decoration: none;
-      transition: opacity 0.18s, transform 0.18s;
-      box-shadow: 0 0 24px rgba(104,104,238,0.25);
-    }
-    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
-
-    .btn-ghost {
-      padding: 10px 20px;
-      border-radius: 10px;
+    .b-completed {
+      background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.1);
-      background: transparent;
-      color: rgba(255,255,255,0.55);
-      font-family: 'Montserrat', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: border-color 0.18s, color 0.18s;
-    }
-    .btn-ghost:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
-
-    /* ----------------------------------------------------------------
-       ERROR STATE
-       ---------------------------------------------------------------- */
-    .error-banner {
-      background: rgba(255,82,82,0.06);
-      border: 1px solid rgba(255,82,82,0.2);
-      border-radius: 12px;
-      padding: 16px 20px;
-      font-size: 13px;
-      color: rgba(255,82,82,0.85);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 24px;
+      color: rgba(255,255,255,0.3);
     }
 
-    /* ----------------------------------------------------------------
-       EMPTY STATE
-       ---------------------------------------------------------------- */
-    .empty-state {
+    /* ================================================================
+       EMPTY STATE — Cinematic full-width card
+       ================================================================ */
+    .empty-card {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, rgba(104,68,238,0.07) 0%, rgba(20,16,60,0.5) 50%, rgba(104,68,238,0.04) 100%);
+      border: 1px solid rgba(104,104,238,0.15);
+      border-radius: 24px;
+      padding: 64px 40px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      padding: 52px 24px;
-      color: rgba(255,255,255,0.25);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
     }
-    .empty-state svg { margin-bottom: 16px; opacity: 0.35; }
-    .empty-state p { font-size: 14px; line-height: 1.7; max-width: 30ch; margin: 0 0 24px; }
-    .empty-state a { color: #6868ee; text-decoration: none; font-weight: 700; }
-    .empty-state a:hover { text-decoration: underline; }
+    .empty-card::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(104,68,238,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .empty-card::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -60px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(80,40,200,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
 
-    /* ----------------------------------------------------------------
-       MODAL
-       ---------------------------------------------------------------- */
+    .empty-illustration {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .empty-watermark {
+      position: absolute;
+      right: 48px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.04;
+      pointer-events: none;
+    }
+
+    .empty-heading {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin: 0 0 10px;
+      position: relative;
+      z-index: 1;
+    }
+    .empty-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,0.35);
+      font-weight: 400;
+      line-height: 1.7;
+      max-width: 36ch;
+      margin: 0 0 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ================================================================
+       PAST SESSIONS — Collapsible
+       ================================================================ */
+    .past-section {
+      margin-top: 60px;
+    }
+
+    .past-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      padding: 16px 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      user-select: none;
+    }
+    .past-toggle:hover .past-toggle-label { color: rgba(255,255,255,0.5); }
+    .past-toggle-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      transition: color 0.18s;
+    }
+    .past-toggle-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .past-chevron {
+      width: 16px; height: 16px;
+      color: rgba(255,255,255,0.2);
+      transition: transform 0.3s;
+      flex-shrink: 0;
+    }
+    .past-section.open .past-chevron {
+      transform: rotate(180deg);
+    }
+
+    .past-body {
+      display: none;
+      margin-top: 8px;
+    }
+    .past-section.open .past-body {
+      display: block;
+    }
+
+    .past-list {
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .past-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 13px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      flex-wrap: wrap;
+      transition: background 0.15s;
+    }
+    .past-row:last-child { border-bottom: none; }
+    .past-row:hover { background: rgba(255,255,255,0.02); }
+    .past-date {
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.22);
+      min-width: 100px;
+      white-space: nowrap;
+      letter-spacing: 0.3px;
+    }
+    .past-pkg {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.4);
+      flex: 1;
+    }
+
+    /* ================================================================
+       GENERAL BUTTONS
+       ================================================================ */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border-radius: 60px;
+      border: none;
+      background: #fff;
+      color: #06061a;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      transition: box-shadow 0.25s, transform 0.2s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 36px rgba(180,160,255,0.3);
+    }
+
+    .btn-ghost {
+      padding: 10px 22px;
+      border-radius: 60px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: border-color 0.18s, color 0.18s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.25); color: #fff; }
+
+    /* ================================================================
+       CANCEL MODAL
+       ================================================================ */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.72);
-      backdrop-filter: blur(6px);
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       z-index: 9200;
       display: flex;
       align-items: center;
@@ -360,108 +709,131 @@
       padding: 24px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s;
+      transition: opacity 0.22s;
     }
     .modal-overlay.open { opacity: 1; pointer-events: all; }
+
     .modal {
-      background: #0d0d2e;
+      background: linear-gradient(160deg, #0d0d2e 0%, #0a0820 100%);
       border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 20px;
-      padding: 36px 32px;
+      border-radius: 24px;
+      padding: 40px 36px;
       max-width: 440px;
       width: 100%;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
-      transform: scale(0.95);
-      transition: transform 0.2s;
+      box-shadow: 0 32px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04);
+      transform: scale(0.94) translateY(8px);
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .modal-overlay.open .modal { transform: scale(1); }
+    .modal-overlay.open .modal { transform: scale(1) translateY(0); }
+
     .modal-icon {
-      width: 48px; height: 48px;
+      width: 52px; height: 52px;
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      margin-bottom: 20px;
-      background: rgba(255,82,82,0.12);
-      border: 1px solid rgba(255,82,82,0.28);
+      margin-bottom: 22px;
+      background: rgba(255,82,82,0.1);
+      border: 1px solid rgba(255,82,82,0.22);
       color: #ff5252;
     }
-    .modal h3 { font-size: 18px; font-weight: 800; color: #fff; margin: 0 0 10px; }
-    .modal p  { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.7; margin: 0 0 18px; }
+    .modal h3 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 10px;
+      letter-spacing: -0.02em;
+    }
+    .modal p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.7;
+      margin: 0 0 20px;
+    }
     .modal-textarea {
       width: 100%;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 11px 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px;
+      padding: 12px 16px;
       color: #fff;
       font-family: 'Montserrat', sans-serif;
       font-size: 13px;
       outline: none;
       resize: vertical;
-      min-height: 72px;
-      margin-bottom: 20px;
+      min-height: 76px;
+      margin-bottom: 22px;
       box-sizing: border-box;
       transition: border-color 0.18s;
     }
-    .modal-textarea:focus { border-color: #6868ee; }
-    .modal-textarea::placeholder { color: rgba(255,255,255,0.18); }
-    .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
+    .modal-textarea:focus { border-color: rgba(104,104,238,0.5); }
+    .modal-textarea::placeholder { color: rgba(255,255,255,0.15); }
+
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
     .btn-confirm-cancel {
-      padding: 10px 20px;
-      border-radius: 10px;
+      padding: 11px 22px;
+      border-radius: 60px;
       border: none;
-      background: #ff5252;
+      background: linear-gradient(135deg, #cc2222, #ff5252);
       color: #fff;
       font-family: 'Montserrat', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
       cursor: pointer;
-      transition: opacity 0.18s;
+      transition: opacity 0.18s, box-shadow 0.18s;
     }
-    .btn-confirm-cancel:hover { opacity: 0.85; }
-    .btn-confirm-cancel:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-confirm-cancel:hover {
+      opacity: 0.88;
+      box-shadow: 0 4px 20px rgba(255,82,82,0.3);
+    }
+    .btn-confirm-cancel:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; }
 
-    /* ----------------------------------------------------------------
+    /* ================================================================
        TOAST
-       ---------------------------------------------------------------- */
+       ================================================================ */
     .toast {
       position: fixed;
       bottom: 28px;
       right: 28px;
-      background: #0d0d2e;
+      background: rgba(13,13,40,0.95);
       border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 14px 20px;
       font-size: 13px;
       font-weight: 600;
       color: #fff;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
       z-index: 9999;
-      transform: translateY(10px);
+      transform: translateY(12px);
       opacity: 0;
-      transition: transform 0.25s, opacity 0.25s;
-      max-width: 320px;
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s;
+      max-width: 340px;
       pointer-events: none;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
     .toast.show { transform: translateY(0); opacity: 1; }
-    .toast.t-success { border-color: rgba(76,175,80,0.4); color: #4caf50; }
-    .toast.t-error   { border-color: rgba(255,82,82,0.4); color: #ff5252; }
+    .toast.t-success { border-color: rgba(76,175,80,0.4); color: #6ee77d; }
+    .toast.t-error   { border-color: rgba(255,82,82,0.4); color: #ff7070; }
 
-    /* ----------------------------------------------------------------
-       SECTION DIVIDER
-       ---------------------------------------------------------------- */
-    .sec-divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent 0%, rgba(80,80,220,0.3) 20%, rgba(120,100,255,0.45) 50%, rgba(80,80,220,0.3) 80%, transparent 100%);
-      border: none;
-      margin: 0;
+    /* ================================================================
+       RESPONSIVE
+       ================================================================ */
+    @media (max-width: 640px) {
+      .page-hero { padding: 110px 20px 56px; min-height: 280px; }
+      .page-main { padding: 40px 20px 80px; }
+      .sessions-grid { grid-template-columns: 1fr; gap: 16px; }
+      .empty-card { padding: 52px 24px; }
+      .empty-watermark { display: none; }
+      .hero-title { font-size: clamp(32px, 10vw, 48px); }
+      .modal { padding: 28px 24px; }
+      .hero-subtitle { text-align: left; }
+      .page-hero-inner { text-align: left; }
     }
 
-    /* ----------------------------------------------------------------
-       RESPONSIVE
-       ---------------------------------------------------------------- */
-    @media (max-width: 600px) {
-      .page-header { padding: 90px 16px 40px; }
-      .page-main { padding: 32px 16px 60px; }
+    @media (min-width: 900px) {
+      .sessions-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -487,28 +859,33 @@
     </div>
   </nav>
 
-  <!-- PAGE HEADER -->
-  <div class="page-header">
-    <div class="page-header-inner">
+  <!-- HERO -->
+  <div class="page-hero">
+    <!-- Animated orbs -->
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+    <!-- Noise -->
+    <div class="hero-noise"></div>
+    <!-- Bottom line -->
+    <div class="hero-line"></div>
+
+    <div class="page-hero-inner">
       <a href="studios.html" class="page-back">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
         Back to Studios
       </a>
-      <div class="page-eyebrow">SERHANT. STUDIOS</div>
-      <h1 class="page-title" id="page-main-title">My Sessions</h1>
-      <p class="page-subtitle">View your upcoming and past production sessions.</p>
-      <div class="page-header-actions">
-        <a href="studios.html" class="btn-primary">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Book a Session
-        </a>
-      </div>
+      <div class="hero-eyebrow">SERHANT. STUDIOS</div>
+      <h1 class="hero-title" id="page-main-title">Your Productions</h1>
+      <p class="hero-subtitle">Upcoming shoots, edits, and creative sessions — all in one place.</p>
+      <a href="studios.html" class="hero-cta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Book a Session
+      </a>
     </div>
   </div>
 
-  <hr class="sec-divider">
-
-  <!-- MAIN CONTENT -->
+  <!-- MAIN -->
   <main class="page-main">
 
     <!-- Error banner -->
@@ -518,18 +895,30 @@
     </div>
 
     <!-- UPCOMING SESSIONS -->
-    <div style="margin-bottom: 48px;">
-      <p class="sec-label" id="upcoming-label" style="display:none;">Upcoming</p>
+    <div id="upcoming-section" style="margin-bottom: 0;">
+      <div class="sec-header" id="upcoming-header" style="display:none;">
+        <span class="sec-label">Upcoming Productions</span>
+        <span class="sec-count" id="upcoming-count"></span>
+      </div>
       <div class="sessions-grid" id="upcoming-grid">
-        <div class="session-card skeleton" style="height:180px;"></div>
-        <div class="session-card skeleton" style="height:180px;"></div>
+        <!-- Skeleton loaders -->
+        <div class="skeleton" style="height:220px;"></div>
+        <div class="skeleton" style="height:220px;"></div>
       </div>
     </div>
 
     <!-- PAST SESSIONS -->
-    <div id="past-section" style="display:none;">
-      <p class="sec-label">Past Sessions</p>
-      <div class="past-list" id="past-list"></div>
+    <div class="past-section" id="past-section" style="display:none;">
+      <div class="past-toggle" id="past-toggle" onclick="togglePast()">
+        <span class="past-toggle-label">Past Productions</span>
+        <div class="past-toggle-right">
+          <span class="sec-count" id="past-count" style="display:none;"></span>
+          <svg class="past-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="past-body">
+        <div class="past-list" id="past-list"></div>
+      </div>
     </div>
 
   </main>
@@ -606,6 +995,13 @@
     function badgeClass(status) {
       return { confirmed:'b-confirmed', pending:'b-pending', cancelled:'b-cancelled', completed:'b-completed' }[status] || 'b-confirmed';
     }
+    function producerDotClass(name) {
+      if (!name) return 'dot-default';
+      const n = name.toLowerCase();
+      if (n.includes('danny')) return 'dot-danny';
+      if (n.includes('hailey')) return 'dot-hailey';
+      return 'dot-default';
+    }
 
     let toastTimer = null;
     function showToast(msg, type) {
@@ -616,14 +1012,11 @@
       toastTimer = setTimeout(() => t.classList.remove('show'), 3800);
     }
 
-    /* ---- page title ---- */
+    /* ---- init ---- */
     function init() {
-      if (!email) {
-        // auth-check.js handles redirect; show nothing
-        return;
-      }
+      if (!email) return;
       if (firstName) {
-        el('page-main-title').textContent = firstName + "'s Sessions";
+        el('page-main-title').textContent = firstName + "'s Productions";
       }
       loadSessions();
     }
@@ -644,59 +1037,129 @@
     }
 
     function renderUpcoming(bookings) {
-      const grid = el('upcoming-grid');
-      const lbl  = el('upcoming-label');
+      const grid   = el('upcoming-grid');
+      const header = el('upcoming-header');
+      const count  = el('upcoming-count');
 
       if (!bookings.length) {
-        lbl.style.display = 'none';
-        grid.innerHTML = `
-          <div class="empty-state" style="grid-column:1/-1;">
-            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h8M8 18h5"/>
-            </svg>
-            <p>No sessions yet. Book your first session.</p>
-            <a href="studios.html">Book a Session &rarr;</a>
-          </div>`;
+        header.style.display = 'none';
+        grid.innerHTML = emptyStateHTML();
         return;
       }
 
-      lbl.style.display = 'block';
-      grid.innerHTML = bookings.map(b => sessionCard(b)).join('');
+      header.style.display = 'flex';
+      count.textContent = bookings.length + (bookings.length === 1 ? ' session' : ' sessions');
+      grid.innerHTML = bookings.map((b, i) => sessionCard(b, i)).join('');
     }
 
-    function sessionCard(b) {
-      const status   = (b.status || 'confirmed').toLowerCase();
+    function emptyStateHTML() {
+      return `
+        <div class="empty-card fadein">
+          <!-- Decorative S watermark -->
+          <svg class="empty-watermark" width="280" height="280" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <text x="50" y="85" text-anchor="middle" font-family="'Montserrat', sans-serif" font-weight="900" font-size="110" fill="white">S</text>
+          </svg>
+
+          <!-- Camera/film SVG illustration -->
+          <svg class="empty-illustration" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Outer ring glow -->
+            <circle cx="60" cy="60" r="55" stroke="rgba(104,104,238,0.12)" stroke-width="1"/>
+            <circle cx="60" cy="60" r="45" stroke="rgba(104,104,238,0.08)" stroke-width="1"/>
+
+            <!-- Camera body -->
+            <rect x="22" y="40" width="60" height="42" rx="7" fill="rgba(104,104,238,0.12)" stroke="rgba(104,104,238,0.4)" stroke-width="1.5"/>
+
+            <!-- Camera lens outer ring -->
+            <circle cx="54" cy="61" r="16" fill="rgba(104,104,238,0.08)" stroke="rgba(104,104,238,0.35)" stroke-width="1.5"/>
+            <!-- Lens inner -->
+            <circle cx="54" cy="61" r="10" fill="rgba(104,104,238,0.15)" stroke="rgba(104,104,238,0.4)" stroke-width="1.2"/>
+            <!-- Lens core -->
+            <circle cx="54" cy="61" r="5" fill="rgba(104,104,238,0.5)"/>
+            <!-- Lens highlight -->
+            <circle cx="51.5" cy="58.5" r="1.5" fill="rgba(255,255,255,0.5)"/>
+
+            <!-- Viewfinder bump -->
+            <rect x="54" y="33" width="18" height="10" rx="3" fill="rgba(104,104,238,0.12)" stroke="rgba(104,104,238,0.35)" stroke-width="1.5"/>
+
+            <!-- Flash / hotshoe -->
+            <rect x="32" y="36" width="14" height="5" rx="2" fill="rgba(104,104,238,0.2)" stroke="rgba(104,104,238,0.35)" stroke-width="1"/>
+
+            <!-- Film reel right side -->
+            <circle cx="80" cy="59" r="10" fill="rgba(30,20,80,0.8)" stroke="rgba(104,104,238,0.3)" stroke-width="1.5"/>
+            <circle cx="80" cy="59" r="4" stroke="rgba(104,104,238,0.25)" stroke-width="1"/>
+            <line x1="80" y1="49" x2="80" y2="69" stroke="rgba(104,104,238,0.2)" stroke-width="1"/>
+            <line x1="70" y1="59" x2="90" y2="59" stroke="rgba(104,104,238,0.2)" stroke-width="1"/>
+
+            <!-- Shutter button -->
+            <circle cx="78" cy="43" r="4" fill="rgba(104,104,238,0.3)" stroke="rgba(104,104,238,0.5)" stroke-width="1"/>
+            <circle cx="78" cy="43" r="2" fill="rgba(104,104,238,0.6)"/>
+
+            <!-- Sparkle top-left -->
+            <g opacity="0.5">
+              <line x1="28" y1="30" x2="28" y2="38" stroke="rgba(180,160,255,0.6)" stroke-width="1.2" stroke-linecap="round"/>
+              <line x1="24" y1="34" x2="32" y2="34" stroke="rgba(180,160,255,0.6)" stroke-width="1.2" stroke-linecap="round"/>
+            </g>
+            <!-- Sparkle bottom-right -->
+            <g opacity="0.35">
+              <line x1="92" y1="78" x2="92" y2="84" stroke="rgba(180,160,255,0.6)" stroke-width="1" stroke-linecap="round"/>
+              <line x1="89" y1="81" x2="95" y2="81" stroke="rgba(180,160,255,0.6)" stroke-width="1" stroke-linecap="round"/>
+            </g>
+          </svg>
+
+          <h2 class="empty-heading">No productions yet</h2>
+          <p class="empty-sub">Your upcoming shoots, edits, and sessions will appear here.</p>
+          <a href="studios.html" class="hero-cta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Book Your First Session
+          </a>
+        </div>`;
+    }
+
+    function sessionCard(b, idx) {
+      const status    = (b.status || 'confirmed').toLowerCase();
       const canCancel = status !== 'cancelled' && status !== 'completed';
-      const bId      = b.id || b.booking_id || b.booking_number || '';
-      const endTime  = b.end_time ? ' - ' + fmtTime(b.end_time) : '';
-      const producer = b.producer ? capitalize(b.producer) : null;
+      const bId       = b.id || b.booking_id || b.booking_number || '';
+      const endTime   = b.end_time ? ' — ' + fmtTime(b.end_time) : '';
+      const producer  = b.producer ? capitalize(b.producer) : null;
+      const delayClass = ['fadein-1','fadein-2','fadein-3','fadein-4','fadein-5','fadein-6'][Math.min(idx, 5)];
+      const dotClass  = producer ? producerDotClass(producer) : '';
 
       return `
-        <div class="session-card fadein">
-          <div class="sc-pkg">${x(b.package_name || b.package || 'Session')}</div>
-          <div class="sc-dt">${fmtDate(b.session_date || b.date || b.booking_date)} &middot; ${fmtTime(b.start_time || b.time)}${endTime}</div>
+        <div class="session-card fadein ${delayClass}">
+          <div class="sc-accent"></div>
+          <div class="sc-body">
+            <div class="sc-pkg">${x(b.package_name || b.package || 'Session')}</div>
+            <div class="sc-dt">
+              ${fmtDate(b.session_date || b.date || b.booking_date)}
+              <span class="sc-dt-dot"></span>
+              ${fmtTime(b.start_time || b.time)}${endTime}
+            </div>
 
-          ${b.address || b.location ? `
-          <div class="sc-row">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-            <span>${x(b.address || b.location)}</span>
-          </div>` : ''}
+            ${b.address || b.location ? `
+            <div class="sc-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+                <circle cx="12" cy="9" r="2.5"/>
+              </svg>
+              <span>${x(b.address || b.location)}</span>
+            </div>` : ''}
 
-          ${producer ? `
-          <div class="sc-row">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-            <span>Producer: ${x(producer)}</span>
-          </div>` : ''}
+            ${producer ? `
+            <div class="sc-row">
+              <span class="producer-dot ${dotClass}"></span>
+              <span>with ${x(producer)}</span>
+            </div>` : ''}
 
-          <div class="sc-bknum">Booking #${x(String(bId))}</div>
+            <div class="sc-bknum">${x(String(bId))}</div>
 
-          <div class="sc-actions">
-            <span class="badge ${badgeClass(status)}"><span class="badge-dot"></span>${status}</span>
-            ${canCancel ? `
-            <button class="btn-cancel"
-              onclick="openCancel('${x(String(bId))}', '${x(b.package_name || 'session')} on ${fmtDate(b.session_date || b.date || b.booking_date)}')">
-              Cancel
-            </button>` : ''}
+            <div class="sc-actions">
+              <span class="badge ${badgeClass(status)}"><span class="badge-dot"></span>${status}</span>
+              ${canCancel ? `
+              <button class="btn-cancel"
+                onclick="openCancel('${x(String(bId))}', '${x(b.package_name || 'session')} on ${fmtDate(b.session_date || b.date || b.booking_date)}')">
+                Cancel Session
+              </button>` : ''}
+            </div>
           </div>
         </div>`;
     }
@@ -704,8 +1167,13 @@
     function renderPast(bookings) {
       const section = el('past-section');
       const list    = el('past-list');
+      const count   = el('past-count');
+
       if (!bookings.length) { section.style.display = 'none'; return; }
       section.style.display = 'block';
+      count.style.display = 'inline-flex';
+      count.textContent = bookings.length + (bookings.length === 1 ? ' session' : ' sessions');
+
       list.innerHTML = bookings.map(b => {
         const st = (b.status || 'completed').toLowerCase();
         return `<div class="past-row">
@@ -715,6 +1183,12 @@
         </div>`;
       }).join('');
     }
+
+    /* ---- past toggle ---- */
+    window.togglePast = function() {
+      const sec = el('past-section');
+      sec.classList.toggle('open');
+    };
 
     /* ---- cancel modal ---- */
     window.openCancel = function(bookingId, desc) {
@@ -738,7 +1212,7 @@
       if (!pendingCancelId) return;
       const btn    = el('cancel-confirm-btn');
       const reason = el('cancel-reason').value.trim();
-      btn.disabled = true; btn.textContent = 'Cancelling...';
+      btn.disabled = true; btn.textContent = 'Cancelling…';
       try {
         const r = await fetch(HUB + '/api/studios/cancel', {
           method: 'POST',
