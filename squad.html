@@ -871,18 +871,18 @@
 
     /* ---- Section 1: Hero Stats with count-up ---- */
     function renderHeroStats(allDeals) {
-      const closed = allDeals.filter(d => CLOSED_STATUSES.includes(d.status));
+      // Only count deals with actual volume (matches Hub app logic)
+      const closed = allDeals.filter(d => CLOSED_STATUSES.includes(d.status) && parseMoney(d.volume) > 0);
       const pending = allDeals.filter(d => PENDING_STATUSES.includes(d.status));
 
       const closedVolume = closed.reduce((s, d) => s + parseMoney(d.volume), 0);
-      const closedUnits = closed.reduce((s, d) => s + parseUnits(d.units), 0);
       const pendingVolume = pending.reduce((s, d) => s + parseMoney(d.volume), 0);
-      const pendingUnits = pending.reduce((s, d) => s + parseUnits(d.units), 0);
 
+      // Count 1 unit per deal (not the TB units field which can be corrupted)
       const volText = fmtMoney(closedVolume);
-      const salesText = String(closedUnits || closed.length);
+      const salesText = String(closed.length);
       const pendVolText = fmtMoney(pendingVolume);
-      const pendText = String(pendingUnits || pending.length);
+      const pendText = String(pending.length);
 
       animateCountUp(document.getElementById('statVolume'), volText, 800);
       animateCountUp(document.getElementById('statSales'), salesText, 600);
@@ -892,15 +892,15 @@
 
     /* ---- Section 5: Rankings ---- */
     function renderRankings(allDeals) {
-      const closed = allDeals.filter(d => CLOSED_STATUSES.includes(d.status));
+      const closed = allDeals.filter(d => CLOSED_STATUSES.includes(d.status) && parseMoney(d.volume) > 0);
 
-      /* Group by agent */
+      /* Group by agent - count 1 unit per deal */
       const agentMap = {};
       closed.forEach(d => {
         const agent = d.attributed_agent || d.original_agents || 'Unknown';
         if (!agentMap[agent]) agentMap[agent] = { volume: 0, units: 0 };
         agentMap[agent].volume += parseMoney(d.volume);
-        agentMap[agent].units += parseUnits(d.units);
+        agentMap[agent].units += 1;
       });
 
       /* Sort by volume descending */
