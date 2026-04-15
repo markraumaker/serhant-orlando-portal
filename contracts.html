@@ -1,0 +1,2221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit a Contract | SERHANT. Orlando</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="auth-check.js"></script>
+
+  <style>
+    /* ================================================================
+       RESET & BASE
+       ================================================================ */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      background: #06061a;
+      color: rgba(255,255,255,0.82);
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ================================================================
+       NAV (from shared portal nav)
+       ================================================================ */
+    .site-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(6,6,26,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 64px;
+    }
+    .nav-logo img {
+      height: 32px;
+      width: auto;
+      display: block;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links a {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: rgba(255,255,255,0.9); }
+    .nav-links a.active { color: #fff; }
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+    @media (max-width: 768px) {
+      .nav-toggle { display: flex; }
+      .nav-links {
+        position: fixed;
+        top: 64px; left: 0; right: 0;
+        background: rgba(6,6,26,0.97);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px 24px 32px;
+        gap: 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        transform: translateY(-120%);
+        opacity: 0;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        pointer-events: none;
+      }
+      .nav-links.open {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: all;
+      }
+      .nav-links a { font-size: 13px; }
+    }
+
+    /* ================================================================
+       PAGE HERO
+       ================================================================ */
+    .page-hero {
+      position: relative;
+      overflow: hidden;
+      padding: 120px 24px 64px;
+      background: linear-gradient(160deg, #04041a 0%, #0a0825 40%, #0c0535 70%, #100640 100%);
+      min-height: 280px;
+      display: flex;
+      align-items: flex-end;
+    }
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+    }
+    .hero-orb-1 {
+      width: 500px; height: 500px;
+      top: -150px; left: -60px;
+      background: radial-gradient(circle, rgba(19,19,117,0.4) 0%, rgba(19,19,117,0.1) 60%, transparent 100%);
+      animation: orbFloat1 14s ease-in-out infinite;
+    }
+    .hero-orb-2 {
+      width: 400px; height: 400px;
+      top: -40px; right: -100px;
+      background: radial-gradient(circle, rgba(80,40,200,0.2) 0%, rgba(80,40,200,0.06) 60%, transparent 100%);
+      animation: orbFloat2 18s ease-in-out infinite;
+    }
+    @keyframes orbFloat1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%       { transform: translate(30px, 20px) scale(1.04); }
+      66%       { transform: translate(-20px, 30px) scale(0.97); }
+    }
+    @keyframes orbFloat2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      40%       { transform: translate(-40px, -20px) scale(1.06); }
+      70%       { transform: translate(20px, 30px) scale(0.96); }
+    }
+    .hero-noise {
+      position: absolute;
+      inset: 0;
+      opacity: 0.03;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+    .hero-line {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(19,19,117,0.4) 20%,
+        rgba(100,80,220,0.6) 50%,
+        rgba(19,19,117,0.4) 80%,
+        transparent 100%);
+    }
+    .page-hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .page-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+      text-decoration: none;
+      margin-bottom: 28px;
+      transition: color 0.2s;
+    }
+    .page-back:hover { color: rgba(255,255,255,0.6); }
+    .page-back:hover svg { transform: translateX(-3px); }
+    .page-back svg { transition: transform 0.2s; }
+    .hero-eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #5555cc;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background: #5555cc;
+      opacity: 0.7;
+    }
+    .hero-title {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.03em;
+      line-height: 1.0;
+      margin: 0 0 12px;
+    }
+    .hero-subtitle {
+      font-size: 13px;
+      color: rgba(255,255,255,0.38);
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      line-height: 1.7;
+    }
+
+    /* ================================================================
+       STEP PROGRESS INDICATOR
+       ================================================================ */
+    .step-progress {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin: 40px 0 0;
+    }
+    .step-node {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .step-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.04);
+      transition: all 0.3s;
+      letter-spacing: 0;
+    }
+    .step-circle.active {
+      border-color: #131375;
+      background: #131375;
+      color: #fff;
+      box-shadow: 0 0 16px rgba(19,19,117,0.5);
+    }
+    .step-circle.done {
+      border-color: #4caf50;
+      background: rgba(76,175,80,0.15);
+      color: #4caf50;
+    }
+    .step-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      transition: color 0.3s;
+    }
+    .step-label.active { color: rgba(255,255,255,0.7); }
+    .step-connector {
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin: 0 12px;
+      min-width: 24px;
+      max-width: 80px;
+    }
+    .step-connector.done { background: rgba(76,175,80,0.3); }
+
+    /* ================================================================
+       MAIN LAYOUT
+       ================================================================ */
+    .page-main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 24px 100px;
+    }
+
+    /* ================================================================
+       STEP PANELS
+       ================================================================ */
+    .step-panel {
+      display: none;
+    }
+    .step-panel.active {
+      display: block;
+      animation: fadeUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ================================================================
+       CARDS
+       ================================================================ */
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 32px;
+    }
+    .card + .card { margin-top: 20px; }
+
+    .card-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    /* ================================================================
+       TRANSACTION TYPE CARDS
+       ================================================================ */
+    .tx-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 600px) {
+      .tx-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .tx-card {
+      background: rgba(255,255,255,0.035);
+      border: 2px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 20px 18px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+    }
+    .tx-card:hover {
+      border-color: rgba(19,19,117,0.5);
+      background: rgba(19,19,117,0.08);
+      transform: translateY(-2px);
+    }
+    .tx-card.selected {
+      border-color: #131375;
+      background: rgba(19,19,117,0.14);
+      box-shadow: 0 0 0 1px rgba(19,19,117,0.3), 0 8px 32px rgba(19,19,117,0.2);
+    }
+    .tx-card.selected::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #131375, #5555cc);
+    }
+    .tx-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.5);
+      transition: all 0.2s;
+    }
+    .tx-card.selected .tx-icon {
+      background: rgba(19,19,117,0.2);
+      border-color: rgba(19,19,117,0.4);
+      color: #7b7bf0;
+    }
+    .tx-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.01em;
+      line-height: 1.3;
+    }
+    .tx-card.selected .tx-name { color: #fff; }
+    .tx-check {
+      position: absolute;
+      top: 12px; right: 12px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: #131375;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .tx-card.selected .tx-check { opacity: 1; }
+
+    /* ================================================================
+       DROP ZONE
+       ================================================================ */
+    .drop-zone {
+      border: 2px dashed rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 44px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s;
+      background: rgba(255,255,255,0.02);
+      position: relative;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: rgba(19,19,117,0.6);
+      background: rgba(19,19,117,0.06);
+    }
+    .drop-zone.has-file {
+      border-color: rgba(76,175,80,0.4);
+      background: rgba(76,175,80,0.04);
+      padding: 20px 24px;
+    }
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+    .drop-icon {
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 14px;
+      color: rgba(255,255,255,0.2);
+    }
+    .drop-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 4px;
+    }
+    .drop-hint {
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 0.5px;
+    }
+    .drop-file-info {
+      display: none;
+      align-items: center;
+      gap: 12px;
+    }
+    .has-file .drop-icon,
+    .has-file .drop-title,
+    .has-file .drop-hint { display: none; }
+    .has-file .drop-file-info { display: flex; }
+    .drop-file-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(76,175,80,0.12);
+      border: 1px solid rgba(76,175,80,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4caf50;
+      flex-shrink: 0;
+    }
+    .drop-file-meta { text-align: left; flex: 1; }
+    .drop-file-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 300px;
+    }
+    .drop-file-size {
+      font-size: 11px;
+      color: rgba(76,175,80,0.7);
+      margin-top: 2px;
+    }
+    .drop-file-remove {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.25);
+      cursor: pointer;
+      padding: 4px;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    .drop-file-remove:hover { color: rgba(255,82,82,0.7); }
+
+    /* Optional pre-approval drop zone */
+    .drop-zone-sm {
+      border: 2px dashed rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: all 0.25s;
+      background: rgba(255,255,255,0.01);
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .drop-zone-sm:hover, .drop-zone-sm.dragover {
+      border-color: rgba(19,19,117,0.5);
+      background: rgba(19,19,117,0.04);
+    }
+    .drop-zone-sm.has-file {
+      border-color: rgba(76,175,80,0.3);
+      background: rgba(76,175,80,0.03);
+    }
+    .drop-zone-sm input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+    .drop-zone-sm-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.25);
+      flex-shrink: 0;
+    }
+    .drop-zone-sm-text { flex: 1; }
+    .drop-zone-sm-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.45);
+    }
+    .drop-zone-sm-hint {
+      font-size: 10px;
+      color: rgba(255,255,255,0.2);
+      margin-top: 2px;
+    }
+    .drop-zone-sm-badge {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 3px 8px;
+      flex-shrink: 0;
+    }
+
+    /* ================================================================
+       EXTRACT BUTTON + LOADING
+       ================================================================ */
+    .extract-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 32px;
+      border-radius: 12px;
+      border: none;
+      background: #131375;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s;
+      margin-top: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .extract-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%);
+      transform: translateX(-100%);
+      transition: transform 0s;
+    }
+    .extract-btn:hover:not(:disabled)::before {
+      transform: translateX(100%);
+      transition: transform 0.6s ease;
+    }
+    .extract-btn:hover:not(:disabled) {
+      background: #1a1a99;
+      box-shadow: 0 8px 32px rgba(19,19,117,0.5);
+      transform: translateY(-1px);
+    }
+    .extract-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .extract-btn.loading {
+      opacity: 1;
+      cursor: wait;
+      background: #0d0d55;
+    }
+    .extract-btn.loading::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #131375, #7b7bf0, #131375);
+      background-size: 200% 100%;
+      animation: btnScan 1.4s ease-in-out infinite;
+      width: 100%;
+    }
+    @keyframes btnScan {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ================================================================
+       FORM FIELDS
+       ================================================================ */
+    .form-row {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .form-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .form-row-2 { grid-template-columns: 1fr 1fr; }
+    .form-row-1 { grid-template-columns: 1fr; }
+    @media (max-width: 640px) {
+      .form-row-3 { grid-template-columns: 1fr 1fr; }
+      .form-row-2 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .form-row-3 { grid-template-columns: 1fr; }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .field label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+    .field input,
+    .field select,
+    .field textarea {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 9px;
+      padding: 11px 14px;
+      color: rgba(255,255,255,0.85);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      width: 100%;
+      transition: border-color 0.2s, background 0.2s;
+      outline: none;
+    }
+    .field textarea {
+      min-height: 100px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: rgba(19,19,117,0.7);
+      background: rgba(255,255,255,0.06);
+    }
+    .field select option {
+      background: #0d0d2a;
+    }
+
+    /* Pre-filled fields (from extraction) */
+    .field input.prefilled,
+    .field select.prefilled,
+    .field textarea.prefilled {
+      border-color: rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.06);
+    }
+
+    /* Needs input fields */
+    .field input.needs-input,
+    .field select.needs-input,
+    .field textarea.needs-input {
+      border-color: rgba(19,19,117,0.5);
+      animation: pulseBorder 2.5s ease-in-out infinite;
+    }
+    @keyframes pulseBorder {
+      0%, 100% { border-color: rgba(19,19,117,0.45); box-shadow: 0 0 0 0 rgba(19,19,117,0); }
+      50%       { border-color: rgba(85,85,220,0.7); box-shadow: 0 0 0 3px rgba(19,19,117,0.1); }
+    }
+    .field input.needs-input:focus,
+    .field select.needs-input:focus,
+    .field textarea.needs-input:focus {
+      animation: none;
+      border-color: rgba(85,85,220,0.8);
+      box-shadow: 0 0 0 3px rgba(19,19,117,0.15);
+    }
+
+    .needs-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: rgba(85,85,220,0.7);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ================================================================
+       TOGGLE (CASH DEAL)
+       ================================================================ */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+    }
+    .toggle-label-text {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.55);
+      cursor: pointer;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 22px;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .toggle-thumb {
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      transition: all 0.25s;
+    }
+    .toggle-switch input:checked + .toggle-track {
+      background: rgba(19,19,117,0.4);
+      border-color: rgba(19,19,117,0.6);
+    }
+    .toggle-switch input:checked + .toggle-track .toggle-thumb {
+      left: 21px;
+      background: #7b7bf0;
+    }
+
+    /* ================================================================
+       MATH CHECK
+       ================================================================ */
+    .math-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-top: 8px;
+    }
+    .math-check.balanced {
+      background: rgba(76,175,80,0.08);
+      border: 1px solid rgba(76,175,80,0.2);
+      color: #4caf50;
+    }
+    .math-check.unbalanced {
+      background: rgba(255,82,82,0.07);
+      border: 1px solid rgba(255,82,82,0.2);
+      color: rgba(255,82,82,0.85);
+    }
+
+    /* ================================================================
+       FLAGS
+       ================================================================ */
+    .flag {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.55;
+    }
+    .flag-icon { flex-shrink: 0; margin-top: 1px; }
+    .flag.critical {
+      background: rgba(255,82,82,0.07);
+      border: 1px solid rgba(255,82,82,0.2);
+      color: rgba(255,82,82,0.9);
+    }
+    .flag.high {
+      background: rgba(255,152,0,0.07);
+      border: 1px solid rgba(255,152,0,0.2);
+      color: rgba(255,152,0,0.9);
+    }
+    .flag.medium {
+      background: rgba(255,214,0,0.06);
+      border: 1px solid rgba(255,214,0,0.15);
+      color: rgba(255,214,0,0.8);
+    }
+    .flag-severity {
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 2px;
+      opacity: 0.75;
+    }
+
+    /* ================================================================
+       MANUAL ENTRY NOTICE
+       ================================================================ */
+    .manual-notice {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.32);
+      padding: 8px 0 16px;
+    }
+    .manual-notice svg { color: rgba(255,255,255,0.18); flex-shrink: 0; }
+
+    /* ================================================================
+       SECTION DIVIDERS IN REVIEW
+       ================================================================ */
+    .review-section {
+      margin-bottom: 20px;
+    }
+
+    /* ================================================================
+       SUBMIT BUTTON
+       ================================================================ */
+    .submit-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 18px 32px;
+      border-radius: 12px;
+      border: none;
+      background: #131375;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.25s;
+      margin-top: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .submit-btn:hover:not(:disabled) {
+      background: #1a1a99;
+      box-shadow: 0 8px 40px rgba(19,19,117,0.55);
+      transform: translateY(-1px);
+    }
+    .submit-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* ================================================================
+       SUCCESS STATE
+       ================================================================ */
+    .success-card {
+      background: rgba(76,175,80,0.06);
+      border: 1px solid rgba(76,175,80,0.2);
+      border-radius: 20px;
+      padding: 56px 40px;
+      text-align: center;
+    }
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(76,175,80,0.12);
+      border: 2px solid rgba(76,175,80,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      color: #4caf50;
+      animation: successPop 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes successPop {
+      from { transform: scale(0.5); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    .success-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    .success-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.7;
+      max-width: 360px;
+      margin: 0 auto 32px;
+    }
+    .home-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      border-radius: 60px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.7);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .home-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* ================================================================
+       ERROR BANNER
+       ================================================================ */
+    .error-banner {
+      background: rgba(255,82,82,0.06);
+      border: 1px solid rgba(255,82,82,0.2);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 12px;
+      color: rgba(255,82,82,0.85);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .error-banner svg { flex-shrink: 0; margin-top: 1px; }
+
+    /* ================================================================
+       HIDDEN UTILITY
+       ================================================================ */
+    .hidden { display: none !important; }
+
+    /* ================================================================
+       COLLAPSIBLE SECTIONS
+       ================================================================ */
+    .section-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      padding: 20px 24px;
+      margin: -32px -32px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      border-radius: 16px 16px 0 0;
+      transition: background 0.2s;
+    }
+    .section-toggle:hover { background: rgba(255,255,255,0.02); }
+    .section-toggle-chevron {
+      color: rgba(255,255,255,0.2);
+      transition: transform 0.25s;
+    }
+    .section-toggle.open .section-toggle-chevron { transform: rotate(180deg); }
+    .section-content { overflow: hidden; }
+    .section-content.collapsed { display: none; }
+
+    /* ================================================================
+       PROGRESS DOTS (loading animation)
+       ================================================================ */
+    .loading-dots {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .loading-dots span {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.6);
+      animation: dotBounce 1.2s ease-in-out infinite;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dotBounce {
+      0%, 100% { transform: translateY(0); opacity: 0.4; }
+      50%       { transform: translateY(-4px); opacity: 1; }
+    }
+
+    /* ================================================================
+       RESPONSIVE
+       ================================================================ */
+    @media (max-width: 640px) {
+      .card { padding: 22px; }
+      .page-hero { padding: 100px 20px 48px; }
+      .page-main { padding: 32px 16px 80px; }
+      .section-toggle { margin: -22px -22px 20px; padding: 16px 20px; }
+      .success-card { padding: 40px 24px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-orb,
+      .extract-btn.loading::after,
+      .field input.needs-input,
+      .loading-dots span { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="site-nav" role="navigation">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="SERHANT. Orlando Home">
+        <img src="assets/S-Orlando-White.svg" alt="S. Orlando" style="height:32px;width:auto;">
+      </a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" role="list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="ranks.html">Ranks</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="squad.html">Squad</a></li>
+        <li><a href="studios.html">Studios</a></li>
+        <li><a href="brain.html">The Brain</a></li>
+        <li><a href="contracts.html" class="active">Contracts</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-noise"></div>
+    <div class="hero-line"></div>
+    <div class="page-hero-inner">
+      <a href="index.html" class="page-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to Portal
+      </a>
+      <div class="hero-eyebrow">TC System</div>
+      <h1 class="hero-title">Submit a Contract</h1>
+      <p class="hero-subtitle">Upload your PDF. We extract the deal data. You review, fill in the gaps, and submit. Andrea gets notified automatically.</p>
+
+      <!-- STEP PROGRESS -->
+      <div class="step-progress" id="stepProgress">
+        <div class="step-node">
+          <div class="step-circle active" id="stepCircle1">1</div>
+          <div class="step-label active" id="stepLabel1">Upload</div>
+        </div>
+        <div class="step-connector" id="stepConnector1"></div>
+        <div class="step-node">
+          <div class="step-circle" id="stepCircle2">2</div>
+          <div class="step-label" id="stepLabel2">Review</div>
+        </div>
+        <div class="step-connector" id="stepConnector2"></div>
+        <div class="step-node">
+          <div class="step-circle" id="stepCircle3">3</div>
+          <div class="step-label" id="stepLabel3">Submit</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="page-main">
+
+    <!-- ============================================================
+         STEP 1: UPLOAD
+         ============================================================ -->
+    <div class="step-panel active" id="step1">
+
+      <!-- Transaction Type -->
+      <div class="card">
+        <div class="card-label">Transaction Type</div>
+        <div class="tx-grid">
+
+          <div class="tx-card" data-type="buyer-resale" onclick="selectTxType(this)">
+            <div class="tx-check">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="tx-icon">
+              <!-- House with arrow in -->
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+                <line x1="19" y1="5" x2="23" y2="5"/>
+                <polyline points="21 3 23 5 21 7"/>
+              </svg>
+            </div>
+            <div class="tx-name">Buyer<br>(Resale)</div>
+          </div>
+
+          <div class="tx-card" data-type="seller-resale" onclick="selectTxType(this)">
+            <div class="tx-check">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="tx-icon">
+              <!-- House with arrow out -->
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+                <line x1="21" y1="5" x2="17" y2="5"/>
+                <polyline points="19 3 17 5 19 7"/>
+              </svg>
+            </div>
+            <div class="tx-name">Seller<br>(Resale)</div>
+          </div>
+
+          <div class="tx-card" data-type="new-listing" onclick="selectTxType(this)">
+            <div class="tx-check">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="tx-icon">
+              <!-- For sale sign -->
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="13" rx="2"/>
+                <line x1="12" y1="16" x2="12" y2="21"/>
+                <line x1="8" y1="21" x2="16" y2="21"/>
+                <line x1="7" y1="8" x2="7" y2="11"/>
+                <line x1="10" y1="7" x2="10" y2="11"/>
+                <line x1="13" y1="8" x2="13" y2="11"/>
+                <line x1="16" y1="7" x2="16" y2="11"/>
+              </svg>
+            </div>
+            <div class="tx-name">New<br>Listing</div>
+          </div>
+
+          <div class="tx-card" data-type="new-construction" onclick="selectTxType(this)">
+            <div class="tx-check">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="tx-icon">
+              <!-- Building / construction -->
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="12" width="10" height="10"/>
+                <path d="M12 12V2l8 4v16H12V12z"/>
+                <line x1="2" y1="17" x2="12" y2="17"/>
+                <line x1="7" y1="12" x2="7" y2="22"/>
+                <line x1="16" y1="8" x2="16" y2="8.01"/>
+                <line x1="16" y1="12" x2="16" y2="12.01"/>
+              </svg>
+            </div>
+            <div class="tx-name">New<br>Construction</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Contract PDF Upload -->
+      <div class="card" style="margin-top:20px;">
+        <div class="card-label">Contract PDF</div>
+        <div class="drop-zone" id="mainDropZone" onclick="triggerMainFile()">
+          <input type="file" id="contractFile" accept=".pdf,application/pdf" onchange="handleContractFile(this)">
+          <div class="drop-icon">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="12" y1="18" x2="12" y2="12"/>
+              <line x1="9" y1="15" x2="12" y2="12"/>
+              <line x1="15" y1="15" x2="12" y2="12"/>
+            </svg>
+          </div>
+          <div class="drop-title">Drop your contract PDF here or click to upload</div>
+          <div class="drop-hint">PDF only — max 50 MB</div>
+          <div class="drop-file-info">
+            <div class="drop-file-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="drop-file-meta">
+              <div class="drop-file-name" id="contractFileName"></div>
+              <div class="drop-file-size" id="contractFileSize"></div>
+            </div>
+            <button class="drop-file-remove" id="contractRemove" onclick="removeContractFile(event)" title="Remove file">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Pre-approval upload -->
+        <div style="margin-top:14px;">
+          <div class="drop-zone-sm" id="lenderDropZone" onclick="triggerLenderFile()">
+            <input type="file" id="lenderFile" accept=".pdf,application/pdf" onchange="handleLenderFile(this)">
+            <div class="drop-zone-sm-icon" id="lenderIcon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+            </div>
+            <div class="drop-zone-sm-text">
+              <div class="drop-zone-sm-title" id="lenderZoneTitle">Pre-approval letter (optional)</div>
+              <div class="drop-zone-sm-hint" id="lenderZoneHint">Helps pre-fill lender contact info</div>
+            </div>
+            <div class="drop-zone-sm-badge">Optional</div>
+          </div>
+        </div>
+
+        <!-- Extract button -->
+        <button class="extract-btn" id="extractBtn" disabled onclick="startExtraction()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+          <span id="extractBtnText">Extract Contract Data</span>
+          <div class="loading-dots hidden" id="extractDots"><span></span><span></span><span></span></div>
+        </button>
+
+        <div class="error-banner hidden" id="extractError">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="extractErrorMsg">Contract extraction is being set up. Please try again soon.</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ============================================================
+         STEP 2: REVIEW
+         ============================================================ -->
+    <div class="step-panel" id="step2">
+
+      <!-- FLAGS (shown if extraction found issues) -->
+      <div id="flagsContainer" class="hidden" style="margin-bottom:20px;">
+        <div class="card-label" style="margin-bottom:12px;">Extraction Notes</div>
+        <div id="flagsList"></div>
+      </div>
+
+      <!-- PROPERTY -->
+      <div class="card review-section">
+        <div class="section-toggle open" onclick="toggleSection(this)">
+          <div class="card-label" style="margin-bottom:0;">Property</div>
+          <svg class="section-toggle-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="section-content">
+          <div class="form-row form-row-1">
+            <div class="field">
+              <label>Street Address</label>
+              <input type="text" id="f_address" class="prefilled" placeholder="123 Main Street">
+            </div>
+          </div>
+          <div class="form-row form-row-3">
+            <div class="field">
+              <label>City</label>
+              <input type="text" id="f_city" class="prefilled" placeholder="Orlando">
+            </div>
+            <div class="field">
+              <label>State</label>
+              <input type="text" id="f_state" class="prefilled" placeholder="FL">
+            </div>
+            <div class="field">
+              <label>Zip Code</label>
+              <input type="text" id="f_zip" class="prefilled" placeholder="32801">
+            </div>
+          </div>
+          <div class="form-row form-row-2">
+            <div class="field">
+              <label>County</label>
+              <input type="text" id="f_county" class="prefilled" placeholder="Orange">
+            </div>
+            <div class="field">
+              <label>Property Type</label>
+              <select id="f_prop_type" class="prefilled">
+                <option value="">Select type</option>
+                <option value="Single Family">Single Family</option>
+                <option value="Condo / Townhouse">Condo / Townhouse</option>
+                <option value="Multi-Family">Multi-Family</option>
+                <option value="Vacant Land">Vacant Land</option>
+                <option value="Commercial">Commercial</option>
+                <option value="New Construction">New Construction</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PARTIES -->
+      <div class="card review-section">
+        <div class="section-toggle open" onclick="toggleSection(this)">
+          <div class="card-label" style="margin-bottom:0;">Parties</div>
+          <svg class="section-toggle-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="section-content">
+          <div class="form-row form-row-2">
+            <div class="field">
+              <label>Our Agent</label>
+              <input type="text" id="f_agent_name" class="prefilled" placeholder="Agent Name" readonly>
+            </div>
+            <div class="field">
+              <label>Our Side</label>
+              <input type="text" id="f_our_side" class="prefilled" placeholder="Buyer / Seller" readonly>
+            </div>
+          </div>
+          <div class="form-row form-row-1">
+            <div class="field">
+              <label>Buyer Name(s)</label>
+              <input type="text" id="f_buyer_names" class="prefilled" placeholder="John Doe and Jane Doe">
+            </div>
+          </div>
+          <div class="form-row form-row-1">
+            <div class="field">
+              <label>Seller Name(s)</label>
+              <input type="text" id="f_seller_names" class="prefilled" placeholder="Bob Smith">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLIENT CONTACT (manual) -->
+      <div class="card review-section" id="clientContactSection">
+        <div class="section-toggle open" onclick="toggleSection(this)">
+          <div class="card-label" style="margin-bottom:0;">Client Contact Info</div>
+          <svg class="section-toggle-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="section-content">
+          <div class="manual-notice">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            This info is not in the contract. Please fill in.
+          </div>
+          <div id="clientContactFields">
+            <!-- Dynamically populated by JS based on tx type -->
+          </div>
+        </div>
+      </div>
+
+      <!-- FINANCIAL -->
+      <div class="card review-section">
+        <div class="section-toggle open" onclick="toggleSection(this)">
+          <div class="card-label" style="margin-bottom:0;">Financial</div>
+          <svg class="section-toggle-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="section-content">
+          <div class="toggle-row" style="margin-bottom:16px;">
+            <label class="toggle-switch">
+              <input type="checkbox" id="cashDealToggle" onchange="handleCashToggle(this)">
+              <div class="toggle-track"><div class="toggle-thumb"></div></div>
+            </label>
+            <label class="toggle-label-text" for="cashDealToggle">Cash Deal</label>
+          </div>
+          <div class="form-row form-row-2">
+            <div class="field">
+              <label>Purchase Price</label>
+              <input type="text" id="f_purchase_price" class="prefilled" placeholder="$0.00">
+            </div>
+            <div class="field">
+              <label>EMD Amount</label>
+              <input type="text" id="f_emd" class="prefilled" placeholder="$0.00">
+            </div>
+          </div>
+          <div class="form-row form-row-2" id="financeRow">
+            <div class="field">
+              <label>Financing Amount</label>
+              <input type="text" id="f_finance_amt" class="prefilled" placeholder="$0.00">
+            </div>
+            <div class="field">
+              <label>Loan Type</label>
+              <select id="f_loan_type" class="prefilled">
+                <option value="">Select</option>
+                <option value="Conventional">Conventional</option>
+                <option value="FHA">FHA</option>
+                <option value="VA">VA</option>
+                <option value="USDA">USDA</option>
+                <option value="Jumbo">Jumbo</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div id="mathCheck" class="math-check balanced hidden">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <span id="mathCheckMsg">Financials balance</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DATES -->
+      <div class="card review-section">
+        <div class="section-toggle open" onclick="toggleSection(this)">
+          <div class="card-label" style="margin-bottom:0;">Key Dates</div>
+          <svg class="section-toggle-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="section-content">
+          <div class="form-row form-row-2">
+            <div class="field">
+              <label>Effective Date</label>
+              <input type="date" id="f_eff_date" class="prefilled">
+            </div>
+            <div class="field">
+              <label>Closing Date</label>
+              <input type="date" id="f_close_date" class="prefilled">
+            </div>
+          </div>
+          <div class="form-row form-row-2">
+            <div class="field">
+              <label>Inspection Period (days)</label>
+              <input type="number" id="f_inspect_days" class="prefilled" placeholder="10" min="0">
+            </div>
+            <div class="field" id="loanApprovalField">
+              <label>Loan Approval Period (days)</label>
+              <input type="number" id="f_loan_approval_days" class="prefilled" placeholder="21" min="0">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TITLE COMPANY -->
+      <div class="card review-section">
+        <div class="section-toggle open" onclick="toggleSection(this)">
+          <div class="card-label" style="margin-bottom:0;">Title Company</div>
+          <svg class="section-toggle-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="section-content">
+          <div class="form-row form-row-2">
+            <div class="field">
+              <label>Company Name</label>
+              <input type="text" id="f_title_co" class="prefilled" placeholder="Title Company Inc.">
+            </div>
+            <div class="field">
+              <label>Contact Name</label>
+              <input type="text" id="f_title_contact" class="prefilled" placeholder="Jane Smith">
+            </div>
+          </div>
+          <div class="form-row form-row-2">
+            <div class="field">
+              <label>Phone</label>
+              <input type="tel" id="f_title_phone" class="prefilled" placeholder="(407) 555-0000">
+            </div>
+            <div class="field">
+              <label>Email</label>
+              <input type="email" id="f_title_email" class="prefilled" placeholder="title@company.com">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LENDER (hidden if cash) -->
+      <div class="card review-section" id="lenderSection">
+        <div class="section-toggle open" onclick="toggleSection(this)">
+          <div class="card-label" style="margin-bottom:0;">Lender</div>
+          <svg class="section-toggle-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="section-content">
+          <div class="manual-notice" id="lenderNotice">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="lenderNoticeText">Please fill in lender details.</span>
+          </div>
+          <div class="form-row form-row-2">
+            <div class="field">
+              <label>Lender Company</label>
+              <input type="text" id="f_lender_co" placeholder="Lender LLC">
+            </div>
+            <div class="field">
+              <label>Loan Officer</label>
+              <input type="text" id="f_lender_contact" placeholder="John Doe">
+            </div>
+          </div>
+          <div class="form-row form-row-2">
+            <div class="field">
+              <label>Phone</label>
+              <input type="tel" id="f_lender_phone" placeholder="(407) 555-0000">
+            </div>
+            <div class="field">
+              <label>Email</label>
+              <input type="email" id="f_lender_email" placeholder="loan@lender.com">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CO-OP AGENT -->
+      <div class="card review-section">
+        <div class="section-toggle open" onclick="toggleSection(this)">
+          <div class="card-label" style="margin-bottom:0;">Co-op Agent</div>
+          <svg class="section-toggle-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="section-content">
+          <div class="form-row form-row-2">
+            <div class="field">
+              <label>Agent Name</label>
+              <input type="text" id="f_coop_name" class="prefilled" placeholder="Agent Name">
+            </div>
+            <div class="field">
+              <label>Brokerage</label>
+              <input type="text" id="f_coop_brokerage" class="prefilled" placeholder="XYZ Realty">
+            </div>
+          </div>
+          <div class="manual-notice">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Phone and email usually aren't in the contract. Please fill in.
+          </div>
+          <div class="form-row form-row-2">
+            <div class="field">
+              <label>Phone</label>
+              <div class="needs-label" style="margin-bottom:4px;">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Needs your input
+              </div>
+              <input type="tel" id="f_coop_phone" class="needs-input" placeholder="(407) 555-0000">
+            </div>
+            <div class="field">
+              <label>Email</label>
+              <div class="needs-label" style="margin-bottom:4px;">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Needs your input
+              </div>
+              <input type="email" id="f_coop_email" class="needs-input" placeholder="agent@realty.com">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADDITIONAL NOTES -->
+      <div class="card review-section">
+        <div class="section-toggle open" onclick="toggleSection(this)">
+          <div class="card-label" style="margin-bottom:0;">Additional Notes</div>
+          <svg class="section-toggle-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="section-content">
+          <div class="manual-notice">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Pre-filled from Paragraph 20 and any rider notes found in the contract.
+          </div>
+          <div class="field">
+            <textarea id="f_notes" class="prefilled" placeholder="Special terms, contingencies, riders, or anything Andrea should know..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- BACK + CONTINUE BUTTONS -->
+      <div style="display:flex;gap:12px;margin-top:32px;">
+        <button onclick="goToStep(1)" style="flex:0 0 auto;padding:16px 24px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.5);font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;">
+          Back
+        </button>
+        <button class="submit-btn" onclick="goToStep(3)" style="margin-top:0;flex:1;">
+          Review and Submit
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+
+
+    <!-- ============================================================
+         STEP 3: CONFIRM + SUBMIT
+         ============================================================ -->
+    <div class="step-panel" id="step3">
+
+      <div class="card">
+        <div class="card-label">Confirm and Submit</div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.45);line-height:1.7;margin:0 0 20px;">
+          Review your submission below. Once you submit, Andrea will receive a notification with the full deal package.
+        </p>
+
+        <!-- Summary preview -->
+        <div id="summaryBlock" style="background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px 24px;margin-bottom:20px;">
+          <div id="summaryContent"></div>
+        </div>
+
+        <div class="error-banner hidden" id="submitError">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="submitErrorMsg">Something went wrong. Please try again.</span>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:0;">
+          <button onclick="goToStep(2)" style="flex:0 0 auto;padding:16px 24px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.5);font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;">
+            Back
+          </button>
+          <button class="submit-btn" id="submitBtn" onclick="submitContract()" style="margin-top:0;flex:1;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Submit to Andrea
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ============================================================
+         STEP 4: SUCCESS
+         ============================================================ -->
+    <div class="step-panel" id="step4">
+      <div class="success-card">
+        <div class="success-icon">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="success-title">Contract Submitted</div>
+        <p class="success-sub">Andrea has been notified. You'll hear back within one business day if any additional info is needed.</p>
+        <a href="index.html" class="home-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          Back to Portal
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="shared.js"></script>
+  <script>
+    /* ================================================================
+       STATE
+       ================================================================ */
+    let currentStep = 1;
+    let txType = null;
+    let contractFileData = null;
+    let lenderFileData = null;
+    let extractedData = {};
+
+    /* ================================================================
+       AUTH PREFILL
+       ================================================================ */
+    window.addEventListener('DOMContentLoaded', () => {
+      const name = localStorage.getItem('portal_user_name') || '';
+      const email = localStorage.getItem('portal_user_email') || '';
+      if (name) document.getElementById('f_agent_name').value = name;
+      if (email) document.getElementById('f_agent_email_hidden') || null;
+
+      // Nav toggle
+      const toggle = document.querySelector('.nav-toggle');
+      const links = document.querySelector('.nav-links');
+      if (toggle && links) {
+        toggle.addEventListener('click', () => {
+          const open = links.classList.toggle('open');
+          toggle.setAttribute('aria-expanded', open);
+        });
+      }
+
+      // Section toggles init
+      document.querySelectorAll('.section-toggle').forEach(t => {
+        t.classList.add('open');
+      });
+
+      setupDragDrop();
+      setupFinancialListeners();
+    });
+
+    /* ================================================================
+       TRANSACTION TYPE
+       ================================================================ */
+    function selectTxType(card) {
+      document.querySelectorAll('.tx-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      txType = card.dataset.type;
+      checkExtractReady();
+      updateClientContactFields();
+      updateOurSideField();
+    }
+
+    function updateOurSideField() {
+      const sideMap = {
+        'buyer-resale': 'Buyer',
+        'seller-resale': 'Seller',
+        'new-listing': 'Seller / Listing',
+        'new-construction': 'Buyer'
+      };
+      document.getElementById('f_our_side').value = sideMap[txType] || '';
+    }
+
+    function updateClientContactFields() {
+      const container = document.getElementById('clientContactFields');
+      const isBuyer = txType === 'buyer-resale' || txType === 'new-construction';
+      const label = isBuyer ? 'Buyer' : 'Seller';
+      container.innerHTML = `
+        <div class="form-row form-row-2">
+          <div class="field">
+            <label>${label} Phone</label>
+            <div class="needs-label" style="margin-bottom:4px;">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Needs your input
+            </div>
+            <input type="tel" id="f_client_phone" class="needs-input" placeholder="(407) 555-0000">
+          </div>
+          <div class="field">
+            <label>${label} Email</label>
+            <div class="needs-label" style="margin-bottom:4px;">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Needs your input
+            </div>
+            <input type="email" id="f_client_email" class="needs-input" placeholder="${label.toLowerCase()}@email.com">
+          </div>
+        </div>
+      `;
+    }
+
+    /* ================================================================
+       FILE HANDLING
+       ================================================================ */
+    function triggerMainFile() {
+      // Don't trigger if clicking remove button
+      document.getElementById('contractFile').click();
+    }
+
+    function triggerLenderFile() {
+      document.getElementById('lenderFile').click();
+    }
+
+    function handleContractFile(input) {
+      const file = input.files[0];
+      if (!file) return;
+      contractFileData = file;
+      const zone = document.getElementById('mainDropZone');
+      zone.classList.add('has-file');
+      document.getElementById('contractFileName').textContent = file.name;
+      document.getElementById('contractFileSize').textContent = formatSize(file.size);
+      checkExtractReady();
+    }
+
+    function removeContractFile(e) {
+      e.stopPropagation();
+      contractFileData = null;
+      const zone = document.getElementById('mainDropZone');
+      zone.classList.remove('has-file');
+      document.getElementById('contractFile').value = '';
+      checkExtractReady();
+    }
+
+    function handleLenderFile(input) {
+      const file = input.files[0];
+      if (!file) return;
+      lenderFileData = file;
+      const zone = document.getElementById('lenderDropZone');
+      zone.classList.add('has-file');
+      document.getElementById('lenderZoneTitle').textContent = file.name;
+      document.getElementById('lenderZoneHint').textContent = formatSize(file.size) + ' - pre-approval letter uploaded';
+      document.getElementById('lenderIcon').style.color = '#4caf50';
+    }
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    function checkExtractReady() {
+      const btn = document.getElementById('extractBtn');
+      btn.disabled = !(contractFileData && txType);
+    }
+
+    /* ================================================================
+       DRAG AND DROP
+       ================================================================ */
+    function setupDragDrop() {
+      setupZone('mainDropZone', 'contractFile', handleContractFile);
+      setupZone('lenderDropZone', 'lenderFile', handleLenderFile);
+    }
+
+    function setupZone(zoneId, inputId, handler) {
+      const zone = document.getElementById(zoneId);
+      if (!zone) return;
+
+      zone.addEventListener('dragover', e => {
+        e.preventDefault();
+        zone.classList.add('dragover');
+      });
+      zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file && file.type === 'application/pdf') {
+          const input = document.getElementById(inputId);
+          // DataTransfer to assign file to input
+          const dt = new DataTransfer();
+          dt.items.add(file);
+          input.files = dt.files;
+          handler(input);
+        }
+      });
+    }
+
+    /* ================================================================
+       EXTRACTION
+       ================================================================ */
+    async function startExtraction() {
+      const btn = document.getElementById('extractBtn');
+      const errBanner = document.getElementById('extractError');
+      const dotEl = document.getElementById('extractDots');
+      const btnText = document.getElementById('extractBtnText');
+
+      // Loading state
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btnText.textContent = 'Reading your contract';
+      dotEl.classList.remove('hidden');
+      errBanner.classList.add('hidden');
+
+      try {
+        const formData = new FormData();
+        formData.append('file', contractFileData);
+        formData.append('transaction_type', txType);
+        formData.append('agent_email', localStorage.getItem('portal_user_email') || '');
+        formData.append('agent_name', localStorage.getItem('portal_user_name') || '');
+        if (lenderFileData) formData.append('lender_letter', lenderFileData);
+
+        const res = await fetch('https://app.serhantorlandohub.com/api/tc-hub/extract-contract', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!res.ok) {
+          let errMsg = 'HTTP ' + res.status;
+          try { const j = await res.json(); errMsg = j.error || j.message || errMsg; } catch (_) {}
+          throw new Error(errMsg);
+        }
+        const data = await res.json();
+        populateReviewForm(data.extracted || data);
+        showFlags(data.flags || []);
+        goToStep(2);
+
+      } catch (err) {
+        errBanner.classList.remove('hidden');
+        document.getElementById('extractErrorMsg').textContent =
+          err.message && !err.message.startsWith('HTTP')
+            ? err.message
+            : 'Extraction failed. Please check your file and try again, or contact support.';
+      } finally {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        btnText.textContent = 'Extract Contract Data';
+        dotEl.classList.add('hidden');
+      }
+    }
+
+    /* ================================================================
+       POPULATE REVIEW FORM
+       ================================================================ */
+    function populateReviewForm(d) {
+      const set = (id, val) => {
+        const el = document.getElementById(id);
+        if (el && val !== undefined && val !== null) el.value = val;
+      };
+
+      set('f_address', d.address || d.street_address);
+      set('f_city', d.city);
+      set('f_state', d.state || 'FL');
+      set('f_zip', d.zip || d.zip_code);
+      set('f_county', d.county);
+      set('f_prop_type', d.property_type);
+
+      // Parties
+      set('f_buyer_names', d.buyer_names || d.buyers);
+      set('f_seller_names', d.seller_names || d.sellers);
+      // Agent from auth
+      const agentName = localStorage.getItem('portal_user_name') || '';
+      set('f_agent_name', agentName);
+
+      // Financial
+      if (d.cash_deal !== undefined) {
+        document.getElementById('cashDealToggle').checked = d.cash_deal;
+        handleCashToggle(document.getElementById('cashDealToggle'));
+      }
+      set('f_purchase_price', d.purchase_price ? formatCurrency(d.purchase_price) : '');
+      set('f_emd', d.emd_amount ? formatCurrency(d.emd_amount) : '');
+      set('f_finance_amt', d.financing_amount ? formatCurrency(d.financing_amount) : '');
+      set('f_loan_type', d.loan_type);
+
+      // Dates
+      set('f_eff_date', d.effective_date);
+      set('f_close_date', d.closing_date);
+      set('f_inspect_days', d.inspection_period_days);
+      set('f_loan_approval_days', d.loan_approval_days);
+
+      // Title
+      set('f_title_co', d.title_company?.name || d.title_company_name);
+      set('f_title_contact', d.title_company?.contact || d.title_contact);
+      set('f_title_phone', d.title_company?.phone || d.title_phone);
+      set('f_title_email', d.title_company?.email || d.title_email);
+
+      // Lender
+      if (d.lender) {
+        set('f_lender_co', d.lender.name || d.lender_company);
+        set('f_lender_contact', d.lender.contact || d.lender_contact);
+        set('f_lender_phone', d.lender.phone || d.lender_phone);
+        set('f_lender_email', d.lender.email || d.lender_email);
+        if (d.lender.name || d.lender_company) {
+          ['f_lender_co','f_lender_contact','f_lender_phone','f_lender_email'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('prefilled');
+          });
+          const notice = document.getElementById('lenderNoticeText');
+          if (notice) notice.textContent = lenderFileData ? 'From the pre-approval letter.' : 'From the contract.';
+        }
+      }
+
+      // Co-op agent
+      set('f_coop_name', d.coop_agent?.name || d.coop_agent_name);
+      set('f_coop_brokerage', d.coop_agent?.brokerage || d.coop_brokerage);
+
+      // Notes
+      set('f_notes', d.additional_notes || d.notes || d.paragraph_20);
+
+      // Math check
+      updateMathCheck();
+
+      // Update client contact label based on type
+      updateClientContactFields();
+      updateOurSideField();
+    }
+
+    /* ================================================================
+       FLAGS
+       ================================================================ */
+    function showFlags(flags) {
+      const container = document.getElementById('flagsContainer');
+      const list = document.getElementById('flagsList');
+      if (!flags || flags.length === 0) {
+        container.classList.add('hidden');
+        return;
+      }
+      container.classList.remove('hidden');
+      list.innerHTML = flags.map(f => `
+        <div class="flag ${f.severity || 'medium'}">
+          <div class="flag-icon">${flagIcon(f.severity)}</div>
+          <div>
+            <span class="flag-severity">${f.severity || 'Note'}</span>
+            ${f.message || f.text || ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function flagIcon(severity) {
+      if (severity === 'critical') return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+      if (severity === 'high') return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+      return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+    }
+
+    /* ================================================================
+       FINANCIAL HELPERS
+       ================================================================ */
+    function formatCurrency(val) {
+      if (!val) return '';
+      const num = typeof val === 'string' ? parseFloat(val.replace(/[^0-9.]/g, '')) : val;
+      if (isNaN(num)) return val;
+      return '$' + num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    }
+
+    function parseCurrency(str) {
+      if (!str) return 0;
+      return parseFloat(String(str).replace(/[^0-9.]/g, '')) || 0;
+    }
+
+    function setupFinancialListeners() {
+      ['f_purchase_price', 'f_emd', 'f_finance_amt'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', updateMathCheck);
+      });
+      const cashToggle = document.getElementById('cashDealToggle');
+      if (cashToggle) cashToggle.addEventListener('change', updateMathCheck);
+    }
+
+    function updateMathCheck() {
+      const mc = document.getElementById('mathCheck');
+      const isCash = document.getElementById('cashDealToggle')?.checked;
+      if (isCash) { mc.classList.add('hidden'); return; }
+
+      const price = parseCurrency(document.getElementById('f_purchase_price')?.value);
+      const emd = parseCurrency(document.getElementById('f_emd')?.value);
+      const finance = parseCurrency(document.getElementById('f_finance_amt')?.value);
+
+      if (!price || !emd || !finance) { mc.classList.add('hidden'); return; }
+
+      const diff = Math.abs(price - (finance + emd));
+      mc.classList.remove('hidden');
+      if (diff < 1) {
+        mc.className = 'math-check balanced';
+        document.getElementById('mathCheckMsg').textContent = 'Financials balance (' + formatCurrency(price) + ' = ' + formatCurrency(finance) + ' + ' + formatCurrency(emd) + ')';
+      } else {
+        mc.className = 'math-check unbalanced';
+        document.getElementById('mathCheckMsg').textContent = 'Gap of ' + formatCurrency(diff) + '. Check loan amount, EMD, or price.';
+      }
+    }
+
+    function handleCashToggle(toggle) {
+      const isCash = toggle.checked;
+      const financeRow = document.getElementById('financeRow');
+      const lenderSection = document.getElementById('lenderSection');
+      const loanApprovalField = document.getElementById('loanApprovalField');
+
+      if (financeRow) financeRow.classList.toggle('hidden', isCash);
+      if (lenderSection) lenderSection.classList.toggle('hidden', isCash);
+      if (loanApprovalField) loanApprovalField.classList.toggle('hidden', isCash);
+      updateMathCheck();
+    }
+
+    /* ================================================================
+       SECTION TOGGLES
+       ================================================================ */
+    function toggleSection(btn) {
+      btn.classList.toggle('open');
+      const content = btn.nextElementSibling;
+      if (content) content.classList.toggle('collapsed');
+    }
+
+    /* ================================================================
+       STEP NAVIGATION
+       ================================================================ */
+    function goToStep(n) {
+      // Hide all panels
+      document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('step' + n).classList.add('active');
+      currentStep = n;
+      updateStepProgress(n);
+
+      if (n === 3) buildSummary();
+
+      // Scroll to top of main
+      window.scrollTo({ top: document.querySelector('.page-hero').offsetHeight - 64, behavior: 'smooth' });
+    }
+
+    function updateStepProgress(n) {
+      for (let i = 1; i <= 3; i++) {
+        const circle = document.getElementById('stepCircle' + i);
+        const label = document.getElementById('stepLabel' + i);
+        const connector = document.getElementById('stepConnector' + i);
+
+        circle.classList.remove('active', 'done');
+        label.classList.remove('active');
+        if (connector) connector.classList.remove('done');
+
+        if (i < n) {
+          circle.classList.add('done');
+          circle.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
+          if (connector) connector.classList.add('done');
+        } else if (i === n) {
+          circle.classList.add('active');
+          label.classList.add('active');
+          if (!circle.dataset.originalText) circle.dataset.originalText = circle.textContent.trim();
+          circle.textContent = i;
+        } else {
+          if (circle.dataset.originalText) {
+            circle.textContent = circle.dataset.originalText;
+          } else {
+            circle.textContent = i;
+          }
+        }
+      }
+    }
+
+    /* ================================================================
+       SUMMARY BUILDER
+       ================================================================ */
+    function buildSummary() {
+      const g = id => document.getElementById(id)?.value || '';
+      const rows = [
+        ['Transaction Type', txType ? txType.replace(/-/g,' ').replace(/\b\w/g, c => c.toUpperCase()) : ''],
+        ['Property', [g('f_address'), g('f_city'), g('f_state'), g('f_zip')].filter(Boolean).join(', ')],
+        ['Our Agent', g('f_agent_name')],
+        ['Our Side', g('f_our_side')],
+        ['Buyer(s)', g('f_buyer_names')],
+        ['Seller(s)', g('f_seller_names')],
+        ['Purchase Price', g('f_purchase_price')],
+        ['EMD', g('f_emd')],
+        ['Cash Deal', document.getElementById('cashDealToggle')?.checked ? 'Yes' : 'No'],
+        ['Closing Date', g('f_close_date')],
+        ['Effective Date', g('f_eff_date')],
+        ['Title Company', g('f_title_co')],
+        ['Co-op Agent', g('f_coop_name')],
+      ].filter(r => r[1]);
+
+      document.getElementById('summaryContent').innerHTML = rows.map(([k, v]) => `
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);gap:16px;">
+          <span style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:0.5px;flex-shrink:0;">${k}</span>
+          <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.75);text-align:right;">${v}</span>
+        </div>
+      `).join('') + `
+        <div style="display:flex;justify-content:space-between;padding:8px 0;gap:16px;">
+          <span style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:0.5px;">Notes</span>
+          <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.75);text-align:right;max-width:300px;">${document.getElementById('f_notes')?.value || '(none)'}</span>
+        </div>
+      `;
+    }
+
+    /* ================================================================
+       SUBMIT
+       ================================================================ */
+    async function submitContract() {
+      const btn = document.getElementById('submitBtn');
+      const errBanner = document.getElementById('submitError');
+      errBanner.classList.add('hidden');
+
+      btn.disabled = true;
+      btn.innerHTML = `
+        <div class="loading-dots"><span></span><span></span><span></span></div>
+        Submitting...
+      `;
+
+      const g = id => document.getElementById(id)?.value || '';
+      const payload = {
+        transaction_type: txType,
+        agent_name: g('f_agent_name'),
+        agent_email: localStorage.getItem('portal_user_email') || '',
+        our_side: g('f_our_side'),
+        address: g('f_address'),
+        city: g('f_city'),
+        state: g('f_state'),
+        zip: g('f_zip'),
+        county: g('f_county'),
+        property_type: g('f_prop_type'),
+        buyer_names: g('f_buyer_names'),
+        seller_names: g('f_seller_names'),
+        client_phone: g('f_client_phone'),
+        client_email: g('f_client_email'),
+        purchase_price: g('f_purchase_price'),
+        emd_amount: g('f_emd'),
+        financing_amount: g('f_finance_amt'),
+        loan_type: g('f_loan_type'),
+        cash_deal: document.getElementById('cashDealToggle')?.checked || false,
+        effective_date: g('f_eff_date'),
+        closing_date: g('f_close_date'),
+        inspection_period_days: g('f_inspect_days'),
+        loan_approval_days: g('f_loan_approval_days'),
+        title_company: g('f_title_co'),
+        title_contact: g('f_title_contact'),
+        title_phone: g('f_title_phone'),
+        title_email: g('f_title_email'),
+        lender_company: g('f_lender_co'),
+        lender_contact: g('f_lender_contact'),
+        lender_phone: g('f_lender_phone'),
+        lender_email: g('f_lender_email'),
+        coop_agent_name: g('f_coop_name'),
+        coop_brokerage: g('f_coop_brokerage'),
+        coop_phone: g('f_coop_phone'),
+        coop_email: g('f_coop_email'),
+        notes: g('f_notes'),
+        submitted_at: new Date().toISOString()
+      };
+
+      try {
+        const res = await fetch('https://app.serhantorlandohub.com/api/tc-hub/submit-transaction', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          let errMsg = 'HTTP ' + res.status;
+          try { const j = await res.json(); errMsg = j.error || j.message || errMsg; } catch (_) {}
+          throw new Error(errMsg);
+        }
+        goToStep(4);
+
+      } catch (err) {
+        errBanner.classList.remove('hidden');
+        document.getElementById('submitErrorMsg').textContent =
+          err.message && !err.message.startsWith('HTTP')
+            ? err.message
+            : 'Submission failed. Please try again or contact support.';
+        btn.disabled = false;
+        btn.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Submit to Andrea
+        `;
+      }
+    }
+  </script>
+</body>
+</html>
