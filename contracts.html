@@ -1678,6 +1678,17 @@
       if (name) document.getElementById('f_agent_name').value = name;
       if (email) document.getElementById('f_agent_email_hidden') || null;
 
+      // Auto-select transaction type from URL param (?type=buyer)
+      const urlType = new URLSearchParams(window.location.search).get('type');
+      if (urlType) {
+        const typeMap = { buyer: 'buyer', seller: 'seller', listing: 'listing', new_construction: 'new_construction' };
+        const mapped = typeMap[urlType];
+        if (mapped) {
+          const card = document.querySelector('[data-type="' + mapped + '"]');
+          if (card) card.click();
+        }
+      }
+
       // Nav toggle
       const toggle = document.querySelector('.nav-toggle');
       const links = document.querySelector('.nav-links');
