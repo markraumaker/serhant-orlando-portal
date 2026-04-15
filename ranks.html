@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agent Rankings — SERHANT. ORLANDO</title>
+  <title>Agent Rankings - SERHANT. ORLANDO</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
@@ -408,7 +408,7 @@
 
     const LB_API = 'https://app.serhantorlandohub.com/api/leaderboard';
     const HUB_KEY = 'hub-cron-secret-2026';
-    // Only these agents appear on the leaderboard — per Hub attribution rules
+    // Only these agents appear on the leaderboard - per Hub attribution rules
     const VALID_AGENTS = new Set([
       'Mark Raumaker','Samantha Andrade','The Attwoods','Mark Baker','Julimar Barreiro',
       'Gladys Bezerra','Genson Blimline','Mary De Boer','Octavia Burgman','Vinny Cordaro',
@@ -430,7 +430,7 @@
     }
 
     async function fetchData() {
-      // Pull rankings + pipeline from Hub API — same backend as the app
+      // Pull rankings + pipeline from Hub API - same backend as the app
       // /api/pipeline returns all agents with proper attribution, sorted by total pipeline
       // We re-sort by closed.volume for the Volume leaderboard
       const [ytdPipe, q1Pipe, monthPipe] = await Promise.all([
@@ -460,7 +460,7 @@
       const snap = await sb('/courted_active_listings?select=snapshot_date&order=snapshot_date.desc&limit=1');
       if (snap && snap[0]) {
         const rows = await sb('/courted_active_listings?select=agent_name,active_count&snapshot_date=eq.' + snap[0].snapshot_date);
-        // Deduplicate by agent_name — webhook bug causes triple inserts
+        // Deduplicate by agent_name - webhook bug causes triple inserts
         const seenAgents = new Set();
         rows.forEach(r => { if (!seenAgents.has(r.agent_name)) { seenAgents.add(r.agent_name); listingsMap[r.agent_name] = r.active_count; } });
       }
@@ -480,11 +480,11 @@
 
       const topVol = ranked[0] ? ranked[0][1].vol : 1;
 
-      // Hero stats — use Hub office totals
+      // Hero stats - use Hub office totals
       const totals = data.office_totals || {};
       const totalVol = ranked.reduce((s, [_, d]) => s + d.vol, 0);
       const totalSales = totals.total_deals || ranked.reduce((s, [_, d]) => s + d.sales, 0);
-      // hero-vol and hero-sales set from pipeline API in fetchData — don't overwrite
+      // hero-vol and hero-sales set from pipeline API in fetchData - don't overwrite
       const totalListings = Object.values(listingsMap).reduce((s, v) => s + v, 0);
       set('total-listings', fmtN(totalListings));
 

@@ -217,7 +217,7 @@
     <!-- SALES TAB -->
     <div id="tab-sales" style="display:none;">
       <div class="sec">
-        <div class="sec-title">Agent Leaderboard — Total Pipeline</div>
+        <div class="sec-title">Agent Leaderboard - Total Pipeline</div>
         <div class="lb-grid" id="lb-grid"><div class="loading"><div class="spinner"></div>Loading agents...</div></div>
       </div>
     </div>
@@ -250,7 +250,7 @@
     <!-- GCI TAB -->
     <div id="tab-gci" style="display:none;">
       <div class="sec">
-        <div class="sec-title">GCI by Agent — YTD Closed</div>
+        <div class="sec-title">GCI by Agent - YTD Closed</div>
         <div class="gci-wrap"><table><thead><tr><th>Agent</th><th>Deals</th><th>Volume</th><th>GCI</th></tr></thead><tbody id="gci-tbody"><tr><td colspan="4"><div class="loading"><div class="spinner"></div></div></td></tr></tbody></table></div>
       </div>
     </div>
@@ -327,7 +327,7 @@ async function checkSession() {
   const { data: { session } } = await sb.auth.getSession();
   if (session && ALLOWED.includes(session.user.email)) showApp(session);
 }
-// ms-btn removed — auth handled by auth-check.js
+// ms-btn removed - auth handled by auth-check.js
 if (false) {
   document.getElementById('ms-btn_removed')?.addEventListener('click', async () => {
   const btn = null;
@@ -422,7 +422,7 @@ function buildPace(clVol,clGCI,clUnits) {
     <div style="margin-top:14px;font-size:10px;color:rgba(255,255,255,0.25);font-weight:600;">${(yp*100).toFixed(0)}% of 2026 elapsed &nbsp;·&nbsp; ${clUnits} units closed &nbsp;·&nbsp; White line = on-pace marker</div>`;
 }
 
-// Hub API leaderboard builder — uses /api/pipeline by_agent
+// Hub API leaderboard builder - uses /api/pipeline by_agent
 function buildLeaderboardFromHub(byAgent) {
   if (!byAgent?.length) { const el=document.getElementById('lb-grid'); if(el) el.innerHTML='<div style="color:rgba(255,255,255,0.4);padding:24px;text-align:center;">No data</div>'; return; }
   document.getElementById('lb-grid').innerHTML = byAgent.map((a,i)=>`
@@ -441,7 +441,7 @@ function buildLeaderboardFromHub(byAgent) {
     </div>`).join('');
 }
 
-// Hub API GCI builder — uses /api/leadership-data financials revenue_by_agent
+// Hub API GCI builder - uses /api/leadership-data financials revenue_by_agent
 function buildGCIFromHub(agents) {
   if (!agents?.length) return;
   const totR = agents.reduce((s,a)=>s+(a.total_revenue||0),0);

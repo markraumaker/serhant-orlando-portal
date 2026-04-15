@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resources — SERHANT. ORLANDO</title>
+  <title>Resources - SERHANT. ORLANDO</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
@@ -280,7 +280,7 @@
     <div class="page-hero-content">
       <span class="page-hero-eyebrow fade-in">Agent Resources</span>
       <h1 class="page-hero-title fade-in fade-in-delay-1">Resources</h1>
-      <p class="page-hero-sub fade-in fade-in-delay-2">Forms, documents, FAQs, and onboarding — everything you need to operate.</p>
+      <p class="page-hero-sub fade-in fade-in-delay-2">Forms, documents, FAQs, and onboarding - everything you need to operate.</p>
     </div>
   </section>
 
@@ -439,7 +439,7 @@
           </div>
           <div class="logo-package-info">
             <div class="logo-package-name">Brand Guidelines</div>
-            <div class="logo-package-desc">Official SERHANT. brand standards — logo usage, color palette, typography, photography, and approved applications.</div>
+            <div class="logo-package-desc">Official SERHANT. brand standards - logo usage, color palette, typography, photography, and approved applications.</div>
             <div class="logo-variants">
               <div class="logo-variant">
                 <span class="lv-dot lv-blue"></span>
@@ -739,7 +739,7 @@
             </svg>
           </div>
           <div class="onboarding-card-title">Onboarding Launchpad</div>
-          <div class="onboarding-card-sub">Step-by-step guide to get fully set up at SERHANT. Orlando — tools, accounts, and expectations.</div>
+          <div class="onboarding-card-sub">Step-by-step guide to get fully set up at SERHANT. Orlando - tools, accounts, and expectations.</div>
           <span class="btn btn-outline" style="margin-top: var(--space-2);">Get Started</span>
         </a>
         <a href="#" class="onboarding-card fade-in fade-in-delay-1">
@@ -749,7 +749,7 @@
             </svg>
           </div>
           <div class="onboarding-card-title">Text Sarah</div>
-          <div class="onboarding-card-sub">Need help getting started? Text Sarah directly — office manager, licensed broker, always reachable.</div>
+          <div class="onboarding-card-sub">Need help getting started? Text Sarah directly - office manager, licensed broker, always reachable.</div>
           <span class="btn btn-outline" style="margin-top: var(--space-2);">Send a Text</span>
         </a>
       </div>
@@ -787,7 +787,7 @@
       let email = localStorage.getItem('agent_email');
       if (!email) {
         email = prompt('Enter your email address to receive documents:');
-        if (!email || !email.includes('@')) { showToast('Invalid email — not sent.', true); return; }
+        if (!email || !email.includes('@')) { showToast('Invalid email - not sent.', true); return; }
         localStorage.setItem('agent_email', email.trim());
       }
       showToast('Sending to ' + email + '…');
@@ -800,10 +800,10 @@
         if (res.ok) {
           showToast('Sent! Check your inbox for ' + docName + '.');
         } else {
-          showToast('Send failed — try again.', true);
+          showToast('Send failed - try again.', true);
         }
       } catch(e) {
-        showToast('Send failed — check connection.', true);
+        showToast('Send failed - check connection.', true);
       }
     }
   </script>
