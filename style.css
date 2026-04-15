@@ -160,15 +160,16 @@ table { border-collapse: collapse; width: 100%; }
 .nav-links {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: 2px;
   list-style: none;
+  flex-wrap: nowrap;
 }
 .nav-links a {
   display: block;
-  padding: var(--space-2) var(--space-4);
-  font-size: var(--text-xs);
+  padding: var(--space-2) 0.6rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #4a4a7a;
   border-radius: var(--radius-md);
