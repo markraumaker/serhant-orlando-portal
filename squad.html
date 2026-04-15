@@ -903,8 +903,12 @@
         agentMap[agent].units += 1;
       });
 
+      /* Exclude leadership from rankings (they still count in stats) */
+      const EXCLUDE_FROM_RANKINGS = ['Mark Raumaker', 'Andrea Florez'];
+
       /* Sort by volume descending */
       const ranked = Object.entries(agentMap)
+        .filter(([name]) => !EXCLUDE_FROM_RANKINGS.includes(name))
         .map(([name, data]) => ({ name, ...data }))
         .sort((a, b) => b.volume - a.volume);
 
