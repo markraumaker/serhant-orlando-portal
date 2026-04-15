@@ -1060,6 +1060,7 @@
             >
             <span class="promo-pct-suffix">% off</span>
           </div>
+          <input type="date" id="promo-expires-input" title="Expiration date (blank = never expires)" style="background:transparent;border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:var(--color-text-muted);padding:6px 10px;font-size:12px;font-family:Montserrat;width:140px;">
           <button class="btn-add-promo" id="promo-add-btn" onclick="addPromo()">Add Code</button>
         </div>
       </div>
@@ -1633,30 +1634,39 @@
       list.forEach(p => {
         const code     = p.code || p.promo_code || '';
         const discount = p.discount_percent != null ? p.discount_percent : (p.discount != null ? p.discount : 100);
+        const expiresAt = p.expires_at || '';
+        const expiresDate = expiresAt ? expiresAt.slice(0, 10) : '';
+        const isExpired = expiresAt && new Date(expiresAt) < new Date();
 
         const row = document.createElement('div');
         row.className = 'promo-row';
+        if (isExpired) row.style.opacity = '0.45';
         row.dataset.origCode = code;
         row.dataset.origDiscount = String(discount);
+        row.dataset.origExpires = expiresDate;
         row.innerHTML =
           '<input type="text" class="promo-row-code" value="' + x(code) + '" maxlength="32" spellcheck="false" autocomplete="off">' +
           '<div class="promo-row-pct-wrap">' +
             '<input type="number" class="promo-row-pct" value="' + x(String(discount)) + '" min="1" max="100">' +
             '<span class="promo-row-pct-label">% off</span>' +
           '</div>' +
+          '<input type="date" class="promo-row-expires" value="' + expiresDate + '" title="Expiration date (blank = never)" style="background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--color-text-muted);padding:4px 8px;font-size:11px;font-family:Montserrat;width:130px;">' +
+          (isExpired ? '<span style="color:#ff5252;font-size:10px;font-weight:600;letter-spacing:0.05em;">EXPIRED</span>' : '') +
           '<button class="btn-promo-save" style="display:none;">Save</button>' +
           '<button class="btn-promo-remove" title="Deactivate">' +
             '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>' +
           '</button>';
 
-        const codeInput = row.querySelector('.promo-row-code');
-        const pctInput  = row.querySelector('.promo-row-pct');
-        const saveBtn   = row.querySelector('.btn-promo-save');
-        const removeBtn = row.querySelector('.btn-promo-remove');
+        const codeInput    = row.querySelector('.promo-row-code');
+        const pctInput     = row.querySelector('.promo-row-pct');
+        const expiresInput = row.querySelector('.promo-row-expires');
+        const saveBtn      = row.querySelector('.btn-promo-save');
+        const removeBtn    = row.querySelector('.btn-promo-remove');
 
         function checkDirty() {
           const dirty = codeInput.value.trim().toUpperCase() !== row.dataset.origCode ||
-                        String(pctInput.value) !== row.dataset.origDiscount;
+                        String(pctInput.value) !== row.dataset.origDiscount ||
+                        (expiresInput.value || '') !== (row.dataset.origExpires || '');
           saveBtn.style.display = dirty ? 'inline-flex' : 'none';
         }
 
@@ -1665,6 +1675,7 @@
           checkDirty();
         });
         pctInput.addEventListener('input', checkDirty);
+        expiresInput.addEventListener('change', checkDirty);
 
         saveBtn.addEventListener('click', async function() {
           const newCode     = codeInput.value.trim().toUpperCase();
@@ -1682,18 +1693,20 @@
                 body: JSON.stringify({ email, code: row.dataset.origCode })
               });
             }
+            const newExpires = expiresInput.value ? expiresInput.value + 'T23:59:59Z' : null;
             const res = await fetch(HUB + '/api/studios/promo/manage', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ email, code: newCode, discount_percent: newDiscount })
+              body: JSON.stringify({ email, code: newCode, discount_percent: newDiscount, expires_at: newExpires })
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Save failed');
             // Update local state
             const idx = promos.findIndex(p => (p.code || p.promo_code) === row.dataset.origCode);
-            if (idx !== -1) promos[idx] = { code: newCode, discount_percent: newDiscount };
+            if (idx !== -1) promos[idx] = { code: newCode, discount_percent: newDiscount, expires_at: newExpires };
             row.dataset.origCode     = newCode;
             row.dataset.origDiscount = String(newDiscount);
+            row.dataset.origExpires  = expiresInput.value || '';
             saveBtn.style.display = 'none';
             showToast('Promo code ' + newCode + ' saved.', 'success');
           } catch(err) {
@@ -1730,11 +1743,14 @@
     }
 
     async function addPromo() {
-      const codeInput = el('promo-code-input');
-      const pctInput  = el('promo-discount-input');
-      const btn       = el('promo-add-btn');
-      const code      = codeInput.value.trim().toUpperCase();
-      const discount  = parseInt(pctInput.value, 10);
+      const codeInput    = el('promo-code-input');
+      const pctInput     = el('promo-discount-input');
+      const expiresInput = el('promo-expires-input');
+      const btn          = el('promo-add-btn');
+      const code         = codeInput.value.trim().toUpperCase();
+      const discount     = parseInt(pctInput.value, 10);
+      const expiresVal   = expiresInput ? expiresInput.value : '';
+      const expiresAt    = expiresVal ? expiresVal + 'T23:59:59Z' : null;
       if (!code) { showToast('Enter a promo code.', 'error'); codeInput.focus(); return; }
       if (isNaN(discount) || discount < 1 || discount > 100) { showToast('Discount must be between 1 and 100.', 'error'); pctInput.focus(); return; }
       btn.disabled = true;
@@ -1743,14 +1759,15 @@
         const res = await fetch(HUB + '/api/studios/promo/manage', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, code, discount_percent: discount })
+          body: JSON.stringify({ email, code, discount_percent: discount, expires_at: expiresAt })
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Failed to add promo');
-        promos.push({ code, discount_percent: discount });
+        promos.push({ code, discount_percent: discount, expires_at: expiresAt });
         renderPromos(promos);
         codeInput.value = '';
         pctInput.value  = '100';
+        if (expiresInput) expiresInput.value = '';
         showToast('Promo code ' + code + ' added.', 'success');
       } catch(err) {
         showToast(err.message || 'Failed to add promo.', 'error');
