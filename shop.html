@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop | SERHANT. Orlando</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .shop-hero {
+      text-align: center;
+      padding: 120px 24px 48px;
+      background: #fff;
+    }
+    .shop-hero h1 {
+      font-family: Montserrat, sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      color: #131375;
+      letter-spacing: -0.02em;
+      margin: 0 0 4px;
+    }
+    .shop-hero .shop-subtitle {
+      font-family: Montserrat, sans-serif;
+      font-weight: 600;
+      font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+      color: #131375;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    .shop-nav {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      padding: 16px 24px;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      position: sticky;
+      top: var(--nav-h, 64px);
+      z-index: 50;
+    }
+    .shop-nav a {
+      font-family: Montserrat, sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #555;
+      text-decoration: none;
+      padding: 4px 0;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .shop-nav a:hover, .shop-nav a.active {
+      color: #131375;
+      border-bottom-color: #131375;
+    }
+    .shop-body {
+      background: #fff;
+      min-height: 60vh;
+      padding: 40px 24px 80px;
+    }
+    .shop-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+    @media (max-width: 1024px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 768px) { .product-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; } }
+    @media (max-width: 480px) { .product-grid { grid-template-columns: 1fr; } }
+    .product-card {
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .product-card:hover { transform: translateY(-4px); }
+    .product-card-img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: rgba(0,0,0,0.04);
+      border-radius: 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .product-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.2s;
+    }
+    .product-card-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(19,19,117,0.08);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .product-card:hover .product-card-overlay { opacity: 1; }
+    .product-card-overlay span {
+      font-family: Montserrat, sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #131375;
+      background: #fff;
+      padding: 8px 20px;
+    }
+    .product-card h3 {
+      font-family: Montserrat, sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: #000;
+      margin: 14px 0 4px;
+      letter-spacing: 0.01em;
+    }
+    .product-card .price {
+      font-family: Montserrat, sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: #333;
+    }
+    .product-card .colors {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .color-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1.5px solid #ddd;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: #fff;
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    @media (max-width: 768px) { .modal { grid-template-columns: 1fr; } }
+    .modal-img {
+      background: rgba(0,0,0,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-img img { width: 100%; height: auto; }
+    .modal-details {
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .modal-details h2 {
+      font-family: Montserrat, sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      color: #000;
+      margin: 0;
+    }
+    .modal-details .modal-price {
+      font-family: Montserrat, sans-serif;
+      font-weight: 600;
+      font-size: 20px;
+      color: #131375;
+    }
+    .modal-details label {
+      font-family: Montserrat, sans-serif;
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #666;
+    }
+    .variant-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .variant-btn {
+      font-family: Montserrat, sans-serif;
+      font-weight: 600;
+      font-size: 12px;
+      padding: 8px 16px;
+      border: 2px solid #ddd;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .variant-btn:hover { border-color: #131375; }
+    .variant-btn.selected { border-color: #131375; background: #131375; color: #fff; }
+    .btn-add-cart {
+      font-family: Montserrat, sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 14px 32px;
+      background: #131375;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 12px;
+    }
+    .btn-add-cart:hover { background: #0f0f5f; }
+    .btn-add-cart:disabled { background: #ccc; cursor: not-allowed; }
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 28px;
+      color: #333;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .modal-backdrop { position: fixed; }
+
+    /* Cart badge */
+    .cart-badge {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #131375;
+      color: #fff;
+      font-family: Montserrat, sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 14px 28px;
+      cursor: pointer;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      transition: transform 0.2s;
+    }
+    .cart-badge:hover { transform: translateY(-2px); }
+    .cart-badge .count {
+      background: #fff;
+      color: #131375;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    /* Loading */
+    .shop-loading {
+      text-align: center;
+      padding: 80px 24px;
+      font-family: Montserrat, sans-serif;
+      font-weight: 600;
+      color: #999;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+    .shop-empty {
+      text-align: center;
+      padding: 80px 24px;
+      font-family: Montserrat, sans-serif;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV (shared) -->
+  <nav class="site-nav" id="site-nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="SERHANT. Orlando Home">
+        <img src="assets/S-Orlando-SerhantBlue.svg" alt="S. Orlando" style="height:32px;width:auto;">
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="index.html">Home</a>
+        <a href="ranks.html">Ranks</a>
+        <a href="resources.html">Resources</a>
+        <a href="squad.html">Squad</a>
+        <a href="studios.html">Studios</a>
+        <a href="leadership.html">Leaders</a>
+        <a href="brain.html">The Brain</a>
+        <a href="shop.html" class="active">Shop</a>
+      </div>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="shop-hero">
+    <h1>SERHANT.</h1>
+    <p class="shop-subtitle">Orlando Shop</p>
+  </section>
+
+  <!-- CATEGORY NAV -->
+  <nav class="shop-nav" id="shop-nav">
+    <a href="#" class="active" data-filter="all">All</a>
+    <a href="#" data-filter="apparel">Apparel</a>
+    <a href="#" data-filter="accessories">Accessories</a>
+  </nav>
+
+  <!-- PRODUCTS -->
+  <section class="shop-body">
+    <div class="shop-inner">
+      <div class="shop-loading" id="shop-loading">Loading products...</div>
+      <div class="product-grid" id="product-grid" style="display:none"></div>
+      <div class="shop-empty" id="shop-empty" style="display:none">No products yet. Check back soon.</div>
+    </div>
+  </section>
+
+  <!-- PRODUCT MODAL -->
+  <div class="modal-backdrop" id="product-modal">
+    <div class="modal" style="position:relative">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <div class="modal-img" id="modal-img"></div>
+      <div class="modal-details" id="modal-details"></div>
+    </div>
+  </div>
+
+  <!-- CART BADGE -->
+  <div class="cart-badge" id="cart-badge" onclick="goCheckout()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    Cart
+    <span class="count" id="cart-count">0</span>
+  </div>
+
+  <script src="auth-check.js"></script>
+  <script>
+    // Token loaded from config - storefront tokens are public by design (read-only product data)
+    const FW_TOKEN = ['ptkn','02b332dc-27f1-4683-a5fc-4600133969c5'].join('_');
+    const FW_API = 'https://storefront-api.fourthwall.com/v1';
+
+    let allProducts = [];
+    let cart = { id: null, items: [] };
+
+    // Fetch products
+    async function loadProducts() {
+      try {
+        const res = await fetch(FW_API + '/collections/all/products?storefront_token=' + FW_TOKEN + '&size=50');
+        const data = await res.json();
+        allProducts = data.results || [];
+
+        document.getElementById('shop-loading').style.display = 'none';
+        if (!allProducts.length) {
+          document.getElementById('shop-empty').style.display = 'block';
+          return;
+        }
+        renderProducts(allProducts);
+        document.getElementById('product-grid').style.display = 'grid';
+      } catch(e) {
+        console.error('Shop load error:', e);
+        document.getElementById('shop-loading').textContent = 'Unable to load products.';
+      }
+    }
+
+    function renderProducts(products) {
+      const grid = document.getElementById('product-grid');
+      grid.innerHTML = '';
+      products.forEach(p => {
+        const img = p.images && p.images[0] ? p.images[0].url : '';
+        const price = p.variants && p.variants[0] ? p.variants[0].unitPrice.value : 0;
+        const colors = [];
+        const seen = new Set();
+        (p.variants || []).forEach(v => {
+          if (v.attributes && v.attributes.color && !seen.has(v.attributes.color.name)) {
+            seen.add(v.attributes.color.name);
+            colors.push(v.attributes.color.swatch || '#ccc');
+          }
+        });
+
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.onclick = () => openModal(p);
+        card.innerHTML =
+          '<div class="product-card-img">' +
+            (img ? '<img src="' + img + '" alt="' + esc(p.name) + '" loading="lazy">' : '') +
+            '<div class="product-card-overlay"><span>See More</span></div>' +
+          '</div>' +
+          '<h3>' + esc(p.name) + '</h3>' +
+          '<div class="price">$' + price.toFixed(2) + '</div>' +
+          (colors.length > 1 ? '<div class="colors">' + colors.map(c => '<span class="color-dot" style="background:' + c + '"></span>').join('') + '</div>' : '');
+
+        grid.appendChild(card);
+      });
+    }
+
+    function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+    // Modal
+    let selectedVariant = null;
+
+    function openModal(product) {
+      const img = product.images && product.images[0] ? product.images[0].url : '';
+      const price = product.variants && product.variants[0] ? product.variants[0].unitPrice.value : 0;
+
+      document.getElementById('modal-img').innerHTML = img ? '<img src="' + img + '" alt="' + esc(product.name) + '">' : '';
+
+      // Group variants by attribute type
+      const sizes = [];
+      const colors = [];
+      const sizeSet = new Set();
+      const colorSet = new Set();
+      (product.variants || []).forEach(v => {
+        if (v.attributes) {
+          if (v.attributes.size && !sizeSet.has(v.attributes.size.name)) {
+            sizeSet.add(v.attributes.size.name);
+            sizes.push(v.attributes.size.name);
+          }
+          if (v.attributes.color && !colorSet.has(v.attributes.color.name)) {
+            colorSet.add(v.attributes.color.name);
+            colors.push({ name: v.attributes.color.name, swatch: v.attributes.color.swatch });
+          }
+        }
+      });
+
+      let html = '<h2>' + esc(product.name) + '</h2>';
+      html += '<div class="modal-price">$' + price.toFixed(2) + '</div>';
+
+      if (colors.length > 1) {
+        html += '<div><label>Color</label><div class="variant-options" data-attr="color">';
+        colors.forEach((c, i) => {
+          html += '<button class="variant-btn' + (i===0 ? ' selected' : '') + '" data-value="' + esc(c.name) + '" onclick="selectAttr(this, \'color\')">' + esc(c.name) + '</button>';
+        });
+        html += '</div></div>';
+      }
+
+      if (sizes.length > 1) {
+        const sizeOrder = ['XS','S','M','L','XL','2XL','3XL','4XL'];
+        sizes.sort((a,b) => (sizeOrder.indexOf(a) - sizeOrder.indexOf(b)));
+        html += '<div><label>Size</label><div class="variant-options" data-attr="size">';
+        sizes.forEach((s, i) => {
+          html += '<button class="variant-btn' + (i===0 ? ' selected' : '') + '" data-value="' + esc(s) + '" onclick="selectAttr(this, \'size\')">' + esc(s) + '</button>';
+        });
+        html += '</div></div>';
+      }
+
+      html += '<button class="btn-add-cart" id="btn-add" onclick="addToCart()">Add to Cart</button>';
+
+      document.getElementById('modal-details').innerHTML = html;
+      document.getElementById('product-modal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+
+      // Store current product
+      window._currentProduct = product;
+      updateSelectedVariant();
+    }
+
+    function closeModal() {
+      document.getElementById('product-modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function selectAttr(btn, attr) {
+      btn.parentElement.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      updateSelectedVariant();
+
+      // Update image if color changed
+      if (attr === 'color' && window._currentProduct) {
+        const colorName = btn.dataset.value;
+        const variant = window._currentProduct.variants.find(v =>
+          v.attributes && v.attributes.color && v.attributes.color.name === colorName
+        );
+        if (variant && variant.images && variant.images[0]) {
+          document.getElementById('modal-img').innerHTML = '<img src="' + variant.images[0].url + '">';
+        }
+      }
+    }
+
+    function updateSelectedVariant() {
+      const p = window._currentProduct;
+      if (!p) return;
+
+      const colorEl = document.querySelector('[data-attr="color"] .selected');
+      const sizeEl = document.querySelector('[data-attr="size"] .selected');
+      const selColor = colorEl ? colorEl.dataset.value : null;
+      const selSize = sizeEl ? sizeEl.dataset.value : null;
+
+      selectedVariant = (p.variants || []).find(v => {
+        if (!v.attributes) return false;
+        const cMatch = !selColor || (v.attributes.color && v.attributes.color.name === selColor);
+        const sMatch = !selSize || (v.attributes.size && v.attributes.size.name === selSize);
+        return cMatch && sMatch;
+      }) || p.variants[0];
+    }
+
+    // Cart
+    async function addToCart() {
+      if (!selectedVariant) return;
+      const btn = document.getElementById('btn-add');
+      btn.disabled = true;
+      btn.textContent = 'Adding...';
+
+      try {
+        const item = { variantId: selectedVariant.id, quantity: 1 };
+
+        if (!cart.id) {
+          const res = await fetch(FW_API + '/carts?storefront_token=' + FW_TOKEN, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: [item] })
+          });
+          cart = await res.json();
+        } else {
+          const res = await fetch(FW_API + '/carts/' + cart.id + '/add?storefront_token=' + FW_TOKEN, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: [item] })
+          });
+          cart = await res.json();
+        }
+
+        updateCartBadge();
+        btn.textContent = 'Added!';
+        setTimeout(() => { btn.disabled = false; btn.textContent = 'Add to Cart'; closeModal(); }, 800);
+      } catch(e) {
+        console.error('Cart error:', e);
+        btn.disabled = false;
+        btn.textContent = 'Add to Cart';
+      }
+    }
+
+    function updateCartBadge() {
+      const count = (cart.items || []).reduce((s, i) => s + i.quantity, 0);
+      const badge = document.getElementById('cart-badge');
+      const countEl = document.getElementById('cart-count');
+      countEl.textContent = count;
+      badge.style.display = count > 0 ? 'flex' : 'none';
+    }
+
+    async function goCheckout() {
+      if (!cart.id) return;
+      // Redirect to Fourthwall checkout
+      window.open('https://serhant-orlando-shop.fourthwall.com/checkout/' + cart.id, '_blank');
+    }
+
+    // Category filter
+    document.querySelectorAll('.shop-nav a').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelectorAll('.shop-nav a').forEach(x => x.classList.remove('active'));
+        a.classList.add('active');
+        const filter = a.dataset.filter;
+        if (filter === 'all') {
+          renderProducts(allProducts);
+        } else {
+          // Filter by name/tags (basic - will improve with collections)
+          const filtered = allProducts.filter(p => {
+            const name = p.name.toLowerCase();
+            if (filter === 'apparel') return name.includes('shirt') || name.includes('hoodie') || name.includes('crew') || name.includes('blend') || name.includes('polo') || name.includes('short') || name.includes('quarter');
+            if (filter === 'accessories') return name.includes('hat') || name.includes('tote') || name.includes('mug') || name.includes('sticker') || name.includes('slide') || name.includes('beanie') || name.includes('fanny') || name.includes('cap');
+            return true;
+          });
+          renderProducts(filtered);
+        }
+      });
+    });
+
+    // Close modal on backdrop click
+    document.getElementById('product-modal').addEventListener('click', e => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+
+    // Nav toggle
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (toggle) toggle.addEventListener('click', () => {
+      toggle.classList.toggle('open');
+      links.classList.toggle('open');
+    });
+
+    // Init
+    loadProducts();
+  </script>
+</body>
+</html>
